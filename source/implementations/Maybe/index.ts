@@ -71,16 +71,16 @@ class Just<A> extends Maybe<A> {
 }
 
 class Nothing<A> extends Maybe<A> {
-    map<B>(fn: (value: A) => B): Functor<B> {
-        return new Nothing<B>();
+    map(fn: (value: any) => any): Functor<any> {
+        return this;
     }
 
-    ap<B>(other: Apply<(value: A) => B>): Apply<B> {
-        return new Nothing<B>();
+    ap(other: Apply<(value: any) => any>): Apply<any> {
+        return this;
     }
 
-    chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
-        return new Nothing<B>();
+    chain(fn: (value: any) => Chain<any>): Chain<any> {
+        return this;
     }
 
     get(): never {

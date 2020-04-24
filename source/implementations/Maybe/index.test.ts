@@ -58,6 +58,7 @@ describe("Maybe", () => {
             const maybe = Maybe.just(5);
             let chained = maybe.chain((value: number): Maybe<number> => Maybe.just(value + 1));
             expect(chained).to.be.instanceof(Maybe);
+
             // @ts-ignore
             expect(chained.get()).to.be.equal(6);
         });
@@ -142,7 +143,7 @@ describe("Maybe", () => {
             const maybe = Maybe.fromNullable(null);
             expect(maybe.isNothing).to.be.equal(true);
         });
-        //
+
     });
 
 });

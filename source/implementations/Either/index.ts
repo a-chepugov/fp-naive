@@ -1,12 +1,12 @@
-import {Applicative, Chain, Functor, Apply} from "../../interfaces/Monad";
+import {Monad, Chain, Functor, Apply} from "../../interfaces/Monad";
 
-export default abstract class Either<A, E extends Error> implements Applicative<A>, Chain<A> {
-    protected readonly value: A;
+export default abstract class Either<E extends Error, A> implements Monad<A> {
     protected readonly error: E;
+    protected readonly value: A;
 
-    protected constructor(value?: A, error?: E) {
-        this.value = value;
+    protected constructor(error?: E, value?: A) {
         this.error = error;
+        this.value = value;
     }
 
     abstract map<B>(fn: (value: A) => B): Functor<B>;
@@ -15,20 +15,24 @@ export default abstract class Either<A, E extends Error> implements Applicative<
 
     abstract chain<B>(fn: (value: A) => Chain<B>): Chain<B>
 
-    static of<A, E extends Error>(value: A): Either<A, E> {
-        return new Right<A, E>(value);
+    static of<E extends Error, A>(error?: E, value?: A): Either<E, A> {
+        return new Right<E, A>(error, value);
     }
 
     abstract get(): A ;
 
     abstract getOrElse(other: A): A;
 
-    static right<A, E extends Error>(value: A): Right<A, E> {
-        return new Right<A, E>(value);
+    static right<E extends Error, A>(value?: A): Right<E, A> {
+        return new Right<E, A>(undefined, value);
     }
 
-    static left<A, E extends Error>(value?: A): Left<A, E> {
-        return new Left<A, E>(value);
+    static left<E extends Error, A>(error?: E): Left<E, A> {
+        return new Left<E, A>(error, undefined);
+    }
+
+    join(): A {
+        return this.value;
     }
 
     get isRight(): Boolean {
@@ -40,9 +44,35 @@ export default abstract class Either<A, E extends Error> implements Applicative<
     }
 }
 
-class Right<A, E extends Error> extends Either<A, E> {
+class Left<E extends Error, A> extends Either<E, A> {
     map<B>(fn: (value: A) => B): Functor<B> {
-        return Either.of(fn(this.value));
+        return new Left<E, B>(this.error, undefined);
+    }
+
+    ap<B>(other: Apply<(value: A) => B>): Apply<B> {
+        return new Left<E, B>(this.error, undefined);
+    }
+
+    chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
+        return new Left<E, B>(this.error, undefined);
+    }
+
+    get(): never {
+        throw new Error("Can't extract the value of a Left");
+    }
+
+    getOrElse(other: A): A {
+        return other;
+    }
+
+    get isLeft(): Boolean {
+        return true;
+    }
+}
+
+class Right<E extends Error, A> extends Either<E, A> {
+    map<B>(fn: (value: A) => B): Functor<B> {
+        return Either.of(this.error, fn(this.value));
     }
 
     ap<B>(other: Apply<(value: A) => B>): Apply<B> {
@@ -62,32 +92,6 @@ class Right<A, E extends Error> extends Either<A, E> {
     }
 
     get isRight(): Boolean {
-        return true;
-    }
-}
-
-class Left<A, E extends Error> extends Either<A, E> {
-    map<B>(fn: (value: A) => B): Functor<B> {
-        return new Left<B, E>();
-    }
-
-    ap<B>(other: Apply<(value: A) => B>): Apply<B> {
-        return new Left<B, E>();
-    }
-
-    chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
-        return new Left<B, E>();
-    }
-
-    get(): never {
-        throw new Error("Can't extract the value of a Left");
-    }
-
-    getOrElse(other: A): A {
-        return other;
-    }
-
-    get isLeft(): Boolean {
         return true;
     }
 }

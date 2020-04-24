@@ -73,6 +73,12 @@ describe("Maybe", () => {
             expect(getOrElse).to.be.equal(0);
         });
 
+        it("getOrElseRun", () => {
+            const maybe = Maybe.just(0);
+            let getOrElse = maybe.getOrElseRun(() => 1);
+            expect(getOrElse).to.be.equal(0);
+        });
+
         it("isJust", () => {
             const maybe = Maybe.fromNullable(123);
             expect(maybe.isJust).to.be.equal(true);
@@ -123,6 +129,12 @@ describe("Maybe", () => {
         it("getOrElse", () => {
             const maybe = Maybe.nothing();
             let getOrElse = maybe.getOrElse(1);
+            expect(getOrElse).to.be.equal(1);
+        });
+
+        it("getOrElseRun", () => {
+            const maybe = Maybe.nothing();
+            let getOrElse = maybe.getOrElseRun(() => 1);
             expect(getOrElse).to.be.equal(1);
         });
 

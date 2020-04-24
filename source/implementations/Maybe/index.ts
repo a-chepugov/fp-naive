@@ -21,6 +21,8 @@ export default abstract class Maybe<A> implements Applicative<A>, Chain<A> {
 
     abstract getOrElse(other: A): A;
 
+    abstract getOrElseRun(fn: () => A): A;
+
     static just<A>(value: A): Just<A> {
         return new Just<A>(value);
     }
@@ -65,6 +67,10 @@ class Just<A> extends Maybe<A> {
         return this.value;
     }
 
+    getOrElseRun(fn: () => A): A {
+        return this.value;
+    };
+
     get isJust(): Boolean {
         return true;
     }
@@ -90,6 +96,10 @@ class Nothing<A> extends Maybe<A> {
     getOrElse(other: A): A {
         return other;
     }
+
+    getOrElseRun(fn: () => A): A {
+        return fn();
+    };
 
     get isNothing(): Boolean {
         return true;

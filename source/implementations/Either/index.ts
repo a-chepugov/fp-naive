@@ -1,41 +1,47 @@
 import {Monad, Chain, Functor, Apply} from "../../interfaces/Monad";
 import Bifunctor from "../../interfaces/Bifunctor";
 
-export default abstract class Either<E extends Error, A> implements Monad<A> {
-    protected readonly error: E;
-    protected readonly value: A;
+export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R> {
+    protected readonly left: L;
+    protected readonly right: R;
 
-    constructor(error?: E, value?: A) {
-        this.error = error;
-        this.value = value;
+    constructor(left?: L, right?: R) {
+        this.left = left;
+        this.right = right;
     }
 
-    abstract map<B>(fn: (value: A) => B): Functor<B>;
+    abstract map<R2>(fn: (right: R) => R2): Functor<R2>;
 
-    abstract ap<B>(apply: Apply<(value: A) => B>): Apply<B>
+    abstract ap<R2>(apply: Apply<(right: R) => R2>): Apply<R2>
 
-    abstract chain<B>(fn: (value: A) => Chain<B>): Chain<B>
+    abstract chain<R2>(fn: (right: R) => Chain<R2>): Chain<R2>
 
-    // abstract bimap<E2 extends Error, A2>(fnLeft: (e: E) => E2, fnRight: (a: A) => A2): Bifunctor<A2, E2>
+    abstract bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Bifunctor<L2, R2>
 
-    static of<E extends Error, A>(value?: A): Either<E, A> {
-        return new Right<E, A>(undefined, value);
+    static of<L, R>(left?: L, right?: R): Either<L, R> {
+        return left ?
+            new Left<L, R>(left, right) :
+            new Right<L, R>(left, right);
     }
 
-    abstract get(): A ;
+    abstract get(): R ;
 
-    abstract getOrElse(other: A): A;
+    abstract getOrElse(other: R): R;
 
-    static right<E extends Error, A>(value?: A): Right<E, A> {
-        return new Right<E, A>(undefined, value);
+    static right<L, R>(right?: R): Right<L, R> {
+        return new Right<L, R>(undefined, right);
     }
 
-    static left<E extends Error, A>(error?: E): Left<E, A> {
-        return new Left<E, A>(error, undefined);
+    static left<L, A>(left?: L): Left<L, A> {
+        return new Left<L, A>(left, undefined);
     }
 
-    join(): Either<E, A> {
+    join(): Either<L, R> {
         return this;
+    }
+
+    swap(): Either<R, L> {
+        return Either.of<R, L>(this.right, this.left);
     }
 
     get isRight(): Boolean {
@@ -47,24 +53,28 @@ export default abstract class Either<E extends Error, A> implements Monad<A> {
     }
 }
 
-class Left<E extends Error, A> extends Either<E, A> {
-    map<B>(fn: (value: A) => B): Functor<B> {
-        return new Left<E, B>(this.error);
+class Left<L, R> extends Either<L, R> {
+    map<R2>(fn: (right: R) => R2): Functor<R2> {
+        return new Left<L, R2>(this.left);
     }
 
-    ap<B>(other: Apply<(value: A) => B>): Apply<B> {
-        return new Left<E, B>(this.error);
+    ap<R2>(other: Apply<(right: R) => R2>): Apply<R2> {
+        return new Left<L, R2>(this.left);
     }
 
-    chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
-        return new Left<E, B>(this.error);
+    chain<B>(fn: (right: R) => Chain<B>): Chain<B> {
+        return new Left<L, B>(this.left);
+    }
+
+    bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Bifunctor<L2, R2> {
+        return new Left<L2, R2>(fnLeft(this.left), undefined) as Bifunctor<L2, R2>;
     }
 
     get(): never {
-        throw new Error("Can't extract the value of a Left");
+        throw new Error("Can't extract the right of a Left");
     }
 
-    getOrElse(other: A): A {
+    getOrElse(other: R): R {
         return other;
     }
 
@@ -73,26 +83,29 @@ class Left<E extends Error, A> extends Either<E, A> {
     }
 }
 
-class Right<E extends Error, A> extends Either<E, A> {
-    map<B>(fn: (value: A) => B): Functor<B> {
-        return new Right(undefined, fn(this.value));
+class Right<L, R> extends Either<L, R> {
+    map<R2>(fn: (right: R) => R2): Functor<R2> {
+        return new Right(undefined, fn(this.right));
     }
 
-    ap<B>(other: Apply<(value: A) => B>): Apply<B> {
-        return other.map((fn: (value: A) => B) => fn.call(this, this.value)) as Apply<B>
+    ap<R2>(other: Apply<(right: R) => R2>): Apply<R2> {
+        return other.map((fn: (right: R) => R2) => fn.call(this, this.right)) as Apply<R2>
     }
 
-    chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
-        return fn(this.value);
+    chain<R2>(fn: (right: R) => Chain<R2>): Chain<R2> {
+        return fn(this.right);
     }
 
-
-    get(): A {
-        return this.value;
+    bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Bifunctor<L2, R2> {
+        return new Right<L2, R2>(undefined, fnRight(this.right)) as Bifunctor<L2, R2>;
     }
 
-    getOrElse(other: A): A {
-        return this.value;
+    get(): R {
+        return this.right;
+    }
+
+    getOrElse(other: R): R {
+        return this.right;
     }
 
     get isRight(): Boolean {

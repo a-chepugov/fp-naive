@@ -1,10 +1,11 @@
 import {Monad, Chain, Functor, Apply} from "../../interfaces/Monad";
+import Bifunctor from "../../interfaces/Bifunctor";
 
 export default abstract class Either<E extends Error, A> implements Monad<A> {
     protected readonly error: E;
     protected readonly value: A;
 
-    protected constructor(error?: E, value?: A) {
+    constructor(error?: E, value?: A) {
         this.error = error;
         this.value = value;
     }
@@ -15,8 +16,10 @@ export default abstract class Either<E extends Error, A> implements Monad<A> {
 
     abstract chain<B>(fn: (value: A) => Chain<B>): Chain<B>
 
-    static of<E extends Error, A>(error?: E, value?: A): Either<E, A> {
-        return new Right<E, A>(error, value);
+    // abstract bimap<E2 extends Error, A2>(fnLeft: (e: E) => E2, fnRight: (a: A) => A2): Bifunctor<A2, E2>
+
+    static of<E extends Error, A>(value?: A): Either<E, A> {
+        return new Right<E, A>(undefined, value);
     }
 
     abstract get(): A ;
@@ -31,8 +34,8 @@ export default abstract class Either<E extends Error, A> implements Monad<A> {
         return new Left<E, A>(error, undefined);
     }
 
-    join(): A {
-        return this.value;
+    join(): Either<E, A> {
+        return this;
     }
 
     get isRight(): Boolean {
@@ -46,15 +49,15 @@ export default abstract class Either<E extends Error, A> implements Monad<A> {
 
 class Left<E extends Error, A> extends Either<E, A> {
     map<B>(fn: (value: A) => B): Functor<B> {
-        return new Left<E, B>(this.error, undefined);
+        return new Left<E, B>(this.error);
     }
 
     ap<B>(other: Apply<(value: A) => B>): Apply<B> {
-        return new Left<E, B>(this.error, undefined);
+        return new Left<E, B>(this.error);
     }
 
     chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
-        return new Left<E, B>(this.error, undefined);
+        return new Left<E, B>(this.error);
     }
 
     get(): never {
@@ -72,7 +75,7 @@ class Left<E extends Error, A> extends Either<E, A> {
 
 class Right<E extends Error, A> extends Either<E, A> {
     map<B>(fn: (value: A) => B): Functor<B> {
-        return Either.of(this.error, fn(this.value));
+        return new Right(undefined, fn(this.value));
     }
 
     ap<B>(other: Apply<(value: A) => B>): Apply<B> {
@@ -80,8 +83,9 @@ class Right<E extends Error, A> extends Either<E, A> {
     }
 
     chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
-        return fn(this.value) as Chain<B>;
+        return fn(this.value);
     }
+
 
     get(): A {
         return this.value;

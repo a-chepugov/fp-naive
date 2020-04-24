@@ -26,11 +26,6 @@ describe("Maybe", () => {
             expect(maybe).to.be.instanceof(Maybe);
         });
 
-        it("get", () => {
-            const maybe = Maybe.of(1);
-            expect(maybe).to.be.instanceof(Maybe);
-            expect(maybe.get()).to.be.equal(1);
-        });
     });
 
     describe("Just", () => {

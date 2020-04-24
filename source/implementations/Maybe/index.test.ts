@@ -74,13 +74,13 @@ describe("Maybe", () => {
         });
 
         it("isJust", () => {
-            const maybe = Maybe.of(123);
-            expect(maybe.isJust()).to.be.equal(true);
+            const maybe = Maybe.fromNullable(123);
+            expect(maybe.isJust).to.be.equal(true);
         });
 
         it("isNothing", () => {
-            const maybe = Maybe.of(123);
-            expect(maybe.isNothing()).to.be.equal(false);
+            const maybe = Maybe.fromNullable(123);
+            expect(maybe.isNothing).to.be.equal(false);
         });
 
     });
@@ -126,13 +126,13 @@ describe("Maybe", () => {
         });
 
         it("isJust", () => {
-            const maybe = Maybe.of(null);
-            expect(maybe.isJust()).to.be.equal(false);
+            const maybe = Maybe.fromNullable(null);
+            expect(maybe.isJust).to.be.equal(false);
         });
 
         it("isNothing", () => {
-            const maybe = Maybe.of(null);
-            expect(maybe.isNothing()).to.be.equal(true);
+            const maybe = Maybe.fromNullable(null);
+            expect(maybe.isNothing).to.be.equal(true);
         });
         //
     });

@@ -14,7 +14,7 @@ export default abstract class Maybe<A> implements Applicative<A>, Chain<A> {
     abstract chain<B>(fn: (value: A) => Chain<B>): Chain<B>
 
     static of<A>(value: A): Maybe<A> {
-        return Maybe.fromNullable(value);
+        return new Just<A>(value);
     }
 
     abstract get(): A | never;
@@ -35,11 +35,11 @@ export default abstract class Maybe<A> implements Applicative<A>, Chain<A> {
             Maybe.just<A>(value);
     }
 
-    isJust(): Boolean {
+    get isJust(): Boolean {
         return false;
     }
 
-    isNothing(): Boolean {
+    get isNothing(): Boolean {
         return false;
     }
 }
@@ -65,7 +65,7 @@ class Just<A> extends Maybe<A> {
         return this.value;
     }
 
-    isJust(): Boolean {
+    get isJust(): Boolean {
         return true;
     }
 }
@@ -91,7 +91,7 @@ class Nothing<A> extends Maybe<A> {
         return other;
     }
 
-    isNothing(): Boolean {
+    get isNothing(): Boolean {
         return true;
     }
 }

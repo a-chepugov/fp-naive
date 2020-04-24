@@ -1,10 +1,12 @@
 import {Applicative, Chain, Functor, Apply} from "../../interfaces/Monad";
 
-export default abstract class Maybe<A> implements Applicative<A>, Chain<A> {
+export default abstract class Either<A, E extends Error> implements Applicative<A>, Chain<A> {
     protected readonly value: A;
+    protected readonly error: E;
 
-    protected constructor(value?: A) {
+    protected constructor(value?: A, error?: E) {
         this.value = value;
+        this.error = error;
     }
 
     abstract map<B>(fn: (value: A) => B): Functor<B>;
@@ -13,40 +15,34 @@ export default abstract class Maybe<A> implements Applicative<A>, Chain<A> {
 
     abstract chain<B>(fn: (value: A) => Chain<B>): Chain<B>
 
-    static of<A>(value: A): Maybe<A> {
-        return new Just<A>(value);
+    static of<A, E extends Error>(value: A): Either<A, E> {
+        return new Right<A, E>(value);
     }
 
-    abstract get(): A | never;
+    abstract get(): A ;
 
     abstract getOrElse(other: A): A;
 
-    static just<A>(value: A): Just<A> {
-        return new Just<A>(value);
+    static right<A, E extends Error>(value: A): Right<A, E> {
+        return new Right<A, E>(value);
     }
 
-    static nothing<A>(value?: A): Nothing<A> {
-        return new Nothing<A>(value);
+    static left<A, E extends Error>(value?: A): Left<A, E> {
+        return new Left<A, E>(value);
     }
 
-    static fromNullable<A>(value: A): Maybe<A> {
-        return value === null || value === undefined ?
-            Maybe.nothing<A>(value) :
-            Maybe.just<A>(value);
-    }
-
-    get isJust(): Boolean {
+    get isRight(): Boolean {
         return false;
     }
 
-    get isNothing(): Boolean {
+    get isLeft(): Boolean {
         return false;
     }
 }
 
-class Just<A> extends Maybe<A> {
+class Right<A, E extends Error> extends Either<A, E> {
     map<B>(fn: (value: A) => B): Functor<B> {
-        return Maybe.fromNullable(fn(this.value));
+        return Either.of(fn(this.value));
     }
 
     ap<B>(other: Apply<(value: A) => B>): Apply<B> {
@@ -65,33 +61,33 @@ class Just<A> extends Maybe<A> {
         return this.value;
     }
 
-    get isJust(): Boolean {
+    get isRight(): Boolean {
         return true;
     }
 }
 
-class Nothing<A> extends Maybe<A> {
+class Left<A, E extends Error> extends Either<A, E> {
     map<B>(fn: (value: A) => B): Functor<B> {
-        return new Nothing<B>();
+        return new Left<B, E>();
     }
 
     ap<B>(other: Apply<(value: A) => B>): Apply<B> {
-        return new Nothing<B>();
+        return new Left<B, E>();
     }
 
     chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
-        return new Nothing<B>();
+        return new Left<B, E>();
     }
 
     get(): never {
-        throw new Error("Can't extract the value of a Nothing");
+        throw new Error("Can't extract the value of a Left");
     }
 
     getOrElse(other: A): A {
         return other;
     }
 
-    get isNothing(): Boolean {
+    get isLeft(): Boolean {
         return true;
     }
 }

@@ -37,6 +37,10 @@ export default abstract class Maybe<A> implements Applicative<A>, Chain<A> {
             Maybe.just<A>(value);
     }
 
+    join(): A {
+        return this.value;
+    }
+
     get isJust(): Boolean {
         return false;
     }

@@ -1,6 +1,6 @@
-import {Applicative, Chain, Functor, Apply} from "../../interfaces/Monad";
+import {Monad, Chain, Functor, Apply} from "../../interfaces/Monad";
 
-export default abstract class Maybe<A> implements Applicative<A>, Chain<A> {
+export default abstract class Maybe<A> implements Monad<A> {
     protected readonly value: A;
 
     protected constructor(value?: A) {

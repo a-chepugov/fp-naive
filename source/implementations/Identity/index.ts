@@ -7,11 +7,11 @@ export default class Identity<A> implements Functor<A> {
         this.value = value;
     }
 
-    map<B>(fn: (value: A) => B): ThisType<B> {
+    map<B>(fn: (value: A) => B): Identity<B> {
         return new Identity(fn(this.value));
     }
 
-    static of<A>(value: A): ThisType<A> {
+    static of<A>(value: A): Identity<A> {
         return new Identity<A>(value);
     }
 

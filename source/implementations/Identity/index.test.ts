@@ -13,8 +13,9 @@ describe("Identity", () => {
 
     it("map", () => {
         const instance = new Index(5);
+        const mapped = instance.map((a: number) => String(a));
         // @ts-ignore
-        expect(instance.map((a: number) => String(a)).get()).to.be.equal('5');
+        expect(mapped.get()).to.be.equal('5');
     });
 
 });

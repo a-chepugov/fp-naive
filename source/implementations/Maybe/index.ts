@@ -1,4 +1,4 @@
-import {Applicative, Chain} from "../../interfaces/Monad";
+import {Applicative, Chain, Functor, Apply} from "../../interfaces/Monad";
 
 export default abstract class Maybe<A> implements Applicative<A>, Chain<A> {
     protected readonly value: A;
@@ -7,11 +7,11 @@ export default abstract class Maybe<A> implements Applicative<A>, Chain<A> {
         this.value = value;
     }
 
-    abstract map<B>(fn: (value: A) => B): ThisType<B>;
+    abstract map<B>(fn: (value: A) => B): Functor<B>;
 
-    abstract ap<B>(apply: Applicative<(value: A) => B>): ThisType<B>
+    abstract ap<B>(apply: Apply<(value: A) => B>): Apply<B>
 
-    abstract chain<B>(fn: (value: A) => ThisType<B>): ThisType<B>
+    abstract chain<B>(fn: (value: A) => Chain<B>): Chain<B>
 
     static of<A>(value: A): Maybe<A> {
         return Maybe.fromNullable(value);
@@ -45,16 +45,16 @@ export default abstract class Maybe<A> implements Applicative<A>, Chain<A> {
 }
 
 class Just<A> extends Maybe<A> {
-    map<B>(fn: (value: A) => B): ThisType<B> {
+    map<B>(fn: (value: A) => B): Functor<B> {
         return Maybe.fromNullable(fn(this.value));
     }
 
-    ap<B>(other: Applicative<(value: A) => B>): ThisType<B> {
-        return other.map((fn: (value: A) => B) => fn.call(this, this.value))
+    ap<B>(other: Apply<(value: A) => B>): Apply<B> {
+        return other.map((fn: (value: A) => B) => fn.call(this, this.value)) as Apply<B>
     }
 
-    chain<B>(fn: (value: A) => ThisType<B>): ThisType<B> {
-        return fn(this.value);
+    chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
+        return fn(this.value) as Chain<B>;
     }
 
     get(): A {
@@ -71,15 +71,15 @@ class Just<A> extends Maybe<A> {
 }
 
 class Nothing<A> extends Maybe<A> {
-    map<B>(fn: (value: A) => B): ThisType<B> {
+    map<B>(fn: (value: A) => B): Functor<B> {
         return new Nothing<B>();
     }
 
-    ap<B>(other: Applicative<(value: A) => B>): ThisType<B> {
+    ap<B>(other: Apply<(value: A) => B>): Apply<B> {
         return new Nothing<B>();
     }
 
-    chain<B>(fn: (value: A) => ThisType<B>): ThisType<B> {
+    chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
         return new Nothing<B>();
     }
 

@@ -54,7 +54,7 @@ describe("Maybe", () => {
             const add = (a: number) => a + 1;
             const maybeAdd = Maybe.just(add);
             const resultMonad = maybe5.ap(maybeAdd);
-
+            expect(resultMonad).to.be.instanceof(Maybe);
             // @ts-ignore
             expect(resultMonad.get()).to.be.equal(5);
         });
@@ -62,7 +62,7 @@ describe("Maybe", () => {
         it("chain", () => {
             const maybe = Maybe.just(5);
             let chained = maybe.chain((value: number): Maybe<number> => Maybe.just(value + 1));
-
+            expect(chained).to.be.instanceof(Maybe);
             // @ts-ignore
             expect(chained.get()).to.be.equal(6);
         });
@@ -94,29 +94,30 @@ describe("Maybe", () => {
 
         it("map", () => {
             const maybe = Maybe.nothing();
-            let mapped = maybe.map((value: number) => value + 1);
+            let counter = 0;
+            let mapped = maybe.map((value: number) => counter++);
             expect(mapped).to.be.instanceof(Maybe);
-            expect(() => maybe.get()).to.throw();
+            expect(counter).to.be.equal(0);
         });
 
 
         it("ap", () => {
             const maybe = Maybe.nothing();
-            const add = (a: number) => a + 1;
+            let counter = 0;
+            const add = (a: number) => counter++;
             const addMonad = Maybe.just(add);
             const resultMonad = maybe.ap(addMonad);
-
-            // @ts-ignore
-            expect(() => resultMonad.get()).to.throw();
+            expect(resultMonad).to.be.instanceof(Maybe);
+            expect(counter).to.be.equal(0);
         });
 
         it("chain", () => {
             const maybe = Maybe.nothing();
-            const fn = (value: number): Maybe<number> => Maybe.just(value + 1)
+            let counter = 0;
+            const fn = (value: number): Maybe<number> => Maybe.just(counter++)
             let chained = maybe.chain(fn);
-
-            // @ts-ignore
-            expect(() => chained.get()).to.throw();
+            expect(chained).to.be.instanceof(Maybe);
+            expect(counter).to.be.equal(0);
         });
 
         it("getOrElse", () => {

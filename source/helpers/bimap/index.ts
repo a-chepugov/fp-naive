@@ -1,4 +1,4 @@
-import curry from "../curry";
+import curry from "../../utilities/curry";
 import Bifunctor from "../../interfaces/Bifunctor";
 
 // bimap :: Bifunctor f => (a -> b, c -> d) -> f a c-> f b d

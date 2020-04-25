@@ -1,4 +1,4 @@
-import curry from "../curry";
+import curry from "../../utilities/curry";
 import Chain from "../../interfaces/Chain";
 
 // chain :: Chain m => (a -> m b) -> m a -> m b

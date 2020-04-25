@@ -1,4 +1,4 @@
-import curry from "../curry";
+import curry from "../../utilities/curry";
 import Functor from "../../interfaces/Functor";
 
 // map :: Functor f => (a -> b) -> f a -> f b

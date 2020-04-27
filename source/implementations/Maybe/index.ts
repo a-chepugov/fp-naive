@@ -37,8 +37,8 @@ export default abstract class Maybe<A> implements Monad<A> {
 
     static fromNullable<A>(value: A): Maybe<A> {
         return value === null || value === undefined ?
-            Maybe.nothing<A>(value) :
-            Maybe.just<A>(value);
+            new Nothing<A>(value) :
+            new Just<A>(value);
     }
 
     get isJust(): Boolean {
@@ -64,7 +64,7 @@ class Just<A> extends Maybe<A> {
     }
 
     filter(fn: (value: A) => Boolean): Maybe<A> {
-        return fn(this.value) ? this : Maybe.nothing();
+        return fn(this.value) ? this : new Nothing<A>();
     }
 
     join<B>(): Maybe<A | any> {

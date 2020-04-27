@@ -58,6 +58,18 @@ describe("Maybe", () => {
             expect(chained.get()).to.be.equal(6);
         });
 
+        it("join", () => {
+            const maybe = Maybe.just(3);
+            expect(maybe.join()).to.be.instanceof(Maybe);
+            expect(maybe.join().getOrElse(2)).to.be.equal(3);
+        });
+
+        it("join. nested", () => {
+            const maybe = Maybe.just(Maybe.just(3));
+            expect(maybe.join()).to.be.instanceof(Maybe);
+            expect(maybe.join().getOrElse(2)).to.be.equal(3);
+        });
+
         it("getOrElse", () => {
             const maybe = Maybe.just(0);
             let getOrElse = maybe.getOrElse(1);
@@ -115,6 +127,11 @@ describe("Maybe", () => {
             let chained = maybe.chain(fn);
             expect(chained).to.be.instanceof(Maybe);
             expect(counter).to.be.equal(0);
+        });
+
+        it("join", () => {
+            const maybe = Maybe.nothing();
+            expect(maybe.join().isNothing).to.be.true;
         });
 
         it("getOrElse", () => {

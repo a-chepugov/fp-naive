@@ -13,6 +13,8 @@ export default abstract class Maybe<A> implements Monad<A> {
 
     abstract chain<B>(fn: (value: A) => Maybe<B>): Maybe<B>
 
+    abstract join(): Maybe<A | any>;
+
     static of<A>(value: A): Maybe<A> {
         return new Just<A>(value);
     }
@@ -59,6 +61,14 @@ class Just<A> extends Maybe<A> {
         return fn(this.value);
     }
 
+    join<B>(): Maybe<A | any> {
+        if (this.value instanceof Maybe) {
+            return this.value;
+        } else {
+            return this;
+        }
+    };
+
     get(): A {
         return this.value;
     }
@@ -88,6 +98,10 @@ class Nothing<A> extends Maybe<A> {
     chain<B>(fn: (value: A) => Maybe<B>): Maybe<B> {
         return new Nothing<B>();
     }
+
+    join(): Maybe<A> {
+        return this;
+    };
 
     get(): never {
         throw new Error("Can't extract the value of a Nothing");

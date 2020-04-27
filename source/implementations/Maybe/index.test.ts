@@ -58,6 +58,16 @@ describe("Maybe", () => {
             expect(chained.get()).to.be.equal(6);
         });
 
+        it("filter. positive", () => {
+            const maybe = Maybe.just(3);
+            expect(maybe.filter(a => a === 3).isJust).to.be.true;
+        });
+
+        it("filter. negative", () => {
+            const maybe = Maybe.just(3);
+            expect(maybe.filter(a => a !== 3).isJust).to.be.false;
+        });
+
         it("join", () => {
             const maybe = Maybe.just(3);
             expect(maybe.join()).to.be.instanceof(Maybe);
@@ -127,6 +137,11 @@ describe("Maybe", () => {
             let chained = maybe.chain(fn);
             expect(chained).to.be.instanceof(Maybe);
             expect(counter).to.be.equal(0);
+        });
+
+        it("filter", () => {
+            const maybe = Maybe.nothing();
+            expect(maybe.filter(a => a === 3).isNothing).to.be.true;
         });
 
         it("join", () => {

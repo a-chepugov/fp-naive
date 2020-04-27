@@ -13,6 +13,8 @@ export default abstract class Maybe<A> implements Monad<A> {
 
     abstract chain<B>(fn: (value: A) => Maybe<B>): Maybe<B>
 
+    abstract filter(fn: (value: A) => Boolean): Maybe<A>
+
     abstract join(): Maybe<A | any>;
 
     static of<A>(value: A): Maybe<A> {
@@ -61,6 +63,10 @@ class Just<A> extends Maybe<A> {
         return fn(this.value);
     }
 
+    filter(fn: (value: A) => Boolean): Maybe<A> {
+        return fn(this.value) ? this : Maybe.nothing();
+    }
+
     join<B>(): Maybe<A | any> {
         if (this.value instanceof Maybe) {
             return this.value;
@@ -97,6 +103,10 @@ class Nothing<A> extends Maybe<A> {
 
     chain<B>(fn: (value: A) => Maybe<B>): Maybe<B> {
         return new Nothing<B>();
+    }
+
+    filter(fn: (value: A) => Boolean): Maybe<A> {
+        return this;
     }
 
     join(): Maybe<A> {

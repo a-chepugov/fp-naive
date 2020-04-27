@@ -7,11 +7,11 @@ export default abstract class Maybe<A> implements Monad<A> {
         this.value = value;
     }
 
-    abstract map<B>(fn: (value: A) => B): Functor<B>;
+    abstract map<B>(fn: (value: A) => B): Maybe<B>;
 
     abstract ap<B>(apply: Apply<(value: A) => B>): Apply<B>
 
-    abstract chain<B>(fn: (value: A) => Chain<B>): Chain<B>
+    abstract chain<B>(fn: (value: A) => Maybe<B>): Maybe<B>
 
     static of<A>(value: A): Maybe<A> {
         return new Just<A>(value);
@@ -37,10 +37,6 @@ export default abstract class Maybe<A> implements Monad<A> {
             Maybe.just<A>(value);
     }
 
-    join(): A {
-        return this.value;
-    }
-
     get isJust(): Boolean {
         return false;
     }
@@ -51,7 +47,7 @@ export default abstract class Maybe<A> implements Monad<A> {
 }
 
 class Just<A> extends Maybe<A> {
-    map<B>(fn: (value: A) => B): Functor<B> {
+    map<B>(fn: (value: A) => B): Maybe<B> {
         return Maybe.fromNullable(fn(this.value));
     }
 
@@ -59,8 +55,8 @@ class Just<A> extends Maybe<A> {
         return other.map((fn: (value: A) => B) => fn.call(this, this.value)) as Apply<B>
     }
 
-    chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
-        return fn(this.value) as Chain<B>;
+    chain<B>(fn: (value: A) => Maybe<B>): Maybe<B> {
+        return fn(this.value);
     }
 
     get(): A {
@@ -81,7 +77,7 @@ class Just<A> extends Maybe<A> {
 }
 
 class Nothing<A> extends Maybe<A> {
-    map<B>(fn: (value: A) => B): Functor<B> {
+    map<B>(fn: (value: A) => B): Maybe<B> {
         return new Nothing<B>();
     }
 
@@ -89,7 +85,7 @@ class Nothing<A> extends Maybe<A> {
         return new Nothing<B>();
     }
 
-    chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
+    chain<B>(fn: (value: A) => Maybe<B>): Maybe<B> {
         return new Nothing<B>();
     }
 

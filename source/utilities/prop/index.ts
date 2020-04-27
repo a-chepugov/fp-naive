@@ -1,9 +1,8 @@
-import curry from "../curry";
-
 // prop :: String -> Object -> a
-export function prop<T, K extends keyof T>(target: T, key: K) {
-    const {[key]: value} = target !== undefined && target !== null ? target : {};
-    return value;
+// @ts-ignore
+export default function prop<K extends NonNullable<any>, T>(key: K) {
+    return function (target: T): any {
+        const {[key]: value} = target !== undefined && target !== null ? target : {};
+        return value;
+    }
 }
-
-export default curry(prop);

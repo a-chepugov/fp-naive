@@ -121,7 +121,39 @@ describe("Maybe", () => {
                 const mul = (a: number) => a + multiplier;
 
                 const instance = Testee.just(value);
-                expect(instance.map((a: number) => mul(add(a))).get()).to.be.equal(instance.map(add).map(mul).get());
+
+                const r1 = instance.map((a: number) => mul(add(a)));
+                const r2 = instance.map(add).map(mul);
+
+                expect(r1.get()).to.be.equal(r2.get());
+            });
+
+        });
+
+        describe("Apply", () => {
+
+            it("composition", () => {
+                const value = Math.floor(Math.random() * 100);
+                const addition = Math.floor(Math.random() * 100);
+                const multiplier = Math.floor(Math.random() * 100);
+
+                const add = (a: number) => a + addition;
+                const mul = (a: number) => a + multiplier;
+
+                const vT = Testee.just(value);
+                const aT = Testee.just(add);
+                const mT = Testee.just(mul);
+
+                const transform =
+                    (f: (a: number) => number) =>
+                        (g: (a: number) => number) =>
+                            (x: number) =>
+                                f(g(x));
+
+                const r1 = vT.ap(aT.ap(mT.map(transform))) as Testee<number>;
+                const r2 = vT.ap(mT).ap(aT) as Testee<number>;
+
+                expect(r1.get()).to.be.equal(r2.get());
             });
 
         });

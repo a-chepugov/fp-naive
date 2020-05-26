@@ -1,7 +1,6 @@
 import {expect} from "chai";
 
 import identity from "../../utilities/identity";
-import Functor from "./index";
 
 export default (Testee: any) => {
 

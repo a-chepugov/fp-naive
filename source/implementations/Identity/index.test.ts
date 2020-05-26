@@ -1,21 +1,15 @@
 import {expect} from "chai";
 
-import Index from "./index";
+import Testee from "./index";
+
+import FunctorTest from "../../interfaces/Functor/index.test";
 
 describe("Identity", () => {
 
     it("of", () => {
-        const instance = Index.of(5);
-        // @ts-ignore
+        const instance = Testee.of(5);
         expect(instance.get()).to.be.equal(5);
     });
 
-
-    it("map", () => {
-        const instance = new Index(5);
-        const mapped = instance.map((a: number) => String(a));
-        // @ts-ignore
-        expect(mapped.get()).to.be.equal('5');
-    });
-
+    FunctorTest(Testee);
 });

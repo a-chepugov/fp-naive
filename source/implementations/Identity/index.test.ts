@@ -6,9 +6,13 @@ import identity from "../../utilities/identity";
 
 describe("Identity", () => {
 
-    it("of", () => {
-        const instance = Testee.of(5);
-        expect(instance.get()).to.be.equal(5);
+    describe("Applicative", () => {
+
+        it("of returns Maybe", () => {
+            const maybe = Testee.of(5);
+            expect(maybe).to.be.instanceof(Testee);
+        });
+
     });
 
     describe("Functor", () => {

@@ -1,4 +1,4 @@
-import {Functor, Apply, Chain, Applicative, Monad} from "../../interfaces/Monad";
+import {Apply, Chain, Monad} from "../../interfaces/Monad";
 
 export default abstract class Maybe<A> implements Monad<A> {
     protected readonly value: A;
@@ -50,6 +50,44 @@ export default abstract class Maybe<A> implements Monad<A> {
     }
 }
 
+class Nothing<A> extends Maybe<A> {
+    map<B>(fn: (value: A) => B): Maybe<B> {
+        return new Nothing<B>(undefined);
+    }
+
+    ap<B>(other: Apply<(value: A) => B>): Apply<B> {
+        return new Nothing<B>(undefined);
+    }
+
+    chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
+        return new Nothing<B>(undefined);
+    }
+
+    filter(fn: (value: A) => Boolean): Maybe<A> {
+        return this;
+    }
+
+    join(): Maybe<A> {
+        return this;
+    };
+
+    get(): never {
+        throw new Error("Can't extract the value of a Nothing");
+    }
+
+    getOrElse(other: A): A {
+        return other;
+    }
+
+    getOrElseRun(fn: () => A): A {
+        return fn();
+    };
+
+    get isNothing(): Boolean {
+        return true;
+    }
+}
+
 class Just<A> extends Maybe<A> {
     map<B>(fn: (value: A) => B): Maybe<B> {
         return Maybe.fromNullable(fn(this.value));
@@ -88,44 +126,6 @@ class Just<A> extends Maybe<A> {
     };
 
     get isJust(): Boolean {
-        return true;
-    }
-}
-
-class Nothing<A> extends Maybe<A> {
-    map<B>(fn: (value: A) => B): Maybe<B> {
-        return new Nothing<B>(undefined);
-    }
-
-    ap<B>(other: Apply<(value: A) => B>): Apply<B> {
-        return new Nothing<B>(undefined);
-    }
-
-    chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
-        return new Nothing<B>(undefined);
-    }
-
-    filter(fn: (value: A) => Boolean): Maybe<A> {
-        return this;
-    }
-
-    join(): Maybe<A> {
-        return this;
-    };
-
-    get(): never {
-        throw new Error("Can't extract the value of a Nothing");
-    }
-
-    getOrElse(other: A): A {
-        return other;
-    }
-
-    getOrElseRun(fn: () => A): A {
-        return fn();
-    };
-
-    get isNothing(): Boolean {
         return true;
     }
 }

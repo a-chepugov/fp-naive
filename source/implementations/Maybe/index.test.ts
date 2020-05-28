@@ -6,30 +6,35 @@ import Testee from "./index";
 
 describe("Maybe", () => {
 
-    describe("Maybe", () => {
+    describe("Maybe prototype", () => {
 
         describe("Applicative", () => {
 
-            it("of", () => {
+            it("of returns Maybe", () => {
                 const maybe = Testee.of(1);
                 expect(maybe).to.be.instanceof(Testee);
             });
 
         });
 
-        it("just", () => {
+        it("just returns Maybe.Just", () => {
             const maybe = Testee.just(5);
-            expect(maybe).to.be.instanceof(Testee);
+            expect(maybe.isJust).to.be.true;
         });
 
-        it("nothing", () => {
+        it("nothing returns Maybe.Nothing", () => {
             const maybe = Testee.nothing();
-            expect(maybe).to.be.instanceof(Testee);
+            expect(maybe.isNothing).to.be.true;
         });
 
-        it("fromNullable", () => {
+        it("fromNullable for non nulls return Maybe.Just", () => {
             const maybe = Testee.fromNullable(1);
-            expect(maybe).to.be.instanceof(Testee);
+            expect(maybe.isJust).to.be.true;
+        });
+
+        it("fromNullable for null return Maybe.Nothing", () => {
+            const maybe = Testee.fromNullable(null);
+            expect(maybe.isNothing).to.be.true;
         });
 
     });
@@ -38,10 +43,10 @@ describe("Maybe", () => {
 
         describe("Functor", () => {
 
-            it("map", () => {
+            it("map skips on Maybe.Nothing", () => {
                 const maybe = Testee.nothing();
                 let counter = 0;
-                let mapped = maybe.map((value: number) => counter++);
+                let mapped = maybe.map((value: number) => ++counter);
                 expect(mapped).to.be.instanceof(Testee);
                 expect(counter).to.be.equal(0);
             });
@@ -50,7 +55,7 @@ describe("Maybe", () => {
 
         describe("Apply", () => {
 
-            it("ap", () => {
+            it("ap skips on Maybe.Nothing", () => {
                 const maybe = Testee.nothing();
                 let counter = 0;
                 const add = (a: number) => counter++;
@@ -64,10 +69,10 @@ describe("Maybe", () => {
 
         describe("Chain", () => {
 
-            it("chain", () => {
+            it("chain skips on Maybe.Nothing", () => {
                 const maybe = Testee.nothing();
                 let counter = 0;
-                const fn = (value: number): Testee<number> => Testee.just(counter++)
+                const fn = (value: number): Testee<number> => Testee.just(++counter)
                 let chained = maybe.chain(fn);
                 expect(chained).to.be.instanceof(Testee);
                 expect(counter).to.be.equal(0);
@@ -75,7 +80,7 @@ describe("Maybe", () => {
 
         });
 
-        it("get", () => {
+        it("get throws on Maybe.Nothing", () => {
             const maybe = Testee.nothing();
             expect(() => maybe.get()).to.throw();
         });
@@ -118,9 +123,9 @@ describe("Maybe", () => {
 
         describe("Functor", () => {
 
-            it("map", () => {
+            it("map invokes on Maybe.Just", () => {
                 const maybe = Testee.just(5);
-                let mapped = maybe.map((value: number) => value + 1);
+                let mapped = maybe.map((value: number) => ++value);
                 expect(mapped).to.be.instanceof(Testee);
                 expect(mapped.get()).to.be.equal(6);
             });
@@ -152,7 +157,7 @@ describe("Maybe", () => {
 
         describe("Apply", () => {
 
-            it("ap", () => {
+            it("ap invokes on Maybe.Just", () => {
                 const maybe5 = Testee.just(4);
                 const add = (a: number) => a + 1;
                 const maybeAdd = Testee.just(add);
@@ -189,7 +194,7 @@ describe("Maybe", () => {
 
         describe("Chain", () => {
 
-            it("chain", () => {
+            it("chain invokes on Maybe.Just", () => {
                 const maybe = Testee.just(5);
                 let chained = maybe.chain((value: number): Testee<number> => Testee.just(value + 1));
                 expect(chained).to.be.instanceof(Testee);

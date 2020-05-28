@@ -102,10 +102,12 @@ describe("Identity", () => {
 
     describe("Traversable", () => {
 
-        it("traverse Identity<number> to Identity<string>", () => {
+        it("traverse Identity to Maybe<Identity>", () => {
             const instance = new Testee(5);
             const toStringEither = (a: number) => Either.of(String(a));
             const result = instance.traverse(Maybe, toStringEither) as Maybe<Testee<string>>;
+            expect(result).to.be.instanceof(Maybe);
+            expect(result.get()).to.be.instanceof(Testee);
             expect(result.get().get()).to.be.equal('5');
         });
 

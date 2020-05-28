@@ -6,10 +6,11 @@ import Maybe from "../../implementations/Maybe";
 
 describe("chain", () => {
 
-    it("run", () => {
+    it("chain inc on Maybe(5) gives Maybe(6)", () => {
         const maybe = Maybe.of(5) as Maybe<number>;
-        const add2AndStringify = (value: number): Maybe<string> => Maybe.of(String(value + 2)) as Maybe<string>;
-        expect(chain(add2AndStringify, maybe).get()).to.be.equal('7');
+        const add2AndWrap = (value: number): Maybe<number> => Maybe.of(++value);
+        const result = chain(add2AndWrap, maybe) as Maybe<number>;
+        expect(result.get()).to.be.equal(6);
     });
 
 });

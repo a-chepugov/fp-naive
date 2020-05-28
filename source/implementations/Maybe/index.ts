@@ -13,7 +13,7 @@ export default abstract class Maybe<A> implements Monad<A> {
 
     abstract chain<B>(fn: (value: A) => Chain<B>): Chain<B>
 
-    static of<A>(value: A): Applicative<A> {
+    static of<A>(value: A): Maybe<A> {
         return new Just<A>(value);
     }
 

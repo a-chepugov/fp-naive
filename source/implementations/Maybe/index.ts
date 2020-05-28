@@ -7,7 +7,7 @@ export default abstract class Maybe<A> implements Monad<A> {
         this.value = value;
     }
 
-    abstract map<B>(fn: (value: A) => B): Functor<B>;
+    abstract map<B>(fn: (value: A) => B): Maybe<B>;
 
     abstract ap<B>(apply: Apply<(value: A) => B>): Apply<B>
 

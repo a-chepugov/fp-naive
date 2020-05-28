@@ -5,7 +5,7 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R> 
     protected readonly left: L;
     protected readonly right: R;
 
-    constructor(left?: L, right?: R) {
+    constructor(left: L, right: R) {
         this.left = left;
         this.right = right;
     }
@@ -24,15 +24,15 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R> 
             new Right<L, R>(left, right);
     }
 
-    abstract get(): R ;
+    abstract get(): L | R ;
 
     abstract getOrElse(other: R): R;
 
-    static right<L, R>(right?: R): Right<L, R> {
+    static right<L, R>(right: R): Right<L, R> {
         return new Right<L, R>(undefined, right);
     }
 
-    static left<L, A>(left?: L): Left<L, A> {
+    static left<L, A>(left: L): Left<L, A> {
         return new Left<L, A>(left, undefined);
     }
 
@@ -55,23 +55,23 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R> 
 
 class Left<L, R> extends Either<L, R> {
     map<R2>(fn: (right: R) => R2): Functor<R2> {
-        return new Left<L, R2>(this.left);
+        return new Left<L, R2>(this.left, undefined);
     }
 
     ap<R2>(other: Apply<(right: R) => R2>): Apply<R2> {
-        return new Left<L, R2>(this.left);
+        return new Left<L, R2>(this.left, undefined);
     }
 
     chain<B>(fn: (right: R) => Chain<B>): Chain<B> {
-        return new Left<L, B>(this.left);
+        return new Left<L, B>(this.left, undefined);
     }
 
     bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Bifunctor<L2, R2> {
         return new Left<L2, R2>(fnLeft(this.left), undefined) as Bifunctor<L2, R2>;
     }
 
-    get(): never {
-        throw new Error("Can't extract the right of a Left");
+    get(): L {
+        return this.left;
     }
 
     getOrElse(other: R): R {

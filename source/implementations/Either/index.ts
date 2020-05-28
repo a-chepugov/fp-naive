@@ -1,16 +1,16 @@
-import {Monad, Chain, Functor, Apply} from "../../interfaces/Monad";
+import {Apply, Chain, Monad} from "../../interfaces/Monad";
 import Bifunctor from "../../interfaces/Bifunctor";
 
 export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R> {
     protected readonly left: L;
     protected readonly right: R;
 
-    constructor(left: L, right: R) {
+    constructor(left?: L, right?: R) {
         this.left = left;
         this.right = right;
     }
 
-    abstract map<R2>(fn: (right: R) => R2): Functor<R2>;
+    abstract map<R2>(fn: (right: R) => R2): Either<L, R2>;
 
     abstract ap<R2>(apply: Apply<(right: R) => R2>): Apply<R2>
 
@@ -24,20 +24,18 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R> 
             new Right<L, R>(left, right);
     }
 
+    abstract mapLeft<L2>(fn: (left: L) => L2): Either<L2, R>;
+
     abstract get(): L | R ;
 
     abstract getOrElse(other: R): R;
 
-    static right<L, R>(right: R): Right<L, R> {
+    static right<L, R>(right?: R): Right<L, R> {
         return new Right<L, R>(undefined, right);
     }
 
-    static left<L, A>(left: L): Left<L, A> {
-        return new Left<L, A>(left, undefined);
-    }
-
-    join(): Either<L, R> {
-        return this;
+    static left<L, R>(left?: L): Left<L, R> {
+        return new Left<L, R>(left, undefined);
     }
 
     swap(): Either<R, L> {
@@ -54,7 +52,7 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R> 
 }
 
 class Left<L, R> extends Either<L, R> {
-    map<R2>(fn: (right: R) => R2): Functor<R2> {
+    map<R2>(fn: (right: R) => R2): Either<L, R2> {
         return new Left<L, R2>(this.left, undefined);
     }
 
@@ -62,12 +60,16 @@ class Left<L, R> extends Either<L, R> {
         return new Left<L, R2>(this.left, undefined);
     }
 
-    chain<B>(fn: (right: R) => Chain<B>): Chain<B> {
-        return new Left<L, B>(this.left, undefined);
+    chain<R2>(fn: (right: R) => Chain<R2>): Chain<R2> {
+        return new Left<L, R2>(this.left, undefined);
     }
 
     bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Bifunctor<L2, R2> {
         return new Left<L2, R2>(fnLeft(this.left), undefined) as Bifunctor<L2, R2>;
+    }
+
+    mapLeft<L2>(fn: (left: L) => L2): Either<L2, R> {
+        return new Left(fn(this.left), this.right);
     }
 
     get(): L {
@@ -84,7 +86,7 @@ class Left<L, R> extends Either<L, R> {
 }
 
 class Right<L, R> extends Either<L, R> {
-    map<R2>(fn: (right: R) => R2): Functor<R2> {
+    map<R2>(fn: (right: R) => R2): Either<L, R2> {
         return new Right(undefined, fn(this.right));
     }
 
@@ -98,6 +100,10 @@ class Right<L, R> extends Either<L, R> {
 
     bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Bifunctor<L2, R2> {
         return new Right<L2, R2>(undefined, fnRight(this.right)) as Bifunctor<L2, R2>;
+    }
+
+    mapLeft<L2>(fn: (left: L) => L2): Either<L2, R> {
+        return new Right<L2, R>(undefined, this.right);
     }
 
     get(): R {

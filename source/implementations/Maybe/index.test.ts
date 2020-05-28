@@ -34,6 +34,86 @@ describe("Maybe", () => {
 
     });
 
+    describe("Nothing", () => {
+
+        describe("Functor", () => {
+
+            it("map", () => {
+                const maybe = Testee.nothing();
+                let counter = 0;
+                let mapped = maybe.map((value: number) => counter++);
+                expect(mapped).to.be.instanceof(Testee);
+                expect(counter).to.be.equal(0);
+            });
+
+        });
+
+        describe("Apply", () => {
+
+            it("ap", () => {
+                const maybe = Testee.nothing();
+                let counter = 0;
+                const add = (a: number) => counter++;
+                const addMonad = Testee.just(add);
+                const resultMonad = maybe.ap(addMonad);
+                expect(resultMonad).to.be.instanceof(Testee);
+                expect(counter).to.be.equal(0);
+            });
+
+        });
+
+        describe("Chain", () => {
+
+            it("chain", () => {
+                const maybe = Testee.nothing();
+                let counter = 0;
+                const fn = (value: number): Testee<number> => Testee.just(counter++)
+                let chained = maybe.chain(fn);
+                expect(chained).to.be.instanceof(Testee);
+                expect(counter).to.be.equal(0);
+            });
+
+        });
+
+        it("get", () => {
+            const maybe = Testee.nothing();
+            expect(() => maybe.get()).to.throw();
+        });
+
+        it("filter", () => {
+            const maybe = Testee.nothing();
+            expect(maybe.filter(a => a === 3).isNothing).to.be.true;
+        });
+
+        it("join", () => {
+            const maybe = Testee.nothing();
+            expect(maybe.join().isNothing).to.be.true;
+        });
+
+        it("getOrElse", () => {
+            const maybe = Testee.nothing();
+            let getOrElse = maybe.getOrElse(1);
+            expect(getOrElse).to.be.equal(1);
+        });
+
+        it("getOrElseRun", () => {
+            const maybe = Testee.nothing();
+            let getOrElse = maybe.getOrElseRun(() => 1);
+            expect(getOrElse).to.be.equal(1);
+        });
+
+        it("isJust", () => {
+            const maybe = Testee.fromNullable(null);
+            expect(maybe.isJust).to.be.equal(false);
+        });
+
+        it("isNothing", () => {
+            const maybe = Testee.fromNullable(null);
+            expect(maybe.isNothing).to.be.equal(true);
+        });
+
+    });
+
     describe("Just", () => {
 
         describe("Functor", () => {
@@ -166,86 +246,6 @@ describe("Maybe", () => {
         it("isNothing", () => {
             const maybe = Testee.fromNullable(123);
             expect(maybe.isNothing).to.be.equal(false);
-        });
-
-    });
-
-    describe("Nothing", () => {
-
-        describe("Functor", () => {
-
-            it("map", () => {
-                const maybe = Testee.nothing();
-                let counter = 0;
-                let mapped = maybe.map((value: number) => counter++);
-                expect(mapped).to.be.instanceof(Testee);
-                expect(counter).to.be.equal(0);
-            });
-
-        });
-
-        describe("Apply", () => {
-
-            it("ap", () => {
-                const maybe = Testee.nothing();
-                let counter = 0;
-                const add = (a: number) => counter++;
-                const addMonad = Testee.just(add);
-                const resultMonad = maybe.ap(addMonad);
-                expect(resultMonad).to.be.instanceof(Testee);
-                expect(counter).to.be.equal(0);
-            });
-
-        });
-
-        describe("Chain", () => {
-
-            it("chain", () => {
-                const maybe = Testee.nothing();
-                let counter = 0;
-                const fn = (value: number): Testee<number> => Testee.just(counter++)
-                let chained = maybe.chain(fn);
-                expect(chained).to.be.instanceof(Testee);
-                expect(counter).to.be.equal(0);
-            });
-
-        });
-
-        it("get", () => {
-            const maybe = Testee.nothing();
-            expect(() => maybe.get()).to.throw();
-        });
-
-        it("filter", () => {
-            const maybe = Testee.nothing();
-            expect(maybe.filter(a => a === 3).isNothing).to.be.true;
-        });
-
-        it("join", () => {
-            const maybe = Testee.nothing();
-            expect(maybe.join().isNothing).to.be.true;
-        });
-
-        it("getOrElse", () => {
-            const maybe = Testee.nothing();
-            let getOrElse = maybe.getOrElse(1);
-            expect(getOrElse).to.be.equal(1);
-        });
-
-        it("getOrElseRun", () => {
-            const maybe = Testee.nothing();
-            let getOrElse = maybe.getOrElseRun(() => 1);
-            expect(getOrElse).to.be.equal(1);
-        });
-
-        it("isJust", () => {
-            const maybe = Testee.fromNullable(null);
-            expect(maybe.isJust).to.be.equal(false);
-        });
-
-        it("isNothing", () => {
-            const maybe = Testee.fromNullable(null);
-            expect(maybe.isNothing).to.be.equal(true);
         });
 
     });

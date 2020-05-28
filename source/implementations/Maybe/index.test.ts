@@ -8,6 +8,15 @@ describe("Maybe", () => {
 
     describe("Maybe", () => {
 
+        describe("Applicative", () => {
+
+            it("of", () => {
+                const maybe = Testee.of(1);
+                expect(maybe).to.be.instanceof(Testee);
+            });
+
+        });
+
         it("just", () => {
             const maybe = Testee.just(5);
             expect(maybe).to.be.instanceof(Testee);
@@ -23,41 +32,96 @@ describe("Maybe", () => {
             expect(maybe).to.be.instanceof(Testee);
         });
 
-        it("of", () => {
-            const maybe = Testee.of(1);
-            expect(maybe).to.be.instanceof(Testee);
-        });
-
     });
 
     describe("Just", () => {
 
+        describe("Functor", () => {
+
+            it("map", () => {
+                const maybe = Testee.just(5);
+                let mapped = maybe.map((value: number) => value + 1);
+                expect(mapped).to.be.instanceof(Testee);
+                expect(mapped.get()).to.be.equal(6);
+            });
+
+            it("identity", () => {
+                const value = Math.floor(Math.random() * 100);
+                const instance = Testee.just(value);
+                const result = instance.map(identity) as Testee<number>;
+                expect(result.get()).to.be.equal(value);
+            });
+
+            it("composition", () => {
+                const value = Math.floor(Math.random() * 100);
+                const addition = Math.floor(Math.random() * 100);
+                const multiplier = Math.floor(Math.random() * 100);
+
+                const add = (a: number) => a + addition;
+                const mul = (a: number) => a + multiplier;
+
+                const instance = Testee.just(value);
+
+                const r1 = instance.map((a: number) => mul(add(a))) as Testee<number>;
+                const r2 = instance.map(add).map(mul) as Testee<number>;
+
+                expect(r1.get()).to.be.equal(r2.get());
+            });
+
+        });
+
+        describe("Apply", () => {
+
+            it("ap", () => {
+                const maybe5 = Testee.just(4);
+                const add = (a: number) => a + 1;
+                const maybeAdd = Testee.just(add);
+                const resultMonad = maybe5.ap(maybeAdd) as Testee<number>;
+                expect(resultMonad).to.be.instanceof(Testee);
+                expect(resultMonad.get()).to.be.equal(5);
+            });
+
+            it("composition", () => {
+                const value = Math.floor(Math.random() * 100);
+                const addition = Math.floor(Math.random() * 100);
+                const multiplier = Math.floor(Math.random() * 100);
+
+                const add = (a: number) => a + addition;
+                const mul = (a: number) => a + multiplier;
+
+                const vT = Testee.just(value);
+                const aT = Testee.just(add);
+                const mT = Testee.just(mul);
+
+                const transform =
+                    (f: (a: number) => number) =>
+                        (g: (a: number) => number) =>
+                            (x: number) =>
+                                f(g(x));
+
+                const r1 = vT.ap(aT.ap(mT.map(transform))) as Testee<number>;
+                const r2 = vT.ap(mT).ap(aT) as Testee<number>;
+
+                expect(r1.get()).to.be.equal(r2.get());
+            });
+
+        });
+
+        describe("Chain", () => {
+
+            it("chain", () => {
+                const maybe = Testee.just(5);
+                let chained = maybe.chain((value: number): Testee<number> => Testee.just(value + 1));
+                expect(chained).to.be.instanceof(Testee);
+                const result = chained as Testee<number>;
+                expect(result.get()).to.be.equal(6);
+            });
+
+        });
+
         it("get", () => {
             const maybe = Testee.just(5);
             expect(maybe.get()).to.be.equal(5);
-        });
-
-        it("map", () => {
-            const maybe = Testee.just(5);
-            let mapped = maybe.map((value: number) => value + 1);
-            expect(mapped).to.be.instanceof(Testee);
-            expect(mapped.get()).to.be.equal(6);
-        });
-
-        it("ap", () => {
-            const maybe5 = Testee.just(4);
-            const add = (a: number) => a + 1;
-            const maybeAdd = Testee.just(add);
-            const resultMonad = maybe5.ap(maybeAdd) as Testee<number>;
-            expect(resultMonad).to.be.instanceof(Testee);
-            expect(resultMonad.get()).to.be.equal(5);
-        });
-
-        it("chain", () => {
-            const maybe = Testee.just(5);
-            let chained = maybe.chain((value: number): Testee<number> => Testee.just(value + 1));
-            expect(chained).to.be.instanceof(Testee);
-            expect(chained.get()).to.be.equal(6);
         });
 
         it("filter. positive", () => {
@@ -104,95 +168,52 @@ describe("Maybe", () => {
             expect(maybe.isNothing).to.be.equal(false);
         });
 
+    });
+
+    describe("Nothing", () => {
+
         describe("Functor", () => {
 
-            it("identity", () => {
-                const value = Math.floor(Math.random() * 100);
-                const instance = Testee.just(value);
-                expect(instance.map(identity).get()).to.be.equal(value);
-            });
-
-            it("composition", () => {
-                const value = Math.floor(Math.random() * 100);
-                const addition = Math.floor(Math.random() * 100);
-                const multiplier = Math.floor(Math.random() * 100);
-
-                const add = (a: number) => a + addition;
-                const mul = (a: number) => a + multiplier;
-
-                const instance = Testee.just(value);
-
-                const r1 = instance.map((a: number) => mul(add(a)));
-                const r2 = instance.map(add).map(mul);
-
-                expect(r1.get()).to.be.equal(r2.get());
+            it("map", () => {
+                const maybe = Testee.nothing();
+                let counter = 0;
+                let mapped = maybe.map((value: number) => counter++);
+                expect(mapped).to.be.instanceof(Testee);
+                expect(counter).to.be.equal(0);
             });
 
         });
 
         describe("Apply", () => {
 
-            it("composition", () => {
-                const value = Math.floor(Math.random() * 100);
-                const addition = Math.floor(Math.random() * 100);
-                const multiplier = Math.floor(Math.random() * 100);
-
-                const add = (a: number) => a + addition;
-                const mul = (a: number) => a + multiplier;
-
-                const vT = Testee.just(value);
-                const aT = Testee.just(add);
-                const mT = Testee.just(mul);
-
-                const transform =
-                    (f: (a: number) => number) =>
-                        (g: (a: number) => number) =>
-                            (x: number) =>
-                                f(g(x));
-
-                const r1 = vT.ap(aT.ap(mT.map(transform))) as Testee<number>;
-                const r2 = vT.ap(mT).ap(aT) as Testee<number>;
-
-                expect(r1.get()).to.be.equal(r2.get());
+            it("ap", () => {
+                const maybe = Testee.nothing();
+                let counter = 0;
+                const add = (a: number) => counter++;
+                const addMonad = Testee.just(add);
+                const resultMonad = maybe.ap(addMonad);
+                expect(resultMonad).to.be.instanceof(Testee);
+                expect(counter).to.be.equal(0);
             });
 
         });
 
-    });
+        describe("Chain", () => {
 
-    describe("Nothing", () => {
+            it("chain", () => {
+                const maybe = Testee.nothing();
+                let counter = 0;
+                const fn = (value: number): Testee<number> => Testee.just(counter++)
+                let chained = maybe.chain(fn);
+                expect(chained).to.be.instanceof(Testee);
+                expect(counter).to.be.equal(0);
+            });
+
+        });
 
         it("get", () => {
             const maybe = Testee.nothing();
             expect(() => maybe.get()).to.throw();
-        });
-
-        it("map", () => {
-            const maybe = Testee.nothing();
-            let counter = 0;
-            let mapped = maybe.map((value: number) => counter++);
-            expect(mapped).to.be.instanceof(Testee);
-            expect(counter).to.be.equal(0);
-        });
-
-
-        it("ap", () => {
-            const maybe = Testee.nothing();
-            let counter = 0;
-            const add = (a: number) => counter++;
-            const addMonad = Testee.just(add);
-            const resultMonad = maybe.ap(addMonad);
-            expect(resultMonad).to.be.instanceof(Testee);
-            expect(counter).to.be.equal(0);
-        });
-
-        it("chain", () => {
-            const maybe = Testee.nothing();
-            let counter = 0;
-            const fn = (value: number): Testee<number> => Testee.just(counter++)
-            let chained = maybe.chain(fn);
-            expect(chained).to.be.instanceof(Testee);
-            expect(counter).to.be.equal(0);
         });
 
         it("filter", () => {

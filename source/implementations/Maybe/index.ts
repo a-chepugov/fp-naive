@@ -1,25 +1,25 @@
-import {Monad, Chain, Functor, Apply} from "../../interfaces/Monad";
+import {Functor, Apply, Chain, Applicative, Monad} from "../../interfaces/Monad";
 
 export default abstract class Maybe<A> implements Monad<A> {
     protected readonly value: A;
 
-    protected constructor(value?: A) {
+    protected constructor(value: A) {
         this.value = value;
     }
 
-    abstract map<B>(fn: (value: A) => B): Maybe<B>;
+    abstract map<B>(fn: (value: A) => B): Functor<B>;
 
     abstract ap<B>(apply: Apply<(value: A) => B>): Apply<B>
 
-    abstract chain<B>(fn: (value: A) => Maybe<B>): Maybe<B>
+    abstract chain<B>(fn: (value: A) => Chain<B>): Chain<B>
+
+    static of<A>(value: A): Applicative<A> {
+        return new Just<A>(value);
+    }
 
     abstract filter(fn: (value: A) => Boolean): Maybe<A>
 
     abstract join(): Maybe<A | any>;
-
-    static of<A>(value: A): Maybe<A> {
-        return new Just<A>(value);
-    }
 
     abstract get(): A | never;
 
@@ -59,20 +59,20 @@ class Just<A> extends Maybe<A> {
         return other.map((fn: (value: A) => B) => fn.call(this, this.value)) as Apply<B>
     }
 
-    chain<B>(fn: (value: A) => Maybe<B>): Maybe<B> {
+    chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
         return fn(this.value);
     }
 
     filter(fn: (value: A) => Boolean): Maybe<A> {
-        return fn(this.value) ? this : new Nothing<A>();
+        return fn(this.value) ?
+            this :
+            new Nothing<A>(undefined);
     }
 
     join<B>(): Maybe<A | any> {
-        if (this.value instanceof Maybe) {
-            return this.value;
-        } else {
-            return this;
-        }
+        return this.value instanceof Maybe ?
+            this.value :
+            this;
     };
 
     get(): A {
@@ -94,15 +94,15 @@ class Just<A> extends Maybe<A> {
 
 class Nothing<A> extends Maybe<A> {
     map<B>(fn: (value: A) => B): Maybe<B> {
-        return new Nothing<B>();
+        return new Nothing<B>(undefined);
     }
 
     ap<B>(other: Apply<(value: A) => B>): Apply<B> {
-        return new Nothing<B>();
+        return new Nothing<B>(undefined);
     }
 
-    chain<B>(fn: (value: A) => Maybe<B>): Maybe<B> {
-        return new Nothing<B>();
+    chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
+        return new Nothing<B>(undefined);
     }
 
     filter(fn: (value: A) => Boolean): Maybe<A> {

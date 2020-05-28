@@ -1,6 +1,8 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
+    "rootDir": "source",
+    "outDir": "build",
     "module": "commonjs",
     "target": "ES2017",
     "noImplicitAny": true,
@@ -8,5 +10,9 @@
     "sourceMap": true,
     "noErrorTruncation": true,
     "pretty": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.test.ts"
+  ]
 }

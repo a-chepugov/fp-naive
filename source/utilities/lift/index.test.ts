@@ -6,7 +6,7 @@ import Testee from "./index";
 
 describe("lift", () => {
 
-    it("lift increment on 1 gives Maybe(2)", () => {
+    it("increment on 1 gives Maybe(2)", () => {
         const inc = (a: number) => a + 1;
         const liftedInc = Testee(inc);
         const result = liftedInc(1);

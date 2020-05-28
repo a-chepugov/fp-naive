@@ -5,7 +5,7 @@ import Maybe from '../../implementations/Maybe';
 
 describe('maybe', () => {
 
-    it('maybe on Maybe.Nothing() uses first argument', () => {
+    it('maybe on Maybe.Nothing() uses first argument as fallback value', () => {
         let just = 0;
         const incJust = (a: number) => just += a;
 

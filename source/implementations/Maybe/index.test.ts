@@ -80,14 +80,21 @@ describe("Maybe", () => {
 
         });
 
+        describe("Filterable", () => {
+
+            it("filter on Maybe.Nothing gives Maybe.Nothing", () => {
+                const instance = Testee.nothing(1);
+                const filtrator = (value: number) => Boolean(value);
+
+                const result = instance.filter(filtrator);
+                expect(result.isNothing).to.be.true;
+            });
+
+        });
+
         it("get throws on Maybe.Nothing", () => {
             const maybe = Testee.nothing();
             expect(() => maybe.get()).to.throw();
-        });
-
-        it("filter", () => {
-            const maybe = Testee.nothing();
-            expect(maybe.filter(a => a === 3).isNothing).to.be.true;
         });
 
         it("join", () => {
@@ -204,19 +211,58 @@ describe("Maybe", () => {
 
         });
 
+        describe("Filterable", () => {
+
+            it("filter on Maybe.Just(1) gives Maybe.Just(1)", () => {
+                const instance = Testee.just(1);
+                const filtrator = (value: number): Boolean => Boolean(value);
+
+                const result = instance.filter(filtrator);
+                expect(result.isJust).to.be.true;
+            });
+
+            it("filter on Maybe.Just(0) gives Maybe.Nothing", () => {
+                const instance = Testee.just(0);
+                const filtrator = (value: number): Boolean => Boolean(value);
+
+                const result = instance.filter(filtrator);
+                expect(result.isNothing).to.be.true;
+            });
+
+            it("distributivity", () => {
+                const v = Testee.just(5);
+                const p = (value: number) => Boolean(value);
+                const q = (value: number) => value > 3;
+
+                const result1 = v.filter(x => p(x) && q(x));
+                const result2 = v.filter(p).filter(q);
+
+                expect(result1.get()).to.be.equal(result2.get());
+            });
+
+            it("identity", () => {
+                const v = Testee.just(5);
+                const p = (_: number) => true;
+
+                const result1 = v.filter(p);
+
+                expect(result1.get()).to.be.equal(v.get());
+            });
+
+            it("annihilation", () => {
+                const v = Testee.just(5);
+                const p = (_: number) => false;
+
+                const result1 = v.filter(p);
+
+                expect(result1.isNothing).to.be.true;
+            });
+
+        });
+
         it("get", () => {
             const maybe = Testee.just(5);
             expect(maybe.get()).to.be.equal(5);
-        });
-
-        it("filter. positive", () => {
-            const maybe = Testee.just(3);
-            expect(maybe.filter(a => a === 3).isJust).to.be.true;
-        });
-
-        it("filter. negative", () => {
-            const maybe = Testee.just(3);
-            expect(maybe.filter(a => a !== 3).isJust).to.be.false;
         });
 
         it("join", () => {

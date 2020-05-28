@@ -1,6 +1,7 @@
 import {Apply, Chain, Monad} from "../../interfaces/Monad";
+import Filterable from "../../interfaces/Filterable";
 
-export default abstract class Maybe<A> implements Monad<A> {
+export default abstract class Maybe<A> implements Monad<A>, Filterable<A> {
     protected readonly value: A;
 
     protected constructor(value: A) {

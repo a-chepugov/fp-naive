@@ -3,6 +3,8 @@ import {expect} from "chai";
 import Testee from "./index";
 
 import identity from "../../utilities/identity";
+import Maybe from "../Maybe";
+import Identity from "./index";
 
 describe("Identity", () => {
 
@@ -94,6 +96,17 @@ describe("Identity", () => {
             expect(chained).to.be.instanceof(Testee);
             const result = chained as Testee<number>;
             expect(result.get()).to.be.equal(6);
+        });
+
+    });
+
+    describe("Traversable", () => {
+
+        it("traverse Identity<number> to Identity<string>", () => {
+            const instance = new Testee(5);
+            const toStringIdentity = (a: number) => Testee.of(String(a));
+            const result = instance.traverse(Testee, toStringIdentity) as Testee<Testee<string>>;
+            expect(result.get().get()).to.be.equal('5');
         });
 
     });

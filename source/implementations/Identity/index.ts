@@ -1,6 +1,7 @@
-import {Apply, Chain, Monad} from "../../interfaces/Monad";
+import {Apply, Applicative, Chain, Monad} from "../../interfaces/Monad";
+import {Traversable} from "../../interfaces/Traversable";
 
-export default class Identity<A> implements Monad<A> {
+export default class Identity<A> implements Monad<A>, Traversable<A> {
     private readonly value: A;
 
     constructor(value: A) {
@@ -27,6 +28,13 @@ export default class Identity<A> implements Monad<A> {
         return this.value;
     }
 
+    reduce<B>(reducer: (accumulator: B, value: A) => B, initial?: B): B {
+        return reducer(undefined, this.value);
+    }
+
+    traverse<B>(applicativeTypeRep: { of: (value: B) => Applicative<B> }, fn: (a: A) => Applicative<B>): Applicative<Traversable<B>> {
+        return fn(this.value).map(applicativeTypeRep.of) as Applicative<any>;
+    }
 
     get(): A {
         return this.value;

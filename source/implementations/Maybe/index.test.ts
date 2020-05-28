@@ -11,30 +11,30 @@ describe("Maybe", () => {
         describe("Applicative", () => {
 
             it("of returns Maybe", () => {
-                const maybe = Testee.of(1);
-                expect(maybe).to.be.instanceof(Testee);
+                const instance = Testee.of(1);
+                expect(instance).to.be.instanceof(Testee);
             });
 
         });
 
         it("just returns Maybe.Just", () => {
-            const maybe = Testee.just(5);
-            expect(maybe.isJust).to.be.true;
+            const instance = Testee.of(5);
+            expect(instance.isJust).to.be.true;
         });
 
         it("nothing returns Maybe.Nothing", () => {
-            const maybe = Testee.nothing();
-            expect(maybe.isNothing).to.be.true;
+            const instance = Testee.nothing();
+            expect(instance.isNothing).to.be.true;
         });
 
         it("fromNullable for non nulls return Maybe.Just", () => {
-            const maybe = Testee.fromNullable(1);
-            expect(maybe.isJust).to.be.true;
+            const instance = Testee.fromNullable(1);
+            expect(instance.isJust).to.be.true;
         });
 
         it("fromNullable for null return Maybe.Nothing", () => {
-            const maybe = Testee.fromNullable(null);
-            expect(maybe.isNothing).to.be.true;
+            const instance = Testee.fromNullable(null);
+            expect(instance.isNothing).to.be.true;
         });
 
     });
@@ -44,9 +44,9 @@ describe("Maybe", () => {
         describe("Functor", () => {
 
             it("map skips on Maybe.Nothing", () => {
-                const maybe = Testee.nothing();
+                const instance = Testee.nothing();
                 let counter = 0;
-                let mapped = maybe.map((value: number) => ++counter);
+                let mapped = instance.map((value: number) => ++counter);
                 expect(mapped).to.be.instanceof(Testee);
                 expect(counter).to.be.equal(0);
             });
@@ -56,11 +56,11 @@ describe("Maybe", () => {
         describe("Apply", () => {
 
             it("ap skips on Maybe.Nothing", () => {
-                const maybe = Testee.nothing();
+                const instance = Testee.nothing();
                 let counter = 0;
                 const add = (a: number) => counter++;
-                const addMonad = Testee.just(add);
-                const resultMonad = maybe.ap(addMonad);
+                const addMonad = Testee.of(add);
+                const resultMonad = instance.ap(addMonad);
                 expect(resultMonad).to.be.instanceof(Testee);
                 expect(counter).to.be.equal(0);
             });
@@ -70,10 +70,10 @@ describe("Maybe", () => {
         describe("Chain", () => {
 
             it("chain skips on Maybe.Nothing", () => {
-                const maybe = Testee.nothing();
+                const instance = Testee.nothing();
                 let counter = 0;
-                const fn = (value: number): Testee<number> => Testee.just(++counter)
-                let chained = maybe.chain(fn);
+                const fn = (value: number): Testee<number> => Testee.of(++counter)
+                let chained = instance.chain(fn);
                 expect(chained).to.be.instanceof(Testee);
                 expect(counter).to.be.equal(0);
             });
@@ -93,35 +93,35 @@ describe("Maybe", () => {
         });
 
         it("get throws on Maybe.Nothing", () => {
-            const maybe = Testee.nothing();
-            expect(() => maybe.get()).to.throw();
+            const instance = Testee.nothing();
+            expect(() => instance.get()).to.throw();
         });
 
         it("join", () => {
-            const maybe = Testee.nothing();
-            expect(maybe.join().isNothing).to.be.true;
+            const instance = Testee.nothing();
+            expect(instance.join().isNothing).to.be.true;
         });
 
         it("getOrElse", () => {
-            const maybe = Testee.nothing();
-            let getOrElse = maybe.getOrElse(1);
+            const instance = Testee.nothing();
+            let getOrElse = instance.getOrElse(1);
             expect(getOrElse).to.be.equal(1);
         });
 
         it("getOrElseRun", () => {
-            const maybe = Testee.nothing();
-            let getOrElse = maybe.getOrElseRun(() => 1);
+            const instance = Testee.nothing();
+            let getOrElse = instance.getOrElseRun(() => 1);
             expect(getOrElse).to.be.equal(1);
         });
 
         it("isJust", () => {
-            const maybe = Testee.fromNullable(null);
-            expect(maybe.isJust).to.be.equal(false);
+            const instance = Testee.fromNullable(null);
+            expect(instance.isJust).to.be.equal(false);
         });
 
         it("isNothing", () => {
-            const maybe = Testee.fromNullable(null);
-            expect(maybe.isNothing).to.be.equal(true);
+            const instance = Testee.fromNullable(null);
+            expect(instance.isNothing).to.be.equal(true);
         });
 
     });
@@ -131,15 +131,15 @@ describe("Maybe", () => {
         describe("Functor", () => {
 
             it("map invokes on Maybe.Just", () => {
-                const maybe = Testee.just(5);
-                let mapped = maybe.map((value: number) => ++value);
+                const instance = Testee.of(5);
+                let mapped = instance.map((value: number) => ++value);
                 expect(mapped).to.be.instanceof(Testee);
                 expect(mapped.get()).to.be.equal(6);
             });
 
             it("identity", () => {
                 const value = Math.floor(Math.random() * 100);
-                const instance = Testee.just(value);
+                const instance = Testee.of(value);
                 const result = instance.map(identity) as Testee<number>;
                 expect(result.get()).to.be.equal(value);
             });
@@ -152,7 +152,7 @@ describe("Maybe", () => {
                 const add = (a: number) => a + addition;
                 const mul = (a: number) => a + multiplier;
 
-                const instance = Testee.just(value);
+                const instance = Testee.of(value);
 
                 const r1 = instance.map((a: number) => mul(add(a))) as Testee<number>;
                 const r2 = instance.map(add).map(mul) as Testee<number>;
@@ -165,10 +165,10 @@ describe("Maybe", () => {
         describe("Apply", () => {
 
             it("ap invokes on Maybe.Just", () => {
-                const maybe5 = Testee.just(4);
+                const instance = Testee.of(4);
                 const add = (a: number) => a + 1;
-                const maybeAdd = Testee.just(add);
-                const resultMonad = maybe5.ap(maybeAdd) as Testee<number>;
+                const instanceAdd = Testee.of(add);
+                const resultMonad = instance.ap(instanceAdd) as Testee<number>;
                 expect(resultMonad).to.be.instanceof(Testee);
                 expect(resultMonad.get()).to.be.equal(5);
             });
@@ -181,9 +181,9 @@ describe("Maybe", () => {
                 const add = (a: number) => a + addition;
                 const mul = (a: number) => a + multiplier;
 
-                const vT = Testee.just(value);
-                const aT = Testee.just(add);
-                const mT = Testee.just(mul);
+                const vT = Testee.of(value);
+                const aT = Testee.of(add);
+                const mT = Testee.of(mul);
 
                 const transform =
                     (f: (a: number) => number) =>
@@ -202,8 +202,8 @@ describe("Maybe", () => {
         describe("Chain", () => {
 
             it("chain invokes on Maybe.Just", () => {
-                const maybe = Testee.just(5);
-                let chained = maybe.chain((value: number): Testee<number> => Testee.just(value + 1));
+                const instance = Testee.of(5);
+                let chained = instance.chain((value: number): Testee<number> => Testee.of(value + 1));
                 expect(chained).to.be.instanceof(Testee);
                 const result = chained as Testee<number>;
                 expect(result.get()).to.be.equal(6);
@@ -214,7 +214,7 @@ describe("Maybe", () => {
         describe("Filterable", () => {
 
             it("filter on Maybe.Just(1) gives Maybe.Just(1)", () => {
-                const instance = Testee.just(1);
+                const instance = Testee.of(1);
                 const filtrator = (value: number): Boolean => Boolean(value);
 
                 const result = instance.filter(filtrator);
@@ -222,7 +222,7 @@ describe("Maybe", () => {
             });
 
             it("filter on Maybe.Just(0) gives Maybe.Nothing", () => {
-                const instance = Testee.just(0);
+                const instance = Testee.of(0);
                 const filtrator = (value: number): Boolean => Boolean(value);
 
                 const result = instance.filter(filtrator);
@@ -230,7 +230,7 @@ describe("Maybe", () => {
             });
 
             it("distributivity", () => {
-                const v = Testee.just(5);
+                const v = Testee.of(5);
                 const p = (value: number) => Boolean(value);
                 const q = (value: number) => value > 3;
 
@@ -241,7 +241,7 @@ describe("Maybe", () => {
             });
 
             it("identity", () => {
-                const v = Testee.just(5);
+                const v = Testee.of(5);
                 const p = (_: number) => true;
 
                 const result1 = v.filter(p);
@@ -250,7 +250,7 @@ describe("Maybe", () => {
             });
 
             it("annihilation", () => {
-                const v = Testee.just(5);
+                const v = Testee.of(5);
                 const p = (_: number) => false;
 
                 const result1 = v.filter(p);
@@ -261,42 +261,42 @@ describe("Maybe", () => {
         });
 
         it("get", () => {
-            const maybe = Testee.just(5);
-            expect(maybe.get()).to.be.equal(5);
+            const instance = Testee.of(5);
+            expect(instance.get()).to.be.equal(5);
         });
 
         it("join", () => {
-            const maybe = Testee.just(3);
-            expect(maybe.join()).to.be.instanceof(Testee);
-            expect(maybe.join().getOrElse(2)).to.be.equal(3);
+            const instance = Testee.of(3);
+            expect(instance.join()).to.be.instanceof(Testee);
+            expect(instance.join().getOrElse(2)).to.be.equal(3);
         });
 
         it("join. nested", () => {
-            const maybe = Testee.just(Testee.just(3));
-            expect(maybe.join()).to.be.instanceof(Testee);
-            expect(maybe.join().getOrElse(2)).to.be.equal(3);
+            const instance = Testee.of(Testee.of(3));
+            expect(instance.join()).to.be.instanceof(Testee);
+            expect(instance.join().getOrElse(2)).to.be.equal(3);
         });
 
         it("getOrElse", () => {
-            const maybe = Testee.just(0);
-            let getOrElse = maybe.getOrElse(1);
+            const instance = Testee.of(0);
+            let getOrElse = instance.getOrElse(1);
             expect(getOrElse).to.be.equal(0);
         });
 
         it("getOrElseRun", () => {
-            const maybe = Testee.just(0);
-            let getOrElse = maybe.getOrElseRun(() => 1);
+            const instance = Testee.of(0);
+            let getOrElse = instance.getOrElseRun(() => 1);
             expect(getOrElse).to.be.equal(0);
         });
 
         it("isJust", () => {
-            const maybe = Testee.fromNullable(123);
-            expect(maybe.isJust).to.be.equal(true);
+            const instance = Testee.fromNullable(123);
+            expect(instance.isJust).to.be.equal(true);
         });
 
         it("isNothing", () => {
-            const maybe = Testee.fromNullable(123);
-            expect(maybe.isNothing).to.be.equal(false);
+            const instance = Testee.fromNullable(123);
+            expect(instance.isNothing).to.be.equal(false);
         });
 
     });

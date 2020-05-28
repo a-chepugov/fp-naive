@@ -137,6 +137,18 @@ describe("List", () => {
 
     });
 
+    describe("Foldable", () => {
+
+        it("reduce on List([1, 2, 3]) with initial 1 gives 7", () => {
+            const instance = new Testee([1, 2, 3]);
+            const reducer = (accumulator: number, value: number) => accumulator + value;
+
+            const result = instance.reduce(reducer, 1);
+            expect(result).to.be.equal(7);
+        });
+
+    });
+
     it("get", () => {
         const instance = Testee.of(5);
         expect(instance.get()).to.be.deep.equal([5]);

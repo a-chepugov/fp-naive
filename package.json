@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "tsc --watch",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
     "start": "node ./build/index.js",
     "start:nodemon": "nodemon ./build/index.js",
     "test": "mocha -r ts-node/register source/**/*test.ts"

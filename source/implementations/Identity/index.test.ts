@@ -1,10 +1,10 @@
 import {expect} from "chai";
 
 import Testee from "./index";
+import Maybe from "../Maybe";
+import Either from "../Either";
 
 import identity from "../../utilities/identity";
-import Maybe from "../Maybe";
-import Identity from "./index";
 
 describe("Identity", () => {
 
@@ -104,8 +104,8 @@ describe("Identity", () => {
 
         it("traverse Identity<number> to Identity<string>", () => {
             const instance = new Testee(5);
-            const toStringIdentity = (a: number) => Testee.of(String(a));
-            const result = instance.traverse(Testee, toStringIdentity) as Testee<Testee<string>>;
+            const toStringEither = (a: number) => Either.of(String(a));
+            const result = instance.traverse(Maybe, toStringEither) as Maybe<Testee<string>>;
             expect(result.get().get()).to.be.equal('5');
         });
 

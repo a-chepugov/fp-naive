@@ -18,10 +18,8 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R> 
 
     abstract bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Bifunctor<L2, R2>
 
-    static of<L, R>(left?: L, right?: R): Either<L, R> {
-        return left ?
-            new Left<L, R>(left, right) :
-            new Right<L, R>(left, right);
+    static of<L, R>(right?: R): Either<L, R> {
+        return new Right<L, R>(undefined, right);
     }
 
     abstract mapLeft<L2>(fn: (left: L) => L2): Either<L2, R>;
@@ -38,9 +36,7 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R> 
         return new Left<L, R>(left, undefined);
     }
 
-    swap(): Either<R, L> {
-        return Either.of<R, L>(this.right, this.left);
-    }
+    abstract swap(): Either<R, L>;
 
     get isRight(): Boolean {
         return false;
@@ -80,6 +76,10 @@ class Left<L, R> extends Either<L, R> {
         return other;
     }
 
+    swap(): Either<R, L> {
+        return new Right<R, L>(this.right, this.left);
+    }
+
     get isLeft(): Boolean {
         return true;
     }
@@ -112,6 +112,10 @@ class Right<L, R> extends Either<L, R> {
 
     getOrElse(other: R): R {
         return this.right;
+    }
+
+    swap(): Either<R, L> {
+        return new Left<R, L>(this.right, this.left);
     }
 
     get isRight(): Boolean {

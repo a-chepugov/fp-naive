@@ -3,7 +3,8 @@ import {expect} from "chai";
 import identity from "../../utilities/identity";
 
 import Testee from "./index";
-import Maybe from "../Maybe";
+import Identity from "../Identity";
+import Either from "../Either";
 
 describe("List", () => {
 
@@ -46,7 +47,7 @@ describe("List", () => {
         it("ap invokes on List", () => {
             const instance = new Testee([1, 2, 3]);
             const inc = (a: number) => ++a;
-            const instanceAdd = Maybe.of(inc);
+            const instanceAdd = Identity.of(inc);
             const resultMonad = instance.ap(instanceAdd);
 
             expect(resultMonad).to.be.instanceof(Testee);
@@ -90,7 +91,7 @@ describe("List", () => {
 
     describe("Filterable", () => {
 
-        it("filter on List([1]) gives Maybe.Just(1)", () => {
+        it("filter on List([1]) gives Identity(1)", () => {
             const instance = Testee.of(1);
             const filtrator = (value: number): Boolean => Boolean(value);
 
@@ -145,6 +146,19 @@ describe("List", () => {
 
             const result = instance.reduce(reducer, 1);
             expect(result).to.be.equal(7);
+        });
+
+    });
+
+    describe("Traversable", () => {
+
+        it("traverse List<number> to List<string>", () => {
+            const instance = new Testee([1, 2, 3]);
+            const toStringIdentity = (a: any) => Identity.of(String(a));
+            const result = instance.traverse(Either, toStringIdentity) as Either<any, Testee<string>>;
+
+            expect(result).to.be.instanceof(Either);
+            expect(result.get().get()).to.be.deep.equal(['1', '2', '3']);
         });
 
     });

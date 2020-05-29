@@ -33,7 +33,7 @@ export default class Identity<A> implements Monad<A>, Traversable<A> {
     }
 
     reduce<B>(reducer: (accumulator: B, value: A) => B, initial?: B): B {
-        return reducer(undefined, this.value);
+        return reducer(initial, this.value);
     }
 
     traverse<B>(fn: (a: A) => Applicative<B>): Applicative<Identity<B>> {

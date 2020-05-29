@@ -44,7 +44,7 @@ describe("Identity", () => {
 
     describe("Apply", () => {
 
-        it("ap invokes on Maybe.Just", () => {
+        it("ap invokes on Identity", () => {
             const instance = Testee.of(4);
             const add = (a: number) => a + 1;
             const instanceAdd = Testee.of(add);
@@ -90,7 +90,7 @@ describe("Identity", () => {
 
     describe("Chain", () => {
 
-        it("chain invokes on Maybe.Just", () => {
+        it("chain invokes on Identity", () => {
             const instance = Testee.of(5);
             let chained = instance.chain((value: number): Testee<number> => Testee.of(value + 1));
             expect(chained).to.be.instanceof(Testee);

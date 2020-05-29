@@ -1,6 +1,13 @@
-import {Apply, ARG1, isFN, RETURNS, Applicative} from "../../interfaces/Applicative";
-import {Filterable} from "../../interfaces/Filterable";
-import {Traversable} from "../../interfaces/Traversable";
+import Filterable from "../../interfaces/Filterable";
+import Traversable from "../../interfaces/Traversable";
+
+import * as MonadModule from "../../interfaces/Monad";
+
+type Applicative<A> = MonadModule.Applicative.Applicative<A>;
+type Apply<A> = MonadModule.Chain.Apply.Apply<A>;
+type ARG1<A> = MonadModule.Chain.Apply.ARG1<A>;
+type RETURNS<A> = MonadModule.Chain.Apply.RETURNS<A>;
+const isFN = MonadModule.Chain.Apply.isFN;
 
 export default class List<A> implements Applicative<A>, Filterable<A>, Traversable<A> {
     protected readonly values: Array<A>;

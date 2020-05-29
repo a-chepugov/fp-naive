@@ -1,4 +1,12 @@
-import {Apply, ARG1, RETURNS, isFN, Chain, Monad} from "../../interfaces/Monad";
+import * as MonadModule from "../../interfaces/Monad";
+
+type Monad<A> = MonadModule.Monad<A>;
+type Chain<A> = MonadModule.Chain.Chain<A>;
+type Apply<A> = MonadModule.Chain.Apply.Apply<A>;
+type ARG1<A> = MonadModule.Chain.Apply.ARG1<A>;
+type RETURNS<A> = MonadModule.Chain.Apply.RETURNS<A>;
+const isFN = MonadModule.Chain.Apply.isFN;
+
 import Filterable from "../../interfaces/Filterable";
 
 export default abstract class Maybe<A> implements Monad<A>, Filterable<A> {

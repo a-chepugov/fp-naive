@@ -1,4 +1,7 @@
-import {Monad, Apply} from "../../interfaces/Monad";
+import * as MonadModule from "../../interfaces/Monad";
+
+type Monad<A> = MonadModule.Monad<A>;
+type Apply<A> = MonadModule.Chain.Apply.Apply<A>;
 
 export default class IO<A> implements Monad<A> {
     private readonly fn: A & Function;

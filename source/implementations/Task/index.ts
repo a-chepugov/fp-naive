@@ -1,4 +1,12 @@
-import {Monad, Apply, ARG1, RETURNS, isFN} from "../../interfaces/Monad";
+import * as MonadModule from "../../interfaces/Monad";
+
+type Monad<A> = MonadModule.Monad<A>;
+type Apply<A> = MonadModule.Chain.Apply.Apply<A>;
+type ARG1<A> = MonadModule.Chain.Apply.ARG1<A>;
+type RETURNS<A> = MonadModule.Chain.Apply.RETURNS<A>;
+const isFN = MonadModule.Chain.Apply.isFN;
+
+
 import compose from "../../utilities/compose";
 import identity from "../../utilities/identity";
 

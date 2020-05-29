@@ -1,6 +1,6 @@
-import {Functor} from './Functor';
+import * as Functor from './Functor';
 
-export {Functor} from './Functor';
+export * as Functor from './Functor';
 
 export type ARGS<F> = F extends (arg: any) => any ? Parameters<F> : Parameters<any>;
 export type ARG1<F> = ARGS<F>[0]
@@ -11,7 +11,7 @@ export function isFN<A, B>(object: any): object is FN<A, B> {
     return typeof (object as FN<A, B>) === 'function';
 }
 
-export interface Apply<A> extends Functor<A> {
+export interface Apply<A> extends Functor.default<A> {
     map<B>(fn: (a: A) => B): Apply<B>
     // ap :: Apply f => f (a -> b) -> f a -> f b
     ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> | never

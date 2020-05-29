@@ -20,7 +20,7 @@ describe("List", () => {
         it("identity", () => {
             const value = Math.floor(Math.random() * 100);
             const instance = Testee.of(value);
-            const result = instance.map(identity) as Testee<number>;
+            const result = instance.map(identity);
             expect(result.get()).to.be.deep.equal([value]);
         });
 
@@ -34,7 +34,7 @@ describe("List", () => {
 
             const instance = Testee.of(value);
 
-            const r1 = instance.map((a: number) => mul(add(a))) as Testee<number>;
+            const r1 = instance.map((a: number) => mul(add(a)));
             const r2 = instance.map(add).map(mul) as Testee<number>;
 
             expect(r1.get()).to.be.deep.equal(r2.get());

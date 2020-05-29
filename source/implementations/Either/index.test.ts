@@ -133,7 +133,7 @@ describe("Either", () => {
             it("identity", () => {
                 const value = Math.floor(Math.random() * 100);
                 const instance = Testee.right(value);
-                const result = instance.map(identity) as Testee<any, number>;
+                const result = instance.map(identity);
                 expect(result.get()).to.be.equal(value);
             });
 
@@ -147,8 +147,8 @@ describe("Either", () => {
 
                 const instance = Testee.right(value);
 
-                const r1 = instance.map((a: number) => mul(add(a))) as Testee<any, number>;
-                const r2 = instance.map(add).map(mul) as Testee<any, number>;
+                const r1 = instance.map((a: number) => mul(add(a)));
+                const r2 = instance.map(add).map(mul);
 
                 expect(r1.get()).to.be.equal(r2.get());
             });

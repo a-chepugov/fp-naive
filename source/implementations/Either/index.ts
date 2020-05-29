@@ -16,7 +16,7 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R> 
 
     abstract chain<R2>(fn: (right: R) => Chain<R2>): Chain<R2>
 
-    abstract bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Bifunctor<L2, R2>
+    abstract bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Either<L2, R2>
 
     static of<L, R>(right?: R): Either<L, R> {
         return new Right<L, R>(undefined, right);
@@ -64,8 +64,8 @@ class Left<L, R> extends Either<L, R> {
         return new Left<L, R2>(this.left, undefined);
     }
 
-    bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Bifunctor<L2, R2> {
-        return new Left<L2, R2>(fnLeft(this.left), undefined) as Bifunctor<L2, R2>;
+    bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Left<L2, R2> {
+        return new Left<L2, R2>(fnLeft(this.left), undefined);
     }
 
     mapLeft<L2>(fn: (left: L) => L2): Either<L2, R> {
@@ -106,7 +106,7 @@ class Right<L, R> extends Either<L, R> {
         type OUTPUT = RETURNS<R>;
 
         if (isFN<INPUT, OUTPUT>(this.right)) {
-            return other.map<OUTPUT>(this.right) as Apply<OUTPUT>;
+            return other.map<OUTPUT>(this.right);
         } else {
             throw new Error('this.value is not a function: ' + this.right)
         }
@@ -116,8 +116,8 @@ class Right<L, R> extends Either<L, R> {
         return fn(this.right);
     }
 
-    bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Bifunctor<L2, R2> {
-        return new Right<L2, R2>(undefined, fnRight(this.right)) as Bifunctor<L2, R2>;
+    bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Right<L2, R2> {
+        return new Right<L2, R2>(undefined, fnRight(this.right));
     }
 
     mapLeft<L2>(fn: (left: L) => L2): Either<L2, R> {

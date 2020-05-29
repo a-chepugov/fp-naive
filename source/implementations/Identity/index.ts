@@ -16,7 +16,7 @@ export default class Identity<A> implements Monad<A>, Traversable<A> {
         type INPUT = ARG1<A>;
         type OUTPUT = RETURNS<A>;
         if (isFN<INPUT, OUTPUT>(this.value)) {
-            return other.map<OUTPUT>(this.value) as Apply<OUTPUT>;
+            return other.map<OUTPUT>(this.value);
         } else {
             throw new Error('this.value is not a function: ' + this.inspect())
         }
@@ -39,7 +39,7 @@ export default class Identity<A> implements Monad<A>, Traversable<A> {
     }
 
     traverse<B>(fn: (a: A) => Applicative<B>): Applicative<Identity<B>> {
-        return fn(this.value).map(Identity.of) as Applicative<Identity<B>>
+        return fn(this.value).map(Identity.of);
     }
 
     get(): A {

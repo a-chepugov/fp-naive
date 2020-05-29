@@ -109,7 +109,7 @@ class Just<A> extends Maybe<A> {
         type OUTPUT = RETURNS<A>;
 
         if (isFN<INPUT, OUTPUT>(this.value)) {
-            return other.map<OUTPUT>(this.value) as Apply<OUTPUT>;
+            return other.map<OUTPUT>(this.value);
         } else {
             throw new Error('this.value is not a function: ' + this.inspect())
         }

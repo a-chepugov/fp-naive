@@ -44,8 +44,8 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
         return this.values.reduce(
             (accumulator: Applicative<List<B>> | null, item: A) => {
                 return accumulator ?
-                    (fn(item).map(addToList) as Applicative<addToListType>).ap(accumulator) :
-                    (fn(item).map(List.of))
+                    fn(item).map(addToList).ap(accumulator) :
+                    fn(item).map(List.of)
             },
             null
         ) as Applicative<List<B>>;
@@ -65,17 +65,3 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
         return `List(${this.values.map((item) => item && typeof item.inspect === 'function' ? item.inspect() : `${item}`)})`
     }
 }
-
-// return this.values.reduce(
-//     (accumulator: Applicative<List<B>> | null, item: A) => {
-//         const appitem = fn(item);
-//
-//         return accumulator ?
-//             (appitem
-//                 .map(addToList) as Applicative<addToListType>)
-//                 .ap(accumulator)
-//             :
-//             appitem.map((item) => List.of(item))
-//     },
-//     null
-// ) as Applicative<List<B>>;

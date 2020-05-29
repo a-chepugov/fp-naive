@@ -12,6 +12,7 @@ export function isFN<A, B>(object: any): object is FN<A, B> {
 }
 
 export interface Apply<A> extends Functor<A> {
+    map<B>(fn: (a: A) => B): Apply<B>
     // ap :: Apply f => f (a -> b) -> f a -> f b
     ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>>
 }

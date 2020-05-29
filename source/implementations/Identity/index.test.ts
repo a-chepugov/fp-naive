@@ -2,7 +2,6 @@ import {expect} from "chai";
 
 import Testee from "./index";
 import Maybe from "../Maybe";
-import Either from "../Either";
 
 import identity from "../../utilities/identity";
 
@@ -10,7 +9,7 @@ describe("Identity", () => {
 
     describe("Functor", () => {
 
-        it("map invokes on Maybe.Just", () => {
+        it("map invokes on Identity", () => {
             const instance = Testee.of(5);
             let mapped = instance.map((value: number) => ++value);
             expect(mapped).to.be.instanceof(Testee);
@@ -44,40 +43,34 @@ describe("Identity", () => {
 
     describe("Apply", () => {
 
-        it("ap invokes on Identity", () => {
-            const instance = Testee.of(4);
+        it("apply invokes on Identity", () => {
+            const instance4 = Testee.of(4);
             const add = (a: number) => a + 1;
             const instanceAdd = Testee.of(add);
-            const resultMonad = instance.ap(instanceAdd) as Testee<number>;
+            const resultMonad = instanceAdd.ap(instance4) as Testee<number>;
             expect(resultMonad).to.be.instanceof(Testee);
             expect(resultMonad.get()).to.be.equal(5);
         });
 
-        it("composition", () => {
-            const value = Math.floor(Math.random() * 100);
-            const addition = Math.floor(Math.random() * 100);
-            const multiplier = Math.floor(Math.random() * 100);
+        it("consumption", () => {
+            const value1 = Math.floor(Math.random() * 100);
+            const value2 = Math.floor(Math.random() * 100);
+            const value3 = Math.floor(Math.random() * 100);
 
-            const add = (a: number) => a + addition;
-            const mul = (a: number) => a + multiplier;
+            const add = (a: number) => (b: number) => a + b;
 
-            const vT = Testee.of(value);
+            const v1 = Testee.of(value1);
+            const v2 = Testee.of(value2);
+            const v3 = Testee.of(value3);
             const aT = Testee.of(add);
-            const mT = Testee.of(mul);
 
-            const transform =
-                (f: (a: number) => number) =>
-                    (g: (a: number) => number) =>
-                        (x: number) =>
-                            f(g(x));
+            const r = aT.ap(v1).ap(v2) as Testee<number>;
 
-            const r1 = vT.ap(aT.ap(mT.map(transform))) as Testee<number>;
-            const r2 = vT.ap(mT).ap(aT) as Testee<number>;
-
-            expect(r1.get()).to.be.equal(r2.get());
+            expect(r.get()).to.be.equal(value1 + value2);
         });
 
     });
+
 
     describe("Applicative", () => {
 
@@ -102,10 +95,11 @@ describe("Identity", () => {
 
     describe("Traversable", () => {
 
-        it("traverse Identity to Maybe<Identity>", () => {
+        it("traverse 1231Identity to Maybe<Identity>", () => {
             const instance = new Testee(5);
-            const toStringEither = (a: number) => Either.of(String(a));
-            const result = instance.traverse(Maybe, toStringEither) as Maybe<Testee<string>>;
+            const toStringEither = (a: number): Maybe<string> => Maybe.of(String(a));
+            const result = instance.traverse(undefined, toStringEither) as Maybe<Testee<string>>;
+
             expect(result).to.be.instanceof(Maybe);
             expect(result.get()).to.be.instanceof(Testee);
             expect(result.get().get()).to.be.equal('5');

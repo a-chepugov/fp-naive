@@ -45,37 +45,13 @@ describe("List", () => {
     describe("Apply", () => {
 
         it("ap invokes on List", () => {
-            const instance = new Testee([1, 2, 3]);
+            const instance = new Identity(3);
             const inc = (a: number) => ++a;
-            const instanceAdd = Identity.of(inc);
-            const resultMonad = instance.ap(instanceAdd);
-
-            expect(resultMonad).to.be.instanceof(Testee);
-            expect(resultMonad.get()).to.be.deep.equal([2, 3, 4]);
-        });
-
-        it("composition", () => {
-            const value = Math.floor(Math.random() * 100);
-            const addition = Math.floor(Math.random() * 100);
-            const multiplier = Math.floor(Math.random() * 100);
-
-            const add = (a: number) => a + addition;
-            const mul = (a: number) => a + multiplier;
-
-            const vT = Testee.of(value);
-            const aT = Testee.of(add);
-            const mT = Testee.of(mul);
-
-            const transform =
-                (f: (a: number) => number) =>
-                    (g: (a: number) => number) =>
-                        (x: number) =>
-                            f(g(x));
-
-            const r1 = vT.ap(aT.ap(mT.map(transform))) as Testee<number>;
-            const r2 = vT.ap(mT).ap(aT) as Testee<number>;
-
-            expect(r1.get()).to.be.deep.equal(r2.get());
+            const dec = (a: number) => --a;
+            const instanceOps = new Testee([inc, dec]);
+            const resultMonad = instanceOps.ap(instance) as Identity<number>
+            expect(resultMonad).to.be.instanceof(Identity);
+            expect(resultMonad.get()).to.be.deep.equal(4);
         });
 
     });
@@ -152,13 +128,13 @@ describe("List", () => {
 
     describe("Traversable", () => {
 
-        it("traverse List<number> to List<string>", () => {
+        it("traverse List<number> to Either<List<number>>", () => {
             const instance = new Testee([1, 2, 3]);
-            const toStringIdentity = (a: any) => Identity.of(String(a));
-            const result = instance.traverse(Either, toStringIdentity) as Either<any, Testee<string>>;
-
+            const toEitherNumber = (a: any) => a > 0 ? Either.right(a) : Either.left();
+            const result = instance.traverse(Identity, toEitherNumber) as Either<any, Testee<number>>
             expect(result).to.be.instanceof(Either);
-            expect(result.get().get()).to.be.deep.equal(['1', '2', '3']);
+            expect(result.get()).to.be.instanceof(Testee);
+            expect(result.get().get()).to.be.deep.equal([1, 2, 3]);
         });
 
     });

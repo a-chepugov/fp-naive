@@ -1,12 +1,12 @@
-import {Apply, Applicative} from "../../interfaces/Applicative";
+import {Apply, ARG1, isFN, RETURNS, Applicative} from "../../interfaces/Applicative";
 import {Filterable} from "../../interfaces/Filterable";
 import {Traversable} from "../../interfaces/Traversable";
 
 export default class List<A> implements Applicative<A>, Filterable<A>, Traversable<A> {
-    protected readonly value: Array<A>;
+    protected readonly values: Array<A>;
 
     constructor(value: Array<A>) {
-        this.value = value;
+        this.values = value;
     }
 
     static of<A>(value: A): List<A> {
@@ -14,53 +14,54 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
     }
 
     map<B>(fn: (value: A) => B): List<B> {
-        return new List(this.value.map(fn));
+        return new List(this.values.map(fn));
     }
 
-    ap<B>(other: Apply<(value: A) => B>): List<B> {
-        const list = new Array<B>(this.value.length);
-
-        this.value.forEach((value, index) => other.map((fn) => {
-            list[index] = fn(value);
-        }));
-
-        return new List(list);
+    ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> {
+        type INPUT = ARG1<A>;
+        type OUTPUT = RETURNS<A>;
+        const fn = this.values[0];
+        if (isFN<INPUT, OUTPUT>(fn)) {
+            return other.map<OUTPUT>(fn) as Apply<OUTPUT>;
+        } else {
+            throw new Error('this.value is not a function: ' + this.inspect())
+        }
     }
 
     filter(fn: (value: A) => Boolean): List<A> {
-        return new List(this.value.filter(fn));
+        return new List(this.values.filter(fn));
     }
 
     reduce<B>(reducer: (accumulator: B, value: A) => B, initial?: B): B {
-        return this.value.reduce(reducer, initial);
+        return this.values.reduce(reducer, initial);
     }
 
     traverse<B>(
-        applicativeTypeRep: { of: (value: List<B>) => Applicative<List<B>> },
+        applicativeTypeRep: { of: (value: B) => Applicative<B> },
         fn: (a: A) => Applicative<B>
     ): Applicative<List<B>> {
-        return this.reduce(
-            (currentApplyList: Applicative<List<B>>, item: A): Applicative<List<B>> => {
-                return fn(item)
-                    .ap(
-                        currentApplyList
-                            .map(
-                                function (currentList: List<B>): (processedItem: B) => List<B> {
-                                    return (processedItem: B) => currentList.concat(processedItem);
-                                }
-                            ) as Apply<(a: B) => List<B>>
-                    ) as Applicative<List<B>>;
+        return this.values.reduce(
+            (acc: Applicative<List<B>> | null, item: A) => {
+                const appitem = fn(item);
+
+                return acc ?
+                    (appitem
+                        .map((item) => (acc: any) => acc.concat(item)) as Applicative<(acc: List<B>) => List<B>>)
+                        .ap(acc) :
+
+                    appitem.map((item) => List.of(item))
             },
-            applicativeTypeRep.of(new List<B>([])) as Applicative<List<B>>,
+            null
         ) as Applicative<List<B>>;
+
     }
 
     concat(value: A): List<A> {
-        return new List(this.value.concat(value));
+        return new List(this.values.concat(value));
     }
 
     get(): Array<A> {
-        return this.value;
+        return this.values;
     }
 
     inspect() {

@@ -1,4 +1,4 @@
-import {Apply, Chain, Monad} from "../../interfaces/Monad";
+import {Apply, ARG1, isFN, RETURNS, Chain, Monad} from "../../interfaces/Monad";
 import Bifunctor from "../../interfaces/Bifunctor";
 
 export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R> {
@@ -12,7 +12,7 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R> 
 
     abstract map<R2>(fn: (right: R) => R2): Either<L, R2>;
 
-    abstract ap<R2>(apply: Apply<(right: R) => R2>): Apply<R2>
+    abstract ap(other: Apply<ARG1<R>>): Apply<RETURNS<R>>
 
     abstract chain<R2>(fn: (right: R) => Chain<R2>): Chain<R2>
 
@@ -55,8 +55,9 @@ class Left<L, R> extends Either<L, R> {
         return new Left<L, R2>(this.left, undefined);
     }
 
-    ap<R2>(other: Apply<(right: R) => R2>): Apply<R2> {
-        return new Left<L, R2>(this.left, undefined);
+    ap(other: Apply<ARG1<R>>): Apply<RETURNS<R>> {
+        type OUTPUT = RETURNS<R>;
+        return new Left<L, OUTPUT>(undefined);
     }
 
     chain<R2>(fn: (right: R) => Chain<R2>): Chain<R2> {
@@ -100,8 +101,15 @@ class Right<L, R> extends Either<L, R> {
         return new Right(undefined, fn(this.right));
     }
 
-    ap<R2>(other: Apply<(right: R) => R2>): Apply<R2> {
-        return other.map((fn: (right: R) => R2) => fn.call(this, this.right)) as Apply<R2>
+    ap(other: Apply<ARG1<R>>): Apply<RETURNS<R>> {
+        type INPUT = ARG1<R>;
+        type OUTPUT = RETURNS<R>;
+
+        if (isFN<INPUT, OUTPUT>(this.right)) {
+            return other.map<OUTPUT>(this.right) as Apply<OUTPUT>;
+        } else {
+            throw new Error('this.value is not a function: ' + this.right)
+        }
     }
 
     chain<R2>(fn: (right: R) => Chain<R2>): Chain<R2> {

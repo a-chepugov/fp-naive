@@ -1,4 +1,4 @@
-import {Apply, Chain, Monad} from "../../interfaces/Monad";
+import {Apply, ARG1, RETURNS, isFN, Chain, Monad} from "../../interfaces/Monad";
 import Filterable from "../../interfaces/Filterable";
 
 export default abstract class Maybe<A> implements Monad<A>, Filterable<A> {
@@ -10,7 +10,7 @@ export default abstract class Maybe<A> implements Monad<A>, Filterable<A> {
 
     abstract map<B>(fn: (value: A) => B): Maybe<B>;
 
-    abstract ap<B>(apply: Apply<(value: A) => B>): Apply<B>
+    abstract ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>>
 
     abstract chain<B>(fn: (value: A) => Chain<B>): Chain<B>
 
@@ -58,8 +58,9 @@ class Nothing<A> extends Maybe<A> {
         return new Nothing<B>(undefined);
     }
 
-    ap<B>(other: Apply<(value: A) => B>): Apply<B> {
-        return new Nothing<B>(undefined);
+    ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> {
+        type OUTPUT = RETURNS<A>;
+        return new Nothing<OUTPUT>(undefined);
     }
 
     chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
@@ -103,8 +104,15 @@ class Just<A> extends Maybe<A> {
         return Maybe.fromNullable(fn(this.value));
     }
 
-    ap<B>(other: Apply<(value: A) => B>): Apply<B> {
-        return other.map((fn: (value: A) => B) => fn.call(this, this.value)) as Apply<B>
+    ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> {
+        type INPUT = ARG1<A>;
+        type OUTPUT = RETURNS<A>;
+
+        if (isFN<INPUT, OUTPUT>(this.value)) {
+            return other.map<OUTPUT>(this.value) as Apply<OUTPUT>;
+        } else {
+            throw new Error('this.value is not a function: ' + this.inspect())
+        }
     }
 
     chain<B>(fn: (value: A) => Chain<B>): Chain<B> {

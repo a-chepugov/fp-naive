@@ -56,11 +56,11 @@ describe("Maybe", () => {
         describe("Apply", () => {
 
             it("ap skips on Maybe.Nothing", () => {
-                const instance = Testee.nothing();
+                const instance = Testee.nothing<number>();
                 let counter = 0;
                 const add = (a: number) => counter++;
-                const addMonad = Testee.of(add);
-                const resultMonad = instance.ap(addMonad);
+                const instanceAdd = Testee.of(add);
+                const resultMonad = instanceAdd.ap(instance);
                 expect(resultMonad).to.be.instanceof(Testee);
                 expect(counter).to.be.equal(0);
             });
@@ -165,36 +165,12 @@ describe("Maybe", () => {
         describe("Apply", () => {
 
             it("ap invokes on Maybe.Just", () => {
-                const instance = Testee.of(4);
+                const instance4 = Testee.of(4);
                 const add = (a: number) => a + 1;
                 const instanceAdd = Testee.of(add);
-                const resultMonad = instance.ap(instanceAdd) as Testee<number>;
+                const resultMonad = instanceAdd.ap(instance4) as Testee<number>;
                 expect(resultMonad).to.be.instanceof(Testee);
                 expect(resultMonad.get()).to.be.equal(5);
-            });
-
-            it("composition", () => {
-                const value = Math.floor(Math.random() * 100);
-                const addition = Math.floor(Math.random() * 100);
-                const multiplier = Math.floor(Math.random() * 100);
-
-                const add = (a: number) => a + addition;
-                const mul = (a: number) => a + multiplier;
-
-                const vT = Testee.of(value);
-                const aT = Testee.of(add);
-                const mT = Testee.of(mul);
-
-                const transform =
-                    (f: (a: number) => number) =>
-                        (g: (a: number) => number) =>
-                            (x: number) =>
-                                f(g(x));
-
-                const r1 = vT.ap(aT.ap(mT.map(transform))) as Testee<number>;
-                const r2 = vT.ap(mT).ap(aT) as Testee<number>;
-
-                expect(r1.get()).to.be.equal(r2.get());
             });
 
         });

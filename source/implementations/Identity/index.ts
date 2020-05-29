@@ -1,4 +1,4 @@
-import {Apply, Applicative, Chain, Monad} from "../../interfaces/Monad";
+import {Apply, Applicative, Chain, Monad, ARG1, RETURNS, isFN} from "../../interfaces/Monad";
 import {Traversable} from "../../interfaces/Traversable";
 
 export default class Identity<A> implements Monad<A>, Traversable<A> {
@@ -12,8 +12,14 @@ export default class Identity<A> implements Monad<A>, Traversable<A> {
         return new Identity(fn(this.value));
     }
 
-    ap<B>(other: Apply<(value: A) => B>): Apply<B> {
-        return other.map((fn: (value: A) => B) => fn.call(this, this.value)) as Apply<B>
+    ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> {
+        type INPUT = ARG1<A>;
+        type OUTPUT = RETURNS<A>;
+        if (isFN<INPUT, OUTPUT>(this.value)) {
+            return other.map<OUTPUT>(this.value) as Apply<OUTPUT>;
+        } else {
+            throw new Error('this.value is not a function: ' + this.inspect())
+        }
     }
 
     static of<A>(value: A): Identity<A> {
@@ -32,10 +38,11 @@ export default class Identity<A> implements Monad<A>, Traversable<A> {
         return reducer(undefined, this.value);
     }
 
-    traverse<B>(applicativeTypeRep: { of: (value: any) => Applicative<any> }, fn: (a: A) => Applicative<B>): Applicative<Identity<B>> {
-        return fn(this.value)
-            .ap(applicativeTypeRep.of((a: B) => a))
-            .map(Identity.of) as Applicative<Identity<B>>
+    traverse<B>(
+        applicativeTypeRep: { of: (value: B) => Applicative<B> } = Identity,
+        fn: (a: A) => Applicative<B>
+    ): Applicative<Identity<B>> {
+        return fn(this.value).map(Identity.of) as Applicative<Identity<B>>
     }
 
     get(): A {

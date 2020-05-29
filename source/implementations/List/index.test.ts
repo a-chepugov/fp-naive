@@ -130,11 +130,11 @@ describe("List", () => {
 
         it("traverse List<number> to Either<List<number>>", () => {
             const instance = new Testee([1, 2, 3]);
-            const toEitherNumber = (a: any) => a > 0 ? Either.right(a) : Either.left();
-            const result = instance.traverse(Identity, toEitherNumber) as Either<any, Testee<number>>;
+            const toEitherNumber = (a: number) => a > 0 ? Either.right(a) : Either.left(new Error(`${a} is not greater than 0`));
+            const result = instance.traverse(toEitherNumber) as Either<number, Testee<number>>;
             expect(result).to.be.instanceof(Either);
             expect(result.get()).to.be.instanceof(Testee);
-            expect(result.get().get()).to.be.deep.equal([1, 2, 3]);
+            expect(result.getOrElse(Testee.of(1)).get()).to.be.deep.equal([1, 2, 3]);
         });
 
     });

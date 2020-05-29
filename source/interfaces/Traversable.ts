@@ -11,8 +11,8 @@ import Applicative from "./Applicative";
 export {Applicative} from "./Applicative";
 
 export interface Traversable<A> extends Functor<A>, Foldable<A> {
-    // traverse :: Applicative f, Traversable t => t a ~> (TypeRep f, a -> f b) -> f (t b)
-    traverse<B>(applicativeTypeRep: { of: (value: any) => Applicative<any> }, fn: (a: A) => Applicative<B>): Applicative<Traversable<B>>
+    // traverse :: Applicative f, Traversable t => t a ~> (a -> f b) -> f (t b)
+    traverse<B>(fn: (a: A) => Applicative<B>): Applicative<Traversable<B>>
 }
 
 export default Traversable;

@@ -96,7 +96,7 @@ describe("Identity", () => {
         it("traverse on Identity gives Maybe<Identity>", () => {
             const instance = new Testee(5);
             const toStringEither = (a: number): Maybe<string> => Maybe.of(String(a));
-            const result = instance.traverse(undefined, toStringEither) as Maybe<Testee<string>>;
+            const result = instance.traverse(toStringEither) as Maybe<Testee<string>>;
 
             expect(result).to.be.instanceof(Maybe);
             expect(result.get()).to.be.instanceof(Testee);

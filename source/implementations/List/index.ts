@@ -36,10 +36,7 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
         return this.values.reduce(reducer, initial);
     }
 
-    traverse<B>(
-        applicativeTypeRep: { of: (value: B) => Applicative<B> },
-        fn: (a: A) => Applicative<B>
-    ): Applicative<List<B>> {
+    traverse<B>(fn: (a: A) => Applicative<B>): Applicative<List<B>> {
         type addToListType = (list: List<B>) => List<B>;
 
         const addToList = (item: B): addToListType => (list: List<B>): List<B> => list.concat(item);

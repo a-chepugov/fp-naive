@@ -38,10 +38,7 @@ export default class Identity<A> implements Monad<A>, Traversable<A> {
         return reducer(undefined, this.value);
     }
 
-    traverse<B>(
-        applicativeTypeRep: { of: (value: B) => Applicative<B> } = Identity,
-        fn: (a: A) => Applicative<B>
-    ): Applicative<Identity<B>> {
+    traverse<B>(fn: (a: A) => Applicative<B>): Applicative<Identity<B>> {
         return fn(this.value).map(Identity.of) as Applicative<Identity<B>>
     }
 

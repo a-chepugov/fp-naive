@@ -40,16 +40,15 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
         applicativeTypeRep: { of: (value: B) => Applicative<B> },
         fn: (a: A) => Applicative<B>
     ): Applicative<List<B>> {
+        type addToListType = (list: List<B>) => List<B>;
+
+        const addToList = (item: B): addToListType => (list: List<B>): List<B> => list.concat(item);
+
         return this.values.reduce(
-            (acc: Applicative<List<B>> | null, item: A) => {
-                const appitem = fn(item);
-
-                return acc ?
-                    (appitem
-                        .map((item) => (acc: any) => acc.concat(item)) as Applicative<(acc: List<B>) => List<B>>)
-                        .ap(acc) :
-
-                    appitem.map((item) => List.of(item))
+            (accumulator: Applicative<List<B>> | null, item: A) => {
+                return accumulator ?
+                    (fn(item).map(addToList) as Applicative<addToListType>).ap(accumulator) :
+                    (fn(item).map(List.of))
             },
             null
         ) as Applicative<List<B>>;
@@ -69,3 +68,17 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
         return `List(${this.values.map((item) => item && typeof item.inspect === 'function' ? item.inspect() : `${item}`)})`
     }
 }
+
+// return this.values.reduce(
+//     (accumulator: Applicative<List<B>> | null, item: A) => {
+//         const appitem = fn(item);
+//
+//         return accumulator ?
+//             (appitem
+//                 .map(addToList) as Applicative<addToListType>)
+//                 .ap(accumulator)
+//             :
+//             appitem.map((item) => List.of(item))
+//     },
+//     null
+// ) as Applicative<List<B>>;

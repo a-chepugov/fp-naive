@@ -55,13 +55,11 @@ describe("Identity", () => {
         it("consumption", () => {
             const value1 = Math.floor(Math.random() * 100);
             const value2 = Math.floor(Math.random() * 100);
-            const value3 = Math.floor(Math.random() * 100);
 
             const add = (a: number) => (b: number) => a + b;
 
             const v1 = Testee.of(value1);
             const v2 = Testee.of(value2);
-            const v3 = Testee.of(value3);
             const aT = Testee.of(add);
 
             const r = aT.ap(v1).ap(v2) as Testee<number>;
@@ -95,7 +93,7 @@ describe("Identity", () => {
 
     describe("Traversable", () => {
 
-        it("traverse 1231Identity to Maybe<Identity>", () => {
+        it("traverse on Identity gives Maybe<Identity>", () => {
             const instance = new Testee(5);
             const toStringEither = (a: number): Maybe<string> => Maybe.of(String(a));
             const result = instance.traverse(undefined, toStringEither) as Maybe<Testee<string>>;

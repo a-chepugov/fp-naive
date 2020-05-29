@@ -49,7 +49,7 @@ describe("List", () => {
             const inc = (a: number) => ++a;
             const dec = (a: number) => --a;
             const instanceOps = new Testee([inc, dec]);
-            const resultMonad = instanceOps.ap(instance) as Identity<number>
+            const resultMonad = instanceOps.ap(instance) as Identity<number>;
             expect(resultMonad).to.be.instanceof(Identity);
             expect(resultMonad.get()).to.be.deep.equal(4);
         });
@@ -67,7 +67,7 @@ describe("List", () => {
 
     describe("Filterable", () => {
 
-        it("filter on List([1]) gives Identity(1)", () => {
+        it("filter on List([1]) gives List(1)", () => {
             const instance = Testee.of(1);
             const filtrator = (value: number): Boolean => Boolean(value);
 
@@ -131,7 +131,7 @@ describe("List", () => {
         it("traverse List<number> to Either<List<number>>", () => {
             const instance = new Testee([1, 2, 3]);
             const toEitherNumber = (a: any) => a > 0 ? Either.right(a) : Either.left();
-            const result = instance.traverse(Identity, toEitherNumber) as Either<any, Testee<number>>
+            const result = instance.traverse(Identity, toEitherNumber) as Either<any, Testee<number>>;
             expect(result).to.be.instanceof(Either);
             expect(result.get()).to.be.instanceof(Testee);
             expect(result.get().get()).to.be.deep.equal([1, 2, 3]);

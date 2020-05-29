@@ -28,6 +28,8 @@ export default abstract class Maybe<A> implements Monad<A>, Filterable<A> {
 
     abstract getOrElseRun(fn: () => A): A;
 
+    abstract inspect(): string;
+
     static just<A>(value: A): Just<A> {
         return new Just<A>(value);
     }
@@ -87,6 +89,13 @@ class Nothing<A> extends Maybe<A> {
     get isNothing(): Boolean {
         return true;
     }
+
+    inspect() {
+        return `Maybe.Nothing(${
+            // @ts-ignore
+            this.value && typeof this.value.inspect === 'function' ? this.value.inspect() : this.value
+        })`
+    }
 }
 
 class Just<A> extends Maybe<A> {
@@ -128,5 +137,12 @@ class Just<A> extends Maybe<A> {
 
     get isJust(): Boolean {
         return true;
+    }
+
+    inspect() {
+        return `Maybe.Just(${
+            // @ts-ignore
+            this.value && typeof this.value.inspect === 'function' ? this.value.inspect() : this.value
+        })`
     }
 }

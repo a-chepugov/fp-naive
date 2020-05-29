@@ -45,6 +45,9 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R> 
     get isLeft(): Boolean {
         return false;
     }
+
+    abstract inspect(): string;
+
 }
 
 class Left<L, R> extends Either<L, R> {
@@ -83,6 +86,13 @@ class Left<L, R> extends Either<L, R> {
     get isLeft(): Boolean {
         return true;
     }
+
+    inspect() {
+        return `Either.Left(${
+            // @ts-ignore
+            this.left && typeof this.left.inspect === 'function' ? this.left.inspect() : this.left
+        })`
+    }
 }
 
 class Right<L, R> extends Either<L, R> {
@@ -120,5 +130,12 @@ class Right<L, R> extends Either<L, R> {
 
     get isRight(): Boolean {
         return true;
+    }
+
+    inspect() {
+        return `Either.Right(${
+            // @ts-ignore
+            this.right && typeof this.right.inspect === 'function' ? this.right.inspect() : this.right
+        })`
     }
 }

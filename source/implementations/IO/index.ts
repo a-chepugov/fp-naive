@@ -38,4 +38,11 @@ export default class IO<A> implements Monad<A> {
     get(): A {
         return this.fn;
     }
+
+    inspect() {
+        return `IO(${
+            // @ts-ignore
+            this.fn && typeof this.fn.inspect === 'function' ? this.fn.inspect() : this.fn
+        })`
+    }
 }

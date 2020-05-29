@@ -63,4 +63,8 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
         return this.value;
     }
 
+    inspect() {
+        // @ts-ignore
+        return `List(${this.values.map((item) => item && typeof item.inspect === 'function' ? item.inspect() : `${item}`)})`
+    }
 }

@@ -1,4 +1,4 @@
-import {Monad, Functor, Apply, Chain} from "../../interfaces/Monad";
+import {Monad, Apply} from "../../interfaces/Monad";
 
 export default class IO<A> implements Monad<A> {
     private readonly fn: A & Function;

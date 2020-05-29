@@ -10,7 +10,7 @@ export default abstract class Maybe<A> implements Monad<A>, Filterable<A> {
 
     abstract map<B>(fn: (value: A) => B): Maybe<B>;
 
-    abstract ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>>
+    abstract ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> | never
 
     abstract chain<B>(fn: (value: A) => Chain<B>): Chain<B>
 
@@ -59,8 +59,7 @@ class Nothing<A> extends Maybe<A> {
     }
 
     ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> {
-        type OUTPUT = RETURNS<A>;
-        return new Nothing<OUTPUT>(undefined);
+        return new Nothing<RETURNS<A>>(undefined);
     }
 
     chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
@@ -104,14 +103,11 @@ class Just<A> extends Maybe<A> {
         return Maybe.fromNullable(fn(this.value));
     }
 
-    ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> {
-        type INPUT = ARG1<A>;
-        type OUTPUT = RETURNS<A>;
-
-        if (isFN<INPUT, OUTPUT>(this.value)) {
-            return other.map<OUTPUT>(this.value);
+    ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> | never {
+        if (isFN<ARG1<A>, RETURNS<A>>(this.value)) {
+            return other.map(this.value);
         } else {
-            throw new Error('this.value is not a function: ' + this.inspect())
+            throw new Error('This is not a apply function: ' + this.inspect())
         }
     }
 

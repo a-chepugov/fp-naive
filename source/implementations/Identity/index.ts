@@ -12,13 +12,11 @@ export default class Identity<A> implements Monad<A>, Traversable<A> {
         return new Identity(fn(this.value));
     }
 
-    ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> {
-        type INPUT = ARG1<A>;
-        type OUTPUT = RETURNS<A>;
-        if (isFN<INPUT, OUTPUT>(this.value)) {
-            return other.map<OUTPUT>(this.value);
+    ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> | never {
+        if (isFN<ARG1<A>, RETURNS<A>>(this.value)) {
+            return other.map(this.value);
         } else {
-            throw new Error('this.value is not a function: ' + this.inspect())
+            throw new Error('This is not a apply function: ' + this.inspect())
         }
     }
 

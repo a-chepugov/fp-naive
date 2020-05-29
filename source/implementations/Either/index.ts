@@ -12,7 +12,7 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R> 
 
     abstract map<R2>(fn: (right: R) => R2): Either<L, R2>;
 
-    abstract ap(other: Apply<ARG1<R>>): Apply<RETURNS<R>>
+    abstract ap(other: Apply<ARG1<R>>): Apply<RETURNS<R>> | never
 
     abstract chain<R2>(fn: (right: R) => Chain<R2>): Chain<R2>
 
@@ -56,8 +56,7 @@ class Left<L, R> extends Either<L, R> {
     }
 
     ap(other: Apply<ARG1<R>>): Apply<RETURNS<R>> {
-        type OUTPUT = RETURNS<R>;
-        return new Left<L, OUTPUT>(undefined);
+        return new Left<L, RETURNS<R>>(undefined);
     }
 
     chain<R2>(fn: (right: R) => Chain<R2>): Chain<R2> {
@@ -102,13 +101,10 @@ class Right<L, R> extends Either<L, R> {
     }
 
     ap(other: Apply<ARG1<R>>): Apply<RETURNS<R>> {
-        type INPUT = ARG1<R>;
-        type OUTPUT = RETURNS<R>;
-
-        if (isFN<INPUT, OUTPUT>(this.right)) {
-            return other.map<OUTPUT>(this.right);
+        if (isFN<ARG1<R>, RETURNS<R>>(this.right)) {
+            return other.map(this.right);
         } else {
-            throw new Error('this.value is not a function: ' + this.right)
+            throw new Error('This is not a apply function: ' + this.inspect())
         }
     }
 

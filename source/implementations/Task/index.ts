@@ -33,10 +33,8 @@ export default class Task<A> implements Monad<A> {
     }
 
     ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> {
-        type INPUT = ARG1<A>;
-        type OUTPUT = RETURNS<A>;
-        if (isFN<INPUT, OUTPUT>(this.fork)) {
-            return other.map<OUTPUT>(this.fork) as Apply<OUTPUT>;
+        if (isFN<ARG1<A>, RETURNS<A>>(this.fork)) {
+            return other.map(this.fork);
         } else {
             throw new Error('this.value is not a function: ' + this.inspect())
         }

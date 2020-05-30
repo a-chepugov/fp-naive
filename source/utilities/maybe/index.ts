@@ -1,7 +1,7 @@
 import Maybe from '../../implementations/Maybe';
 
 // maybe :: b -> (a -> b) -> Maybe a -> b
-export default function maybe<A, B>(fallbackValue: B, map: (a: A) => any, m: Maybe<A>): B {
+export default function maybe<A, B>(fallbackValue: B, map: (a: A) => B, m: Maybe<A>): B {
     switch (true) {
         case m.isJust:
             return map(m.get());

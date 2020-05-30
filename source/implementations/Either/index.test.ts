@@ -3,6 +3,7 @@ import {expect} from "chai";
 import Testee from "./index";
 
 import FunctorTests from "../../interfaces/Functor/index.tests";
+import Bifunctor from "../../interfaces/Bifunctor/index.tests";
 import ApplyTests from "../../interfaces/Apply/index.tests";
 import ApplicativeTests from "../../interfaces/Applicative/index.tests";
 import ChainTests from "../../interfaces/Chain/index.tests";
@@ -11,6 +12,7 @@ describe("Either", () => {
 
     describe("laws", () => {
         FunctorTests(Testee);
+        Bifunctor(Testee);
         ApplyTests(Testee);
         ApplicativeTests(Testee);
         ChainTests(Testee);
@@ -86,15 +88,19 @@ describe("Either", () => {
 
         });
 
-        it("bimap", () => {
-            const either = Testee.left();
-            let counterL = 0;
-            let counterR = 0;
-            let bimapped = either.bimap((value: number) => counterL++, (value: number) => counterR++);
-            expect(bimapped).to.be.instanceof(Testee);
-            expect(counterL).to.be.equal(1);
-            expect(counterR).to.be.equal(0);
-        });
+        describe("Bifunctor", () => {
+
+            it("skips bimap right function", () => {
+                const either = Testee.left();
+                let counterL = 0;
+                let counterR = 0;
+                let bimapped = either.bimap((_: number) => counterL++, (_: number) => counterR++);
+                expect(bimapped.isLeft).to.be.true;
+                expect(counterL).to.be.equal(1);
+                expect(counterR).to.be.equal(0);
+            });
+
+        })
 
         it("getOrElse", () => {
             const either = Testee.left();
@@ -121,15 +127,19 @@ describe("Either", () => {
             expect(either.get()).to.be.equal(5);
         });
 
-        it("bimap", () => {
-            const either = Testee.right();
-            let counterL = 0;
-            let counterR = 0;
-            let bimapped = either.bimap((value: number) => counterL++, (value: number) => counterR++);
-            expect(bimapped).to.be.instanceof(Testee);
-            expect(counterL).to.be.equal(0);
-            expect(counterR).to.be.equal(1);
-        });
+        describe("Bifunctor", () => {
+
+            it("skip bimap left function", () => {
+                const either = Testee.right();
+                let counterL = 0;
+                let counterR = 0;
+                let bimapped = either.bimap((_: number) => counterL++, (_: number) => counterR++);
+                expect(bimapped.isRight).to.be.true;
+                expect(counterL).to.be.equal(0);
+                expect(counterR).to.be.equal(1);
+            });
+
+        })
 
         it("getOrElse", () => {
             const either = Testee.right(0);

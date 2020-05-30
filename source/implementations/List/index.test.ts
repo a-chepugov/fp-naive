@@ -1,13 +1,12 @@
 import {expect} from "chai";
 
-import identity from "../../utilities/identity";
-
 import Testee from "./index";
 import Either from "../Either";
 
 import FunctorTests from "../../interfaces/Functor/index.tests";
 import ApplyTests from "../../interfaces/Apply/index.tests";
 import ApplicativeTests from "../../interfaces/Applicative/index.tests";
+import FilterableTests from "../../interfaces/Filterable/index.tests";
 
 describe("List", () => {
 
@@ -15,6 +14,7 @@ describe("List", () => {
         FunctorTests(Testee);
         ApplyTests(Testee);
         ApplicativeTests(Testee);
+        FilterableTests(Testee);
     });
 
     describe("Filterable", () => {
@@ -33,35 +33,6 @@ describe("List", () => {
 
             const result = instance.filter(filtrator);
             expect(result.get()).to.be.deep.equal([1, 2]);
-        });
-
-        it("distributivity", () => {
-            const v = Testee.of(5);
-            const p = (value: number) => Boolean(value);
-            const q = (value: number) => value > 3;
-
-            const result1 = v.filter(x => p(x) && q(x));
-            const result2 = v.filter(p).filter(q);
-
-            expect(result1.get()).to.be.deep.equal(result2.get());
-        });
-
-        it("identity", () => {
-            const v = Testee.of(5);
-            const p = (_: number) => true;
-
-            const result1 = v.filter(p);
-
-            expect(result1.get()).to.be.deep.equal(v.get());
-        });
-
-        it("annihilation", () => {
-            const v = Testee.of(5);
-            const p = (_: number) => false;
-
-            const result1 = v.filter(p);
-
-            expect(result1.get()).to.be.deep.equal([]);
         });
 
     });

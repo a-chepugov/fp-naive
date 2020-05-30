@@ -1,7 +1,5 @@
 import {expect} from "chai";
 
-import identity from "../../utilities/identity";
-
 import Testee from "./index";
 
 import FunctorTests from "../../interfaces/Functor/index.tests";
@@ -9,6 +7,7 @@ import ApplyTests from "../../interfaces/Apply/index.tests";
 import ApplicativeTests from "../../interfaces/Applicative/index.tests";
 import ChainTests from "../../interfaces/Chain/index.tests";
 import MonadTests from "../../interfaces/Monad/index.tests";
+import Filterable from "../../interfaces/Filterable/index.tests";
 
 describe("Maybe", () => {
 
@@ -18,6 +17,7 @@ describe("Maybe", () => {
         ApplicativeTests(Testee);
         ChainTests(Testee);
         MonadTests(Testee);
+        Filterable(Testee);
     });
 
     describe("Maybe prototype", () => {
@@ -85,9 +85,13 @@ describe("Maybe", () => {
 
         describe("Filterable", () => {
 
-            it("filter on Maybe.Nothing gives Maybe.Nothing", () => {
+            it("skips filter function", () => {
                 const instance = Testee.nothing(1);
-                const filtrator = (value: number) => Boolean(value);
+                let counter = 0;
+                const filtrator = (x: number): boolean => {
+                    counter++;
+                    return !!x;
+                };
 
                 const result = instance.filter(filtrator);
                 expect(result.isNothing).to.be.true;
@@ -130,55 +134,6 @@ describe("Maybe", () => {
     });
 
     describe("Just", () => {
-
-        describe("Filterable", () => {
-
-            it("filter on Maybe.Just(1) gives Maybe.Just(1)", () => {
-                const instance = Testee.of(1);
-                const filtrator = (value: number): Boolean => Boolean(value);
-
-                const result = instance.filter(filtrator);
-                expect(result.isJust).to.be.true;
-            });
-
-            it("filter on Maybe.Just(0) gives Maybe.Nothing", () => {
-                const instance = Testee.of(0);
-                const filtrator = (value: number): Boolean => Boolean(value);
-
-                const result = instance.filter(filtrator);
-                expect(result.isNothing).to.be.true;
-            });
-
-            it("distributivity", () => {
-                const v = Testee.of(5);
-                const p = (value: number) => Boolean(value);
-                const q = (value: number) => value > 3;
-
-                const result1 = v.filter(x => p(x) && q(x));
-                const result2 = v.filter(p).filter(q);
-
-                expect(result1.get()).to.be.equal(result2.get());
-            });
-
-            it("identity", () => {
-                const v = Testee.of(5);
-                const p = (_: number) => true;
-
-                const result1 = v.filter(p);
-
-                expect(result1.get()).to.be.equal(v.get());
-            });
-
-            it("annihilation", () => {
-                const v = Testee.of(5);
-                const p = (_: number) => false;
-
-                const result1 = v.filter(p);
-
-                expect(result1.isNothing).to.be.true;
-            });
-
-        });
 
         it("get", () => {
             const instance = Testee.of(5);

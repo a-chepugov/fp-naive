@@ -1,5 +1,6 @@
 import Filterable from "../../interfaces/Filterable";
 import Traversable from "../../interfaces/Traversable";
+import Semigroup from "../../interfaces/Semigroup";
 
 import * as MonadModule from "../../interfaces/Monad";
 
@@ -9,7 +10,7 @@ type ARG1<A> = MonadModule.Chain.Apply.ARG1<A>;
 type RETURNS<A> = MonadModule.Chain.Apply.RETURNS<A>;
 const isFN = MonadModule.Chain.Apply.isFN;
 
-export default class List<A> implements Applicative<A>, Filterable<A>, Traversable<A> {
+export default class List<A> implements Applicative<A>, Filterable<A>, Traversable<A>, Semigroup<A> {
     protected readonly values: Array<A>;
 
     constructor(value: Array<A>) {
@@ -46,7 +47,7 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
     traverse<B>(fn: (a: A) => Applicative<B>): Applicative<List<B>> {
         type addToListType = (list: List<B>) => List<B>;
 
-        const addToList = (item: B): addToListType => (list: List<B>): List<B> => list.concat(item);
+        const addToList = (item: B): addToListType => (list: List<B>): List<B> => list.concat(new List([item]));
 
         return this.values.reduce(
             (accumulator: Applicative<List<B>> | null, item: A) => {
@@ -59,8 +60,8 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
 
     }
 
-    concat(value: A): List<A> {
-        return new List(this.values.concat(value));
+    concat(other: List<A>): List<A> {
+        return new List(this.values.concat(other.get()));
     }
 
     get(): Array<A> {

@@ -139,6 +139,26 @@ describe("List", () => {
 
     });
 
+    describe("Semigroup", () => {
+
+        it("concat returns same type", () => {
+            const instance1 = Testee.of(1);
+            const instance2 = Testee.of(2);
+            expect(instance1.concat(instance2)).to.be.instanceof(Testee);
+        });
+
+        it("associativity", () => {
+            const a = Testee.of(1);
+            const b = Testee.of(2);
+            const c = Testee.of(3);
+
+            const r1 = a.concat(b).concat(c);
+            const r2 = a.concat(b.concat(c));
+            expect(r1).to.be.deep.equal(r2);
+        });
+
+    });
+
     it("get", () => {
         const instance = Testee.of(5);
         expect(instance.get()).to.be.deep.equal([5]);

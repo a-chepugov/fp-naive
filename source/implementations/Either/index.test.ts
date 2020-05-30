@@ -4,6 +4,7 @@ import Testee from "./index";
 
 import FunctorTests from "../../interfaces/Functor/index.tests";
 import ApplyTests from "../../interfaces/Apply/index.tests";
+import ApplicativeTests from "../../interfaces/Applicative/index.tests";
 import ChainTests from "../../interfaces/Chain/index.tests";
 
 describe("Either", () => {
@@ -11,19 +12,11 @@ describe("Either", () => {
     describe("laws", () => {
         FunctorTests(Testee);
         ApplyTests(Testee);
+        ApplicativeTests(Testee);
         ChainTests(Testee);
     });
 
     describe("Either prototype", () => {
-
-        describe("Applicative", () => {
-
-            it("of", () => {
-                const maybe = Testee.of(1);
-                expect(maybe).to.be.instanceof(Testee);
-            });
-
-        });
 
         it("Either.left gives Either.Left", () => {
             const either = Testee.left();

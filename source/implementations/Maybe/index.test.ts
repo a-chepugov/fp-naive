@@ -6,6 +6,7 @@ import Testee from "./index";
 
 import FunctorTests from "../../interfaces/Functor/index.tests";
 import ApplyTests from "../../interfaces/Apply/index.tests";
+import ApplicativeTests from "../../interfaces/Applicative/index.tests";
 import ChainTests from "../../interfaces/Chain/index.tests";
 
 describe("Maybe", () => {
@@ -13,19 +14,11 @@ describe("Maybe", () => {
     describe("laws", () => {
         FunctorTests(Testee);
         ApplyTests(Testee);
+        ApplicativeTests(Testee);
         ChainTests(Testee);
     });
 
     describe("Maybe prototype", () => {
-
-        describe("Applicative", () => {
-
-            it("of returns Maybe", () => {
-                const instance = Testee.of(1);
-                expect(instance).to.be.instanceof(Testee);
-            });
-
-        });
 
         it("just returns Maybe.Just", () => {
             const instance = Testee.of(5);

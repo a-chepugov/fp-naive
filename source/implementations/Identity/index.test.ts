@@ -5,6 +5,7 @@ import Maybe from "../Maybe";
 
 import FunctorTests from "../../interfaces/Functor/index.tests";
 import ApplyTests from "../../interfaces/Apply/index.tests";
+import ApplicativeTests from "../../interfaces/Applicative/index.tests";
 import ChainTests from "../../interfaces/Chain/index.tests";
 
 describe("Identity", () => {
@@ -12,16 +13,8 @@ describe("Identity", () => {
     describe("laws", () => {
         FunctorTests(Testee);
         ApplyTests(Testee);
+        ApplicativeTests(Testee);
         ChainTests(Testee);
-    });
-
-    describe("Applicative", () => {
-
-        it("of returns Maybe", () => {
-            const maybe = Testee.of(5);
-            expect(maybe).to.be.instanceof(Testee);
-        });
-
     });
 
     describe("Traversable", () => {

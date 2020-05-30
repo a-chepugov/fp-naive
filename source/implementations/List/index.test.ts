@@ -7,21 +7,14 @@ import Either from "../Either";
 
 import FunctorTests from "../../interfaces/Functor/index.tests";
 import ApplyTests from "../../interfaces/Apply/index.tests";
+import ApplicativeTests from "../../interfaces/Applicative/index.tests";
 
 describe("List", () => {
 
     describe("laws", () => {
         FunctorTests(Testee);
         ApplyTests(Testee);
-    });
-
-    describe("Applicative", () => {
-
-        it("of returns List", () => {
-            const instance = Testee.of(1);
-            expect(instance).to.be.instanceof(Testee);
-        });
-
+        ApplicativeTests(Testee);
     });
 
     describe("Filterable", () => {

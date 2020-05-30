@@ -1,6 +1,6 @@
-import * as Apply from './Apply';
+import * as Apply from '../Apply';
 
-export * as Apply from './Apply';
+export * as Apply from '../Apply';
 
 export interface Applicative<A> extends Apply.default<A> {
     map<B>(fn: (a: A) => B): Applicative<B>

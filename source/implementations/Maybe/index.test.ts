@@ -3,8 +3,11 @@ import {expect} from "chai";
 import identity from "../../utilities/identity";
 
 import Testee from "./index";
+import FunctorTests from "../../interfaces/Functor/index.tests";
 
 describe("Maybe", () => {
+
+    FunctorTests(Testee);
 
     describe("Maybe prototype", () => {
 
@@ -43,10 +46,10 @@ describe("Maybe", () => {
 
         describe("Functor", () => {
 
-            it("map skips on Maybe.Nothing", () => {
-                const instance = Testee.nothing();
+            it("skips map function", () => {
+                const maybe = Testee.nothing();
                 let counter = 0;
-                let mapped = instance.map((value: number) => ++counter);
+                let mapped = maybe.map((value: number) => counter++);
                 expect(mapped).to.be.instanceof(Testee);
                 expect(counter).to.be.equal(0);
             });
@@ -127,40 +130,6 @@ describe("Maybe", () => {
     });
 
     describe("Just", () => {
-
-        describe("Functor", () => {
-
-            it("map invokes on Maybe.Just", () => {
-                const instance = Testee.of(5);
-                let mapped = instance.map((value: number) => ++value);
-                expect(mapped).to.be.instanceof(Testee);
-                expect(mapped.get()).to.be.equal(6);
-            });
-
-            it("identity", () => {
-                const value = Math.floor(Math.random() * 100);
-                const instance = Testee.of(value);
-                const result = instance.map(identity);
-                expect(result.get()).to.be.equal(value);
-            });
-
-            it("composition", () => {
-                const value = Math.floor(Math.random() * 100);
-                const addition = Math.floor(Math.random() * 100);
-                const multiplier = Math.floor(Math.random() * 100);
-
-                const add = (a: number) => a + addition;
-                const mul = (a: number) => a + multiplier;
-
-                const instance = Testee.of(value);
-
-                const r1 = instance.map((a: number) => mul(add(a)));
-                const r2 = instance.map(add).map(mul);
-
-                expect(r1.get()).to.be.equal(r2.get());
-            });
-
-        });
 
         describe("Apply", () => {
 

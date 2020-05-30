@@ -3,7 +3,11 @@ import {expect} from "chai";
 import Testee from "./index";
 import identity from "../../utilities/identity";
 
+import FunctorTests from "../../interfaces/Functor/index.tests";
+
 describe("Either", () => {
+
+    FunctorTests(Testee);
 
     describe("Either prototype", () => {
 
@@ -49,7 +53,7 @@ describe("Either", () => {
 
         describe("Functor", () => {
 
-            it("map", () => {
+            it("skips map function", () => {
                 const maybe = Testee.left();
                 let counter = 0;
                 let mapped = maybe.map((value: number) => counter++);
@@ -119,40 +123,6 @@ describe("Either", () => {
         it("get", () => {
             const either = Testee.right(5);
             expect(either.get()).to.be.equal(5);
-        });
-
-        describe("Functor", () => {
-
-            it("map", () => {
-                const maybe = Testee.right(5);
-                let mapped = maybe.map((value: number) => value + 1);
-                expect(mapped).to.be.instanceof(Testee);
-                expect(mapped.get()).to.be.equal(6);
-            });
-
-            it("identity", () => {
-                const value = Math.floor(Math.random() * 100);
-                const instance = Testee.right(value);
-                const result = instance.map(identity);
-                expect(result.get()).to.be.equal(value);
-            });
-
-            it("composition", () => {
-                const value = Math.floor(Math.random() * 100);
-                const addition = Math.floor(Math.random() * 100);
-                const multiplier = Math.floor(Math.random() * 100);
-
-                const add = (a: number) => a + addition;
-                const mul = (a: number) => a + multiplier;
-
-                const instance = Testee.right(value);
-
-                const r1 = instance.map((a: number) => mul(add(a)));
-                const r2 = instance.map(add).map(mul);
-
-                expect(r1.get()).to.be.equal(r2.get());
-            });
-
         });
 
         describe("Apply", () => {

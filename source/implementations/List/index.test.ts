@@ -6,41 +6,11 @@ import Testee from "./index";
 import Identity from "../Identity";
 import Either from "../Either";
 
+import FunctorTests from "../../interfaces/Functor/index.tests";
+
 describe("List", () => {
 
-    describe("Functor", () => {
-
-        it("map invokes on List", () => {
-            const instance = Testee.of(5);
-            let mapped = instance.map((value: number) => ++value);
-            expect(mapped).to.be.instanceof(Testee);
-            expect(mapped.get()).to.be.deep.equal([6]);
-        });
-
-        it("identity", () => {
-            const value = Math.floor(Math.random() * 100);
-            const instance = Testee.of(value);
-            const result = instance.map(identity);
-            expect(result.get()).to.be.deep.equal([value]);
-        });
-
-        it("composition", () => {
-            const value = Math.floor(Math.random() * 100);
-            const addition = Math.floor(Math.random() * 100);
-            const multiplier = Math.floor(Math.random() * 100);
-
-            const add = (a: number) => a + addition;
-            const mul = (a: number) => a + multiplier;
-
-            const instance = Testee.of(value);
-
-            const r1 = instance.map((a: number) => mul(add(a)));
-            const r2 = instance.map(add).map(mul) as Testee<number>;
-
-            expect(r1.get()).to.be.deep.equal(r2.get());
-        });
-
-    });
+    FunctorTests(Testee)
 
     describe("Apply", () => {
 

@@ -1,14 +1,14 @@
 import {expect} from "chai";
 
 import Testee from "./index";
-import Either from "../Either";
 
 import FunctorTests from "../../interfaces/Functor/index.tests";
 import ApplyTests from "../../interfaces/Apply/index.tests";
 import ApplicativeTests from "../../interfaces/Applicative/index.tests";
+import FoldableTests from "../../interfaces/Foldable/index.tests";
+import TraversableTests from "../../interfaces/Traversable/index.tests";
 import FilterableTests from "../../interfaces/Filterable/index.tests";
 import SemigroupTests from "../../interfaces/Semigroup/index.tests";
-import TraversableTests from "../../interfaces/Traversable/index.tests";
 
 describe("List", () => {
 
@@ -17,9 +17,10 @@ describe("List", () => {
         ApplyTests(Testee);
         ApplicativeTests(Testee);
         FilterableTests(Testee);
+        FoldableTests(Testee);
+        TraversableTests(Testee);
         FilterableTests(Testee);
         SemigroupTests(Testee);
-        TraversableTests(Testee);
     });
 
     describe("Filterable", () => {
@@ -38,18 +39,6 @@ describe("List", () => {
 
             const result = instance.filter(filtrator);
             expect(result.get()).to.be.deep.equal([1, 2]);
-        });
-
-    });
-
-    describe("Foldable", () => {
-
-        it("reduce on List([1, 2, 3]) with initial 1 gives 7", () => {
-            const instance = new Testee([1, 2, 3]);
-            const reducer = (accumulator: number, value: number) => accumulator + value;
-
-            const result = instance.reduce(reducer, 1);
-            expect(result).to.be.equal(7);
         });
 
     });

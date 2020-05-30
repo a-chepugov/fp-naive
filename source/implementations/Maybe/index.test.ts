@@ -7,8 +7,9 @@ import ApplyTests from "../../interfaces/Apply/index.tests";
 import ApplicativeTests from "../../interfaces/Applicative/index.tests";
 import ChainTests from "../../interfaces/Chain/index.tests";
 import MonadTests from "../../interfaces/Monad/index.tests";
-import Filterable from "../../interfaces/Filterable/index.tests";
+import FoldableTests from "../../interfaces/Foldable/index.tests";
 import TraversableTests from "../../interfaces/Traversable/index.tests";
+import Filterable from "../../interfaces/Filterable/index.tests";
 
 describe("Maybe", () => {
 
@@ -18,8 +19,9 @@ describe("Maybe", () => {
         ApplicativeTests(Testee);
         ChainTests(Testee);
         MonadTests(Testee);
-        Filterable(Testee);
+        FoldableTests(Testee);
         TraversableTests(Testee);
+        Filterable(Testee);
     });
 
     describe("Maybe prototype", () => {

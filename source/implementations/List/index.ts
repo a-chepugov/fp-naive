@@ -5,6 +5,7 @@ import Semigroup from "../../interfaces/Semigroup";
 import * as MonadModule from "../../interfaces/Monad";
 
 type Applicative<A> = MonadModule.Applicative.Applicative<A>;
+type ApplicativeTypeRep<A> = MonadModule.Applicative.ApplicativeTypeRep<A>;
 type Apply<A> = MonadModule.Chain.Apply.Apply<A>;
 type ARG1<A> = MonadModule.Chain.Apply.ARG1<A>;
 type RETURNS<A> = MonadModule.Chain.Apply.RETURNS<A>;
@@ -44,7 +45,7 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
         return this.values.reduce(reducer, initial);
     }
 
-    traverse<B>(fn: (a: A) => Applicative<B>): Applicative<List<B>> {
+    traverse<B>(TypeRep: ApplicativeTypeRep<List<B>>, fn: (a: A) => Applicative<B>): Applicative<List<B>> {
         type addToListType = (list: List<B>) => List<B>;
 
         const addToList = (item: B): addToListType => (list: List<B>): List<B> => list.concat(new List([item]));

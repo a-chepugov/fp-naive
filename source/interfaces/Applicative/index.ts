@@ -9,3 +9,5 @@ export interface Applicative<A> extends Apply.default<A> {
 }
 
 export default Applicative;
+
+export type ApplicativeTypeRep<A> = { of: (a: A) => Applicative<A> }

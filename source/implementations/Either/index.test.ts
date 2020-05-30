@@ -8,6 +8,7 @@ import ApplyTests from "../../interfaces/Apply/index.tests";
 import ApplicativeTests from "../../interfaces/Applicative/index.tests";
 import ChainTests from "../../interfaces/Chain/index.tests";
 import MonadTests from "../../interfaces/Monad/index.tests";
+import TraversableTests from "../../interfaces/Traversable/index.tests";
 
 describe("Either", () => {
 
@@ -18,6 +19,7 @@ describe("Either", () => {
         ApplicativeTests(Testee);
         ChainTests(Testee);
         MonadTests(Testee);
+        TraversableTests(Testee);
     });
 
     describe("Either prototype", () => {

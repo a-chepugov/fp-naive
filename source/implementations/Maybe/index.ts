@@ -1,6 +1,10 @@
+import Traversable from "../../interfaces/Traversable";
+
 import * as MonadModule from "../../interfaces/Monad";
 
 type Monad<A> = MonadModule.Monad<A>;
+type Applicative<A> = MonadModule.Applicative.Applicative<A>;
+type ApplicativeTypeRep<A> = MonadModule.Applicative.ApplicativeTypeRep<A>;
 type Chain<A> = MonadModule.Chain.Chain<A>;
 type Apply<A> = MonadModule.Chain.Apply.Apply<A>;
 type ARG1<A> = MonadModule.Chain.Apply.ARG1<A>;
@@ -9,7 +13,7 @@ const isFN = MonadModule.Chain.Apply.isFN;
 
 import Filterable from "../../interfaces/Filterable";
 
-export default abstract class Maybe<A> implements Monad<A>, Filterable<A> {
+export default abstract class Maybe<A> implements Monad<A>, Filterable<A>, Traversable<A> {
     protected readonly value: A;
 
     protected constructor(value: A) {
@@ -27,6 +31,10 @@ export default abstract class Maybe<A> implements Monad<A>, Filterable<A> {
     }
 
     abstract filter(fn: (value: A) => Boolean): Maybe<A>
+
+    abstract reduce<B>(reducer: (accumulator: B, value: A) => B, initial: B): B;
+
+    abstract traverse<B>(TypeRep: ApplicativeTypeRep<Maybe<B>>, fn: (a: A) => Applicative<B>): Applicative<Maybe<B>>
 
     abstract join(): Maybe<A | any>;
 
@@ -78,6 +86,14 @@ class Nothing<A> extends Maybe<A> {
         return this;
     }
 
+    reduce<B>(reducer: (accumulator: B, value: A) => B, initial: B): B {
+        return undefined;
+    }
+
+    traverse<B>(TypeRep: ApplicativeTypeRep<Maybe<B>>, fn: (a: A) => Applicative<B>): Applicative<Maybe<B>> {
+        return TypeRep.of(new Nothing<B>(undefined));
+    }
+
     join(): Maybe<A> {
         return this;
     };
@@ -127,6 +143,14 @@ class Just<A> extends Maybe<A> {
         return fn(this.value) ?
             this :
             new Nothing<A>(undefined);
+    }
+
+    reduce<B>(reducer: (accumulator: B, value: A) => B, initial: B): B {
+        return reducer(initial, this.value);
+    }
+
+    traverse<B>(TypeRep: ApplicativeTypeRep<Maybe<B>>, fn: (a: A) => Applicative<B>): Applicative<Maybe<B>> {
+        return fn(this.value).map((x: B) => new Just(x));
     }
 
     join<B>(): Maybe<A | any> {

@@ -1,15 +1,19 @@
+import Traversable from "../../interfaces/Traversable";
+
 import Bifunctor from "../../interfaces/Bifunctor";
 
 import * as MonadModule from "../../interfaces/Monad";
 
 type Monad<A> = MonadModule.Monad<A>;
+type Applicative<A> = MonadModule.Applicative.Applicative<A>;
+type ApplicativeTypeRep<A> = MonadModule.Applicative.ApplicativeTypeRep<A>;
 type Chain<A> = MonadModule.Chain.Chain<A>;
 type Apply<A> = MonadModule.Chain.Apply.Apply<A>;
 type ARG1<A> = MonadModule.Chain.Apply.ARG1<A>;
 type RETURNS<A> = MonadModule.Chain.Apply.RETURNS<A>;
 const isFN = MonadModule.Chain.Apply.isFN;
 
-export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R> {
+export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R>, Traversable<R> {
     protected readonly left: L;
     protected readonly right: R;
 
@@ -24,13 +28,17 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R> 
 
     abstract chain<R2>(fn: (right: R) => Chain<R2>): Chain<R2>
 
-    abstract bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Either<L2, R2>
-
     static of<L, R>(right?: R): Either<L, R> {
         return new Right<L, R>(undefined, right);
     }
 
+    abstract bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Either<L2, R2>
+
     abstract mapLeft<L2>(fn: (left: L) => L2): Either<L2, R>;
+
+    abstract reduce<R2>(reducer: (accumulator: R2, value: R) => R2, initial: R2): R2;
+
+    abstract traverse<R2>(TypeRep: ApplicativeTypeRep<Either<L, R2>>, fn: (a: R) => Applicative<R2>): Applicative<Either<L, R2>>
 
     abstract get(): L | R ;
 
@@ -73,6 +81,14 @@ class Left<L, R> extends Either<L, R> {
 
     bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Left<L2, R2> {
         return new Left<L2, R2>(fnLeft(this.left), undefined);
+    }
+
+    reduce<R2>(reducer: (accumulator: R2, value: R) => R2, initial: R2): R2 {
+        return undefined;
+    }
+
+    traverse<R2>(TypeRep: ApplicativeTypeRep<Either<L, R2>>, fn: (a: R) => Applicative<R2>): Applicative<Either<L, R2>> {
+        return TypeRep.of(new Left<L, R2>(undefined, undefined));
     }
 
     mapLeft<L2>(fn: (left: L) => L2): Either<L2, R> {
@@ -126,6 +142,14 @@ class Right<L, R> extends Either<L, R> {
 
     mapLeft<L2>(fn: (left: L) => L2): Either<L2, R> {
         return new Right<L2, R>(undefined, this.right);
+    }
+
+    reduce<R2>(reducer: (accumulator: R2, value: R) => R2, initial: R2): R2 {
+        return reducer(initial, this.right);
+    }
+
+    traverse<R2>(TypeRep: ApplicativeTypeRep<Either<L, R2>>, fn: (a: R) => Applicative<R2>): Applicative<Either<L, R2>> {
+        return fn(this.right).map((a: R2) => new Right<L, R2>(undefined, a));
     }
 
     get(): R {

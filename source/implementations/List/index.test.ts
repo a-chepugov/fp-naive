@@ -8,6 +8,7 @@ import ApplyTests from "../../interfaces/Apply/index.tests";
 import ApplicativeTests from "../../interfaces/Applicative/index.tests";
 import FilterableTests from "../../interfaces/Filterable/index.tests";
 import SemigroupTests from "../../interfaces/Semigroup/index.tests";
+import TraversableTests from "../../interfaces/Traversable/index.tests";
 
 describe("List", () => {
 
@@ -18,6 +19,7 @@ describe("List", () => {
         FilterableTests(Testee);
         FilterableTests(Testee);
         SemigroupTests(Testee);
+        TraversableTests(Testee);
     });
 
     describe("Filterable", () => {
@@ -48,19 +50,6 @@ describe("List", () => {
 
             const result = instance.reduce(reducer, 1);
             expect(result).to.be.equal(7);
-        });
-
-    });
-
-    describe("Traversable", () => {
-
-        it("traverse List<number> to Either<List<number>>", () => {
-            const instance = new Testee([1, 2, 3]);
-            const toEitherNumber = (a: number) => a > 0 ? Either.right(a) : Either.left(new Error(`${a} is not greater than 0`));
-            const result = instance.traverse(toEitherNumber) as Either<number, Testee<number>>;
-            expect(result).to.be.instanceof(Either);
-            expect(result.get()).to.be.instanceof(Testee);
-            expect(result.getOrElse(Testee.of(1)).get()).to.be.deep.equal([1, 2, 3]);
         });
 
     });

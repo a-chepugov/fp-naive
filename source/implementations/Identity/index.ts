@@ -4,6 +4,7 @@ import * as MonadModule from "../../interfaces/Monad";
 
 type Monad<A> = MonadModule.Monad<A>;
 type Applicative<A> = MonadModule.Applicative.Applicative<A>;
+type ApplicativeTypeRep<A> = MonadModule.Applicative.ApplicativeTypeRep<A>;
 type Chain<A> = MonadModule.Chain.Chain<A>;
 type Apply<A> = MonadModule.Chain.Apply.Apply<A>;
 type ARG1<A> = MonadModule.Chain.Apply.ARG1<A>;
@@ -41,11 +42,11 @@ export default class Identity<A> implements Monad<A>, Traversable<A> {
         return this.value;
     }
 
-    reduce<B>(reducer: (accumulator: B, value: A) => B, initial?: B): B {
+    reduce<B>(reducer: (accumulator: B, value: A) => B, initial: B): B {
         return reducer(initial, this.value);
     }
 
-    traverse<B>(fn: (a: A) => Applicative<B>): Applicative<Identity<B>> {
+    traverse<B>(TypeRep: ApplicativeTypeRep<Identity<B>>, fn: (a: A) => Applicative<B>): Applicative<Identity<B>> {
         return fn(this.value).map(Identity.of);
     }
 

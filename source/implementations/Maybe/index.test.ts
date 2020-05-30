@@ -46,7 +46,7 @@ describe("Maybe", () => {
 
         describe("Functor", () => {
 
-            it("skips map method", () => {
+            it("skips map function", () => {
                 const maybe = Testee.nothing();
                 let counter = 0;
                 let mapped = maybe.map((_: number) => counter++);
@@ -58,7 +58,7 @@ describe("Maybe", () => {
 
         describe("Apply", () => {
 
-            it("skips ap method", () => {
+            it("skips ap function", () => {
                 const instance = Testee.just(5);
                 let counter = 0;
                 const add = (_: number) => counter++;
@@ -71,7 +71,7 @@ describe("Maybe", () => {
 
         describe("Chain", () => {
 
-            it("skips chain method", () => {
+            it("skips chain function", () => {
                 const instance = Testee.nothing();
                 let counter = 0;
                 const fn = (_: number): Testee<number> => Testee.of(++counter);

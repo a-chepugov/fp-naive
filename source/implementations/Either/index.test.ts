@@ -53,7 +53,7 @@ describe("Either", () => {
 
         describe("Functor", () => {
 
-            it("skips map method", () => {
+            it("skips map function", () => {
                 const maybe = Testee.left();
                 let counter = 0;
                 let mapped = maybe.map((_: number) => counter++);
@@ -65,7 +65,7 @@ describe("Either", () => {
 
         describe("Apply", () => {
 
-            it("skips ap method", () => {
+            it("skips ap function", () => {
                 const instance = Testee.right();
                 let counter = 0;
                 const add = (_: number) => counter++;
@@ -78,7 +78,7 @@ describe("Either", () => {
 
         describe("Chain", () => {
 
-            it("skips chain method", () => {
+            it("skips chain function", () => {
                 const either = Testee.left();
                 let counter = 0;
                 const fn = (_: number): Testee<Error, number> => Testee.right(counter++);
@@ -100,7 +100,7 @@ describe("Either", () => {
                 expect(counterR).to.be.equal(0);
             });
 
-        })
+        });
 
         it("getOrElse", () => {
             const either = Testee.left();
@@ -139,7 +139,7 @@ describe("Either", () => {
                 expect(counterR).to.be.equal(1);
             });
 
-        })
+        });
 
         it("getOrElse", () => {
             const either = Testee.right(0);

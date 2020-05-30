@@ -1,7 +1,6 @@
 import {expect} from "chai";
 
 import Testee from "./index";
-import identity from "../../utilities/identity";
 
 import FunctorTests from "../../interfaces/Functor/index.tests";
 
@@ -53,10 +52,10 @@ describe("Either", () => {
 
         describe("Functor", () => {
 
-            it("skips map function", () => {
+            it("skips map method", () => {
                 const maybe = Testee.left();
                 let counter = 0;
-                let mapped = maybe.map((value: number) => counter++);
+                let mapped = maybe.map((_: number) => counter++);
                 expect(mapped).to.be.instanceof(Testee);
                 expect(counter).to.be.equal(0);
             });

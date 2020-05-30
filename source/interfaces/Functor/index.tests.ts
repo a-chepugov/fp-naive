@@ -9,7 +9,6 @@ export default (Testee: any) => {
             const value = Math.floor(Math.random() * 100);
             const instance = Testee.of(value);
             const mapped = instance.map(identity);
-            expect(mapped).to.be.instanceof(Testee);
             expect(instance).to.be.deep.equal(mapped);
         });
 

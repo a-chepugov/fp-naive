@@ -1,11 +1,13 @@
 import {expect} from "chai";
 
+const randomTill100 = () => Math.ceil(Math.random() * 100);
+
 export default (M: any) => {
 
     describe("Chain", () => {
 
         it("associativity", () => {
-            const x = Math.ceil(Math.random() * 100);
+            const x = randomTill100();
 
             const f = (a: number) => M.of(a + 2);
             const g = (a: number) => M.of(a * 3);

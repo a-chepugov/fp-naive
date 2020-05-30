@@ -1,11 +1,13 @@
 import {expect} from "chai";
 
+const randomTill100 = () => Math.ceil(Math.random() * 100);
+
 export default (M: any) => {
 
     describe("Monad", () => {
 
         it("left identity", () => {
-            const a = Math.floor(Math.random() * 100);
+            const a = randomTill100();
 
             const f = (a: number) => M.of(a + 1);
 
@@ -16,7 +18,7 @@ export default (M: any) => {
         });
 
         it("right identity", () => {
-            const a = Math.floor(Math.random() * 100);
+            const a = randomTill100();
 
             const m = M.of(a);
 

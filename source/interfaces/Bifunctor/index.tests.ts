@@ -1,14 +1,15 @@
 import identity from "../../utilities/identity";
 import {expect} from "chai";
 
+const randomTill100 = () => Math.ceil(Math.random() * 100);
+
 export default (M: any) => {
 
     describe("Bifunctor", () => {
 
         it("identity", () => {
-            const value = Math.floor(Math.random() * 100);
 
-            const p = M.of(value);
+            const p = M.of(randomTill100());
 
             const r1 = p;
             const r2 = p.bimap(identity, identity);
@@ -17,8 +18,7 @@ export default (M: any) => {
         });
 
         it("composition", () => {
-            const random100 = () => Math.ceil(Math.random() * 100);
-            const x = random100();
+            const x = randomTill100();
 
             const f = (a: number) => a + 2;
             const g = (a: number) => a * 3;

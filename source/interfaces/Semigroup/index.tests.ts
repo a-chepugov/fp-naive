@@ -1,12 +1,12 @@
 import {expect} from "chai";
 
+const randomTill100 = () => Math.ceil(Math.random() * 100);
+
 export default (M: any) => {
 
     describe("Semigroup", () => {
 
         it("associativity", () => {
-            const randomTill100 = () => Math.ceil(Math.random() * 100);
-
             const a = M.of(randomTill100());
             const b = M.of(randomTill100());
             const c = M.of(randomTill100());

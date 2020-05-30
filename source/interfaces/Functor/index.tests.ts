@@ -1,12 +1,14 @@
 import identity from "../../utilities/identity";
 import {expect} from "chai";
 
+const randomTill100 = () => Math.ceil(Math.random() * 100);
+
 export default (M: any) => {
 
     describe("Functor", () => {
 
         it("identity", () => {
-            const x = Math.floor(Math.random() * 100);
+            const x = randomTill100();
 
             const u = M.of(x);
 
@@ -17,7 +19,7 @@ export default (M: any) => {
         });
 
         it("composition", () => {
-            const x = Math.ceil(Math.random() * 100);
+            const x = randomTill100();
 
             const f = (a: number) => a + 2;
             const g = (a: number) => a * 3;

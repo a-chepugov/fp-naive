@@ -1,12 +1,14 @@
 import identity from "../../utilities/identity";
 import {expect} from "chai";
 
+const randomTill100 = () => Math.ceil(Math.random() * 100);
+
 export default (M: any) => {
 
     describe("Filterable", () => {
 
         it("distributivity", () => {
-            const v = M.of(5);
+            const v = M.of(randomTill100());
             const p = (x: number) => Boolean(x);
             const q = (x: number) => x > 3;
 
@@ -17,7 +19,7 @@ export default (M: any) => {
         });
 
         it("identity", () => {
-            const v = M.of(5);
+            const v = M.of(randomTill100());
 
             const r1 = v.filter((_: any) => true);
             const r2 = v;

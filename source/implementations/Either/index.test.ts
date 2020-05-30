@@ -4,13 +4,15 @@ import Testee from "./index";
 
 import FunctorTests from "../../interfaces/Functor/index.tests";
 import ApplyTests from "../../interfaces/Apply/index.tests";
+import ChainTests from "../../interfaces/Chain/index.tests";
 
 describe("Either", () => {
 
     describe("laws", () => {
         FunctorTests(Testee);
         ApplyTests(Testee);
-    })
+        ChainTests(Testee);
+    });
 
     describe("Either prototype", () => {
 
@@ -81,12 +83,11 @@ describe("Either", () => {
 
         describe("Chain", () => {
 
-            it("chain", () => {
+            it("skips chain method", () => {
                 const either = Testee.left();
                 let counter = 0;
-                const fn = (value: number): Testee<Error, number> => Testee.right(counter++)
-                let chained = either.chain(fn);
-                expect(chained).to.be.instanceof(Testee);
+                const fn = (_: number): Testee<Error, number> => Testee.right(counter++);
+                either.chain(fn);
                 expect(counter).to.be.equal(0);
             });
 
@@ -125,18 +126,6 @@ describe("Either", () => {
         it("get", () => {
             const either = Testee.right(5);
             expect(either.get()).to.be.equal(5);
-        });
-
-        describe("Chain", () => {
-
-            it("chain", () => {
-                const maybe = Testee.right(5);
-                let chained = maybe.chain((value: number): Testee<any, number> => Testee.right(value + 1));
-                expect(chained).to.be.instanceof(Testee);
-                const result = chained as Testee<any, number>;
-                expect(result.get()).to.be.equal(6);
-            });
-
         });
 
         it("bimap", () => {

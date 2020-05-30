@@ -5,31 +5,21 @@ import Maybe from "../Maybe";
 
 import FunctorTests from "../../interfaces/Functor/index.tests";
 import ApplyTests from "../../interfaces/Apply/index.tests";
+import ChainTests from "../../interfaces/Chain/index.tests";
 
 describe("Identity", () => {
 
     describe("laws", () => {
         FunctorTests(Testee);
         ApplyTests(Testee);
-    })
+        ChainTests(Testee);
+    });
 
     describe("Applicative", () => {
 
         it("of returns Maybe", () => {
             const maybe = Testee.of(5);
             expect(maybe).to.be.instanceof(Testee);
-        });
-
-    });
-
-    describe("Chain", () => {
-
-        it("chain invokes on Identity", () => {
-            const instance = Testee.of(5);
-            let chained = instance.chain((value: number): Testee<number> => Testee.of(value + 1));
-            expect(chained).to.be.instanceof(Testee);
-            const result = chained as Testee<number>;
-            expect(result.get()).to.be.equal(6);
         });
 
     });

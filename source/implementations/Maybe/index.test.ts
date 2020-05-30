@@ -6,13 +6,15 @@ import Testee from "./index";
 
 import FunctorTests from "../../interfaces/Functor/index.tests";
 import ApplyTests from "../../interfaces/Apply/index.tests";
+import ChainTests from "../../interfaces/Chain/index.tests";
 
 describe("Maybe", () => {
 
     describe("laws", () => {
         FunctorTests(Testee);
         ApplyTests(Testee);
-    })
+        ChainTests(Testee);
+    });
 
     describe("Maybe prototype", () => {
 
@@ -76,12 +78,11 @@ describe("Maybe", () => {
 
         describe("Chain", () => {
 
-            it("chain skips on Maybe.Nothing", () => {
+            it("skips chain method", () => {
                 const instance = Testee.nothing();
                 let counter = 0;
-                const fn = (value: number): Testee<number> => Testee.of(++counter)
-                let chained = instance.chain(fn);
-                expect(chained).to.be.instanceof(Testee);
+                const fn = (_: number): Testee<number> => Testee.of(++counter);
+                instance.chain(fn);
                 expect(counter).to.be.equal(0);
             });
 
@@ -134,18 +135,6 @@ describe("Maybe", () => {
     });
 
     describe("Just", () => {
-
-        describe("Chain", () => {
-
-            it("chain invokes on Maybe.Just", () => {
-                const instance = Testee.of(5);
-                let chained = instance.chain((value: number): Testee<number> => Testee.of(value + 1));
-                expect(chained).to.be.instanceof(Testee);
-                const result = chained as Testee<number>;
-                expect(result.get()).to.be.equal(6);
-            });
-
-        });
 
         describe("Filterable", () => {
 

@@ -42,13 +42,13 @@ export default abstract class Maybe<A> implements Monad<A>, Filterable<A> {
         return new Just<A>(value);
     }
 
-    static nothing<A>(value?: A): Nothing<A> {
-        return new Nothing<A>(value);
+    static nothing<A>(_: A): Nothing<A> {
+        return new Nothing<A>(undefined);
     }
 
     static fromNullable<A>(value: A): Maybe<A> {
         return value === null || value === undefined ?
-            new Nothing<A>(value) :
+            new Nothing<A>(undefined) :
             new Just<A>(value);
     }
 

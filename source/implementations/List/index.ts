@@ -13,8 +13,8 @@ const isFN = MonadModule.Chain.Apply.isFN;
 export default class List<A> implements Applicative<A>, Filterable<A>, Traversable<A>, Semigroup<A> {
     protected readonly values: Array<A>;
 
-    constructor(value: Array<A>) {
-        this.values = value;
+    constructor(values: Array<A>) {
+        this.values = values;
     }
 
     static of<A>(value: A): List<A> {
@@ -50,7 +50,7 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
         const addToList = (item: B): addToListType => (list: List<B>): List<B> => list.concat(new List([item]));
 
         return this.values.reduce(
-            (accumulator: Applicative<List<B>> | null, item: A) => {
+            (accumulator: Applicative<List<B>> | null, item: A): Applicative<List<B>> => {
                 return accumulator ?
                     fn(item).map(addToList).ap(accumulator) :
                     fn(item).map(List.of)

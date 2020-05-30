@@ -13,7 +13,7 @@ describe("List", () => {
     describe("laws", () => {
         FunctorTests(Testee);
         ApplyTests(Testee);
-    })
+    });
 
     describe("Applicative", () => {
 

@@ -6,8 +6,8 @@
  * expect(saved(100)).to.equal(42);
  */
 // always :: a -> b -> a
-export default function always(a: any): Function {
-    return function alwaysInternal(...args: Array<any>) {
+export default function always<A>(a: A): Function {
+    return function alwaysInternal(...args: Array<any>): A {
         return a;
     }
 };

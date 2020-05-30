@@ -7,6 +7,7 @@ import FunctorTests from "../../interfaces/Functor/index.tests";
 import ApplyTests from "../../interfaces/Apply/index.tests";
 import ApplicativeTests from "../../interfaces/Applicative/index.tests";
 import FilterableTests from "../../interfaces/Filterable/index.tests";
+import SemigroupTests from "../../interfaces/Semigroup/index.tests";
 
 describe("List", () => {
 
@@ -15,6 +16,8 @@ describe("List", () => {
         ApplyTests(Testee);
         ApplicativeTests(Testee);
         FilterableTests(Testee);
+        FilterableTests(Testee);
+        SemigroupTests(Testee);
     });
 
     describe("Filterable", () => {
@@ -58,26 +61,6 @@ describe("List", () => {
             expect(result).to.be.instanceof(Either);
             expect(result.get()).to.be.instanceof(Testee);
             expect(result.getOrElse(Testee.of(1)).get()).to.be.deep.equal([1, 2, 3]);
-        });
-
-    });
-
-    describe("Semigroup", () => {
-
-        it("concat returns same type", () => {
-            const instance1 = Testee.of(1);
-            const instance2 = Testee.of(2);
-            expect(instance1.concat(instance2)).to.be.instanceof(Testee);
-        });
-
-        it("associativity", () => {
-            const a = Testee.of(1);
-            const b = Testee.of(2);
-            const c = Testee.of(3);
-
-            const r1 = a.concat(b).concat(c);
-            const r2 = a.concat(b.concat(c));
-            expect(r1).to.be.deep.equal(r2);
         });
 
     });

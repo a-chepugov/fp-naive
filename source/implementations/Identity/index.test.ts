@@ -7,6 +7,7 @@ import FunctorTests from "../../interfaces/Functor/index.tests";
 import ApplyTests from "../../interfaces/Apply/index.tests";
 import ApplicativeTests from "../../interfaces/Applicative/index.tests";
 import ChainTests from "../../interfaces/Chain/index.tests";
+import MonadTests from "../../interfaces/Monad/index.tests";
 
 describe("Identity", () => {
 
@@ -15,6 +16,7 @@ describe("Identity", () => {
         ApplyTests(Testee);
         ApplicativeTests(Testee);
         ChainTests(Testee);
+        MonadTests(Testee);
     });
 
     describe("Traversable", () => {

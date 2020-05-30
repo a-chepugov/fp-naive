@@ -39,7 +39,7 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
         return new List(this.values.filter(fn));
     }
 
-    reduce<B>(reducer: (accumulator: B, value: A) => B, initial?: B): B {
+    reduce<B>(reducer: (accumulator: B, value: A) => B, initial: B): B {
         return this.values.reduce(reducer, initial);
     }
 

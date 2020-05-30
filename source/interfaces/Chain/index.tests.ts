@@ -1,19 +1,16 @@
 import {expect} from "chai";
 
-export default (Testee: any) => {
+export default (M: any) => {
 
     describe("Chain", () => {
 
         it("associativity", () => {
-            const random100 = () => Math.ceil(Math.random() * 100);
-            const value = random100();
-            const addition = random100();
-            const multiplier = random100();
+            const x = Math.ceil(Math.random() * 100);
 
-            const f = (a: number) => Testee.of(a + addition);
-            const g = (a: number) => Testee.of(a * multiplier);
+            const f = (a: number) => M.of(a + 2);
+            const g = (a: number) => M.of(a * 3);
 
-            const m = Testee.of(value);
+            const m = M.of(x);
 
             const r1 = m.chain(f).chain(g);
             const r2 = m.chain((x: number) => f(x).chain(g));

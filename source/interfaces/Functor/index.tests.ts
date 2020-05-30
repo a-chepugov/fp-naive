@@ -1,30 +1,31 @@
 import identity from "../../utilities/identity";
 import {expect} from "chai";
 
-export default (Testee: any) => {
+export default (M: any) => {
 
     describe("Functor", () => {
 
         it("identity", () => {
-            const value = Math.floor(Math.random() * 100);
-            const instance = Testee.of(value);
-            const mapped = instance.map(identity);
-            expect(instance).to.be.deep.equal(mapped);
+            const x = Math.floor(Math.random() * 100);
+
+            const u = M.of(x);
+
+            const r1 = u.map(identity);
+            const r2 = u;
+
+            expect(r1).to.be.deep.equal(r2);
         });
 
         it("composition", () => {
-            const random100 = () => Math.ceil(Math.random() * 100);
-            const value = random100();
-            const addition = random100();
-            const multiplier = random100();
+            const x = Math.ceil(Math.random() * 100);
 
-            const add = (a: number) => a + addition;
-            const mul = (a: number) => a * multiplier;
+            const f = (a: number) => a + 2;
+            const g = (a: number) => a * 3;
 
-            const instance = Testee.of(value);
+            const u = M.of(x);
 
-            const r1 = instance.map((a: number) => mul(add(a)));
-            const r2 = instance.map(add).map(mul);
+            const r1 = u.map((a: number) => f(g(a)));
+            const r2 = u.map(g).map(f);
 
             expect(r1).to.be.deep.equal(r2);
         });

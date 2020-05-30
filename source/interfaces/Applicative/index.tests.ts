@@ -1,25 +1,25 @@
 import {expect} from "chai";
 import identity from "../../utilities/identity";
 
-const compose = (f: any) => (g: any) => (x: any) => f(g(x))
-
-export default (Testee: any) => {
+export default (M: any) => {
 
     describe("Applicative", () => {
 
         it("identity", () => {
-            const v = Testee.of(5);
-            const result = Testee.of(identity).ap(v);
+            const v = M.of(5);
 
-            expect(v).to.be.deep.equal(result);
+            const r1 = v;
+            const r2 = M.of(identity).ap(v);
+
+            expect(r1).to.be.deep.equal(r2);
         });
 
         it("homomorphism", () => {
             const x = Math.ceil(Math.random() * 100);
             const f = (a: number) => a + 2;
 
-            const r1 = Testee.of(f).ap(Testee.of(x));
-            const r2 = Testee.of(f(x));
+            const r1 = M.of(f).ap(M.of(x));
+            const r2 = M.of(f(x));
 
             expect(r1).to.be.deep.equal(r2);
         });
@@ -27,10 +27,10 @@ export default (Testee: any) => {
         it("interchange", () => {
             const x = Math.ceil(Math.random() * 100);
             const f = (a: number) => a + 2;
-            const v = Testee.of((a: number) => a * 3);
+            const v = M.of((a: number) => a * 3);
 
-            const r1 = v.ap(Testee.of(x));
-            const r2 = Testee.of((f: (a: number) => number) => f(x)).ap(v);
+            const r1 = v.ap(M.of(x));
+            const r2 = M.of((f: (a: number) => number) => f(x)).ap(v);
 
             expect(r1).to.be.deep.equal(r2);
         });

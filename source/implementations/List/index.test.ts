@@ -3,28 +3,17 @@ import {expect} from "chai";
 import identity from "../../utilities/identity";
 
 import Testee from "./index";
-import Identity from "../Identity";
 import Either from "../Either";
 
 import FunctorTests from "../../interfaces/Functor/index.tests";
+import ApplyTests from "../../interfaces/Apply/index.tests";
 
 describe("List", () => {
 
-    FunctorTests(Testee)
-
-    describe("Apply", () => {
-
-        it("ap invokes on List", () => {
-            const instance = new Identity(3);
-            const inc = (a: number) => ++a;
-            const dec = (a: number) => --a;
-            const instanceOps = new Testee([inc, dec]);
-            const resultMonad = instanceOps.ap(instance) as Identity<number>;
-            expect(resultMonad).to.be.instanceof(Identity);
-            expect(resultMonad.get()).to.be.deep.equal(4);
-        });
-
-    });
+    describe("laws", () => {
+        FunctorTests(Testee);
+        ApplyTests(Testee);
+    })
 
     describe("Applicative", () => {
 

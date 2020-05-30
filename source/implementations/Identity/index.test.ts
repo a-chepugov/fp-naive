@@ -4,39 +4,14 @@ import Testee from "./index";
 import Maybe from "../Maybe";
 
 import FunctorTests from "../../interfaces/Functor/index.tests";
+import ApplyTests from "../../interfaces/Apply/index.tests";
 
 describe("Identity", () => {
 
-    FunctorTests(Testee);
-
-    describe("Apply", () => {
-
-        it("apply invokes on Identity", () => {
-            const instance4 = Testee.of(4);
-            const add = (a: number) => a + 1;
-            const instanceAdd = Testee.of(add);
-            const resultMonad = instanceAdd.ap(instance4) as Testee<number>;
-            expect(resultMonad).to.be.instanceof(Testee);
-            expect(resultMonad.get()).to.be.equal(5);
-        });
-
-        it("consumption", () => {
-            const value1 = Math.floor(Math.random() * 100);
-            const value2 = Math.floor(Math.random() * 100);
-
-            const add = (a: number) => (b: number) => a + b;
-
-            const v1 = Testee.of(value1);
-            const v2 = Testee.of(value2);
-            const aT = Testee.of(add);
-
-            const r = aT.ap(v1).ap(v2) as Testee<number>;
-
-            expect(r.get()).to.be.equal(value1 + value2);
-        });
-
-    });
-
+    describe("laws", () => {
+        FunctorTests(Testee);
+        ApplyTests(Testee);
+    })
 
     describe("Applicative", () => {
 

@@ -3,11 +3,16 @@ import {expect} from "chai";
 import identity from "../../utilities/identity";
 
 import Testee from "./index";
+
 import FunctorTests from "../../interfaces/Functor/index.tests";
+import ApplyTests from "../../interfaces/Apply/index.tests";
 
 describe("Maybe", () => {
 
-    FunctorTests(Testee);
+    describe("laws", () => {
+        FunctorTests(Testee);
+        ApplyTests(Testee);
+    })
 
     describe("Maybe prototype", () => {
 
@@ -58,13 +63,12 @@ describe("Maybe", () => {
 
         describe("Apply", () => {
 
-            it("ap skips on Maybe.Nothing", () => {
-                const instance = Testee.nothing<number>();
+            it("skips ap method", () => {
+                const instance = Testee.just(5);
                 let counter = 0;
-                const add = (a: number) => counter++;
-                const instanceAdd = Testee.of(add);
-                const resultMonad = instanceAdd.ap(instance);
-                expect(resultMonad).to.be.instanceof(Testee);
+                const add = (_: number) => counter++;
+                const instanceAdd = Testee.nothing(add);
+                instanceAdd.ap(instance);
                 expect(counter).to.be.equal(0);
             });
 
@@ -130,19 +134,6 @@ describe("Maybe", () => {
     });
 
     describe("Just", () => {
-
-        describe("Apply", () => {
-
-            it("ap invokes on Maybe.Just", () => {
-                const instance4 = Testee.of(4);
-                const add = (a: number) => a + 1;
-                const instanceAdd = Testee.of(add);
-                const resultMonad = instanceAdd.ap(instance4) as Testee<number>;
-                expect(resultMonad).to.be.instanceof(Testee);
-                expect(resultMonad.get()).to.be.equal(5);
-            });
-
-        });
 
         describe("Chain", () => {
 

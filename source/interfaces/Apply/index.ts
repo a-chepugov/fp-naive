@@ -1,6 +1,6 @@
-import * as Functor from './Functor';
+import * as Functor from '../Functor';
 
-export * as Functor from './Functor';
+export * as Functor from '../Functor';
 
 export type ARGS<F> = F extends (arg: any) => any ? Parameters<F> : Parameters<any>;
 export type ARG1<F> = ARGS<F>[0]

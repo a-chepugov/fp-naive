@@ -3,10 +3,14 @@ import {expect} from "chai";
 import Testee from "./index";
 
 import FunctorTests from "../../interfaces/Functor/index.tests";
+import ApplyTests from "../../interfaces/Apply/index.tests";
 
 describe("Either", () => {
 
-    FunctorTests(Testee);
+    describe("laws", () => {
+        FunctorTests(Testee);
+        ApplyTests(Testee);
+    })
 
     describe("Either prototype", () => {
 
@@ -64,13 +68,12 @@ describe("Either", () => {
 
         describe("Apply", () => {
 
-            it("ap", () => {
-                const either = Testee.left();
+            it("skips ap method", () => {
+                const instance = Testee.right();
                 let counter = 0;
-                const add = (a: number) => counter++;
-                const instanceAdd = Testee.right(add);
-                const resultMonad = instanceAdd.ap(either as Testee<any, number>);
-                expect(resultMonad).to.be.instanceof(Testee);
+                const add = (_: number) => counter++;
+                const instanceAdd = Testee.left(add);
+                instanceAdd.ap(instance);
                 expect(counter).to.be.equal(0);
             });
 
@@ -122,19 +125,6 @@ describe("Either", () => {
         it("get", () => {
             const either = Testee.right(5);
             expect(either.get()).to.be.equal(5);
-        });
-
-        describe("Apply", () => {
-
-            it("ap", () => {
-                const instance5 = Testee.right(4);
-                const add = (a: number) => a + 1;
-                const instanceAdd = Testee.right(add);
-                const resultMonad = instanceAdd.ap(instance5) as Testee<any, number>;
-                expect(resultMonad).to.be.instanceof(Testee);
-                expect(resultMonad.get()).to.be.equal(5);
-            });
-
         });
 
         describe("Chain", () => {

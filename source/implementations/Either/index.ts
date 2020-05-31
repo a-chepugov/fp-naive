@@ -17,7 +17,7 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R>,
     protected readonly left: L;
     protected readonly right: R;
 
-    constructor(left?: L, right?: R) {
+    constructor(left: L, right: R) {
         this.left = left;
         this.right = right;
     }
@@ -44,11 +44,11 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R>,
 
     abstract getOrElse(other: R): R;
 
-    static right<L, R>(right?: R): Right<L, R> {
+    static right<L, R>(right: R): Right<L, R> {
         return new Right<L, R>(undefined, right);
     }
 
-    static left<L, R>(left?: L): Left<L, R> {
+    static left<L, R>(left: L): Left<L, R> {
         return new Left<L, R>(left, undefined);
     }
 
@@ -72,7 +72,7 @@ class Left<L, R> extends Either<L, R> {
     }
 
     ap(other: Apply<ARG1<R>>): Apply<RETURNS<R>> {
-        return new Left<L, RETURNS<R>>(undefined);
+        return new Left<L, RETURNS<R>>(undefined, undefined);
     }
 
     chain<R2>(fn: (right: R) => Chain<R2>): Chain<R2> {

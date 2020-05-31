@@ -1,16 +1,15 @@
 import {expect} from "chai";
+
 import identity from "../../utilities/identity";
 
 const compose = (f: any) => (g: any) => (x: any) => f(g(x));
 
-const randomTill100 = () => Math.ceil(Math.random() * 100);
-
-export default (M: any) => {
+export default (M: any, {x, f, g}: {x: any, f: any, g: any}) => {
 
     describe("Apply", () => {
 
         it("identity", () => {
-            const v = M.of(randomTill100());
+            const v = M.of(x);
 
             const r1 = v;
             const r2 = M.of(identity).ap(v);
@@ -19,9 +18,6 @@ export default (M: any) => {
         });
 
         it("homomorphism", () => {
-            const x = randomTill100();
-            const f = (a: number) => a + 2;
-
             const r1 = M.of(f).ap(M.of(x));
             const r2 = M.of(f(x));
 
@@ -29,19 +25,17 @@ export default (M: any) => {
         });
 
         it("interchange", () => {
-            const x = randomTill100();
-            const v = M.of((a: number) => a * 3);
+            const v = M.of(f);
 
             const r1 = v.ap(M.of(x));
-            const r2 = M.of((f: (a: number) => number) => f(x)).ap(v);
+            const r2 = M.of((f: (a: any) => any) => f(x)).ap(v);
 
             expect(r1).to.be.deep.equal(r2);
         });
 
         it("composition", () => {
-            const x = randomTill100();
-            const u = M.of((a: number) => a + 2);
-            const v = M.of((a: number) => a * 3);
+            const u = M.of(f);
+            const v = M.of(g);
             const w = M.of(x);
 
             const r2 = M.of(compose).ap(u).ap(v).ap(w);

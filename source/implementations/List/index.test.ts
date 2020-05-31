@@ -2,30 +2,37 @@ import {expect} from "chai";
 
 import Testee from "./index";
 
-import FunctorTests from "../../interfaces/Functor/index.tests";
-import ApplyTests from "../../interfaces/Apply/index.tests";
-import ApplicativeTests from "../../interfaces/Applicative/index.tests";
-import FoldableTests from "../../interfaces/Foldable/index.tests";
-import TraversableTests from "../../interfaces/Traversable/index.tests";
-import FilterableTests from "../../interfaces/Filterable/index.tests";
-import SemigroupTests from "../../interfaces/Semigroup/index.tests";
+import random from "../../utilities/random";
 
 describe("List", () => {
 
+    const x = random(0, 100);
+    const y = random(0, 100);
+    const z = random(0, 100);
+    const f = (a: number) => a + 2;
+    const g = (a: number) => a * 3;
+    const p = (x: any) => Boolean(x);
+    const q = (x: any) => x > 3;
+
+    const Identity = require("../../implementations/Identity").default;
+    const Maybe = require("../../implementations/Maybe").default;
+
+    const F = Identity;
+    const G = Maybe;
+
     describe("laws", () => {
-        FunctorTests(Testee);
-        ApplyTests(Testee);
-        ApplicativeTests(Testee);
-        FilterableTests(Testee);
-        FoldableTests(Testee);
-        TraversableTests(Testee);
-        FilterableTests(Testee);
-        SemigroupTests(Testee);
+        require('../../interfaces/Functor/index.tests').default(Testee, {x, f, g});
+        require('../../interfaces/Apply/index.tests').default(Testee, {x, f, g});
+        require('../../interfaces/Applicative/index.tests').default(Testee, {x, f});
+        require('../../interfaces/Foldable/index.tests').default(Testee, {x, i: 1});
+        require('../../interfaces/Traversable/index.tests').default(Testee, {x, F, G});
+        require('../../interfaces/Filterable/index.tests').default(Testee, {x, y, p, q});
+        require('../../interfaces/Semigroup/index.tests').default(Testee, {x, y, z});
     });
 
     describe("Filterable", () => {
 
-        it("filter on List([1]) gives List(1)", () => {
+        it("filter on List(1) gives List(1)", () => {
             const instance = Testee.of(1);
             const filtrator = (value: number): Boolean => Boolean(value);
 
@@ -33,7 +40,7 @@ describe("List", () => {
             expect(result.get()).to.be.deep.equal([1]);
         });
 
-        it("filter on List([0, 1, 2]) gives List([1, 2])", () => {
+        it("filter on List(0, 1, 2) gives List(1, 2)", () => {
             const instance = new Testee([0, 1, 2]);
             const filtrator = (value: number): Boolean => Boolean(value);
 

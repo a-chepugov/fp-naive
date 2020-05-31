@@ -1,15 +1,12 @@
-import identity from "../../utilities/identity";
 import {expect} from "chai";
 
-const randomTill100 = () => Math.ceil(Math.random() * 100);
+import identity from "../../utilities/identity";
 
-export default (M: any) => {
+export default (M: any, {x, f, g}: {x: any, f: any, g: any}) => {
 
     describe("Functor", () => {
 
         it("identity", () => {
-            const x = randomTill100();
-
             const u = M.of(x);
 
             const r1 = u.map(identity);
@@ -19,14 +16,10 @@ export default (M: any) => {
         });
 
         it("composition", () => {
-            const x = randomTill100();
-
-            const f = (a: number) => a + 2;
-            const g = (a: number) => a * 3;
 
             const u = M.of(x);
 
-            const r1 = u.map((a: number) => f(g(a)));
+            const r1 = u.map((a: any) => f(g(a)));
             const r2 = u.map(g).map(f);
 
             expect(r1).to.be.deep.equal(r2);

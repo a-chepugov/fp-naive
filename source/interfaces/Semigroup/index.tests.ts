@@ -1,15 +1,13 @@
 import {expect} from "chai";
 
-const randomTill100 = () => Math.ceil(Math.random() * 100);
-
-export default (M: any) => {
+export default (M: any, {x, y, z}: {x: any, y: any, z: any}) => {
 
     describe("Semigroup", () => {
 
         it("associativity", () => {
-            const a = M.of(randomTill100());
-            const b = M.of(randomTill100());
-            const c = M.of(randomTill100());
+            const a = M.of(x);
+            const b = M.of(y);
+            const c = M.of(z);
 
             const r1 = a.concat(b).concat(c);
             const r2 = a.concat(b.concat(c));

@@ -1,14 +1,13 @@
 import {expect} from "chai";
+
 import identity from "../../utilities/identity";
 
-const randomTill100 = () => Math.ceil(Math.random() * 100);
-
-export default (M: any) => {
+export default (M: any, {x, f}: {x: any, f: any}) => {
 
     describe("Applicative", () => {
 
         it("identity", () => {
-            const v = M.of(randomTill100());
+            const v = M.of(x);
 
             const r1 = v;
             const r2 = M.of(identity).ap(v);
@@ -17,9 +16,6 @@ export default (M: any) => {
         });
 
         it("homomorphism", () => {
-            const x = randomTill100();
-            const f = (a: number) => a + 2;
-
             const r1 = M.of(f).ap(M.of(x));
             const r2 = M.of(f(x));
 
@@ -27,11 +23,10 @@ export default (M: any) => {
         });
 
         it("interchange", () => {
-            const x = randomTill100();
-            const v = M.of((a: number) => a * 3);
+            const v = M.of(f);
 
             const r1 = v.ap(M.of(x));
-            const r2 = M.of((f: (a: number) => number) => f(x)).ap(v);
+            const r2 = M.of((f: (a: any) => any) => f(x)).ap(v);
 
             expect(r1).to.be.deep.equal(r2);
         });

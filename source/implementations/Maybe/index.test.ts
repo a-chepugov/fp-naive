@@ -2,26 +2,32 @@ import {expect} from "chai";
 
 import Testee from "./index";
 
-import FunctorTests from "../../interfaces/Functor/index.tests";
-import ApplyTests from "../../interfaces/Apply/index.tests";
-import ApplicativeTests from "../../interfaces/Applicative/index.tests";
-import ChainTests from "../../interfaces/Chain/index.tests";
-import MonadTests from "../../interfaces/Monad/index.tests";
-import FoldableTests from "../../interfaces/Foldable/index.tests";
-import TraversableTests from "../../interfaces/Traversable/index.tests";
-import Filterable from "../../interfaces/Filterable/index.tests";
+import random from "../../utilities/random";
 
 describe("Maybe", () => {
 
+    const x = random(0, 100);
+    const y = random(0, 100);
+    const f = (a: number) => a + 2;
+    const g = (a: number) => a * 3;
+    const p = (x: any) => Boolean(x);
+    const q = (x: any) => x > 3;
+
+    const Identity = require("../../implementations/Identity").default;
+    const Either = require("../../implementations/Either").default;
+
+    const F = Identity;
+    const G = Either;
+
     describe("laws", () => {
-        FunctorTests(Testee);
-        ApplyTests(Testee);
-        ApplicativeTests(Testee);
-        ChainTests(Testee);
-        MonadTests(Testee);
-        FoldableTests(Testee);
-        TraversableTests(Testee);
-        Filterable(Testee);
+        require('../../interfaces/Functor/index.tests').default(Testee, {x, f, g});
+        require('../../interfaces/Apply/index.tests').default(Testee, {x, f, g});
+        require('../../interfaces/Applicative/index.tests').default(Testee, {x, f});
+        require('../../interfaces/Chain/index.tests').default(Testee, {x, f, g});
+        require('../../interfaces/Monad/index.tests').default(Testee, {x, f});
+        require('../../interfaces/Foldable/index.tests').default(Testee, {x, i: 1});
+        require('../../interfaces/Traversable/index.tests').default(Testee, {x, F, G});
+        require('../../interfaces/Filterable/index.tests').default(Testee, {x, y, p, q});
     });
 
     describe("Maybe prototype", () => {

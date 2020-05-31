@@ -1,15 +1,13 @@
-import identity from "../../utilities/identity";
 import {expect} from "chai";
 
-const randomTill100 = () => Math.ceil(Math.random() * 100);
+import identity from "../../utilities/identity";
 
-export default (M: any) => {
+export default (M: any, {x, f, g, h, i}: { x: any, f: any, g: any, h: any, i: any  }) => {
 
     describe("Bifunctor", () => {
 
         it("identity", () => {
-
-            const p = M.of(randomTill100());
+            const p = M.of(x);
 
             const r1 = p;
             const r2 = p.bimap(identity, identity);
@@ -18,18 +16,10 @@ export default (M: any) => {
         });
 
         it("composition", () => {
-            const x = randomTill100();
-
-            const f = (a: number) => a + 2;
-            const g = (a: number) => a * 3;
-
-            const h = (a: number) => a + 2;
-            const i = (a: number) => a * 3;
-
             const p = M.of(x, x);
 
-            const composedLeft = (a: number) => f(g(a));
-            const composedRight = (a: number) => h(i(a));
+            const composedLeft = (a: any) => f(g(a));
+            const composedRight = (a: any) => h(i(a));
 
             const r1 = p.bimap(composedLeft, composedRight);
             const r2 = p.bimap(g, i).bimap(f, h);

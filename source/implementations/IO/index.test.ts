@@ -10,13 +10,6 @@ describe("IO", () => {
     const f = (a: any) => a ** 2;
     const g = (a: any) => a * 3;
 
-
-    const Identity = require("../../implementations/Identity").default;
-    const Maybe = require("../../implementations/Maybe").default;
-
-    const F = Identity;
-    const G = Maybe;
-
     describe("laws", () => {
         require('../../interfaces/Functor/index.tests').default(Testee, {x, f, g});
         require('../../interfaces/Apply/index.tests').default(Testee, {x, f, g});
@@ -25,89 +18,87 @@ describe("IO", () => {
         require('../../interfaces/Foldable/index.tests').default(Testee, {x, i: (a: any) => a()});
     });
 
-    describe("q", () => {
+    describe("Functor", () => {
 
-    it("ap", () => {
+        it("map doesn't invoke original function", () => {
             let counter = 0;
-            const x = (i: any) => {
-                console.log('DEBUG:index.test.ts:28 =>');
-                counter++;
-                return i
-            };
-            const instance = new Testee(x);
+            const inc = () => counter++;
 
-            let iden = Identity.of(5)
-
-            let q = instance.ap(iden);
-
-
-        console.log('DEBUG:index.test.ts:42 =>', q.inspect());
-
-        console.log('DEBUG:index.test.ts:46 =>', q.run());
-
-
-        });
-
-
-        it("map", () => {
-            let counter = 0;
-            const x = () => {
-                console.log('DEBUG:index.test.ts:28 =>');
-                counter++;
-                return 33
-            };
-
-            const instance = new Testee(x);
-            console.log('DEBUG:index.test.ts:64 =>', instance.inspect());
-            const f = (x: any) => x * 2;
-
-            let q = instance.map(f);
+            const instance = new Testee(inc);
             expect(counter).to.be.equal(0);
-            console.log('DEBUG:index.test.ts:38 =>', q.inspect());
 
-            console.log('DEBUG:index.test.ts:40 => counter ', counter);
+            const mapped = instance.map(f);
+            expect(counter).to.be.equal(0);
 
-            let r = q.run();
-            console.log('DEBUG:index.test.ts:43 => r', r);
-            console.log('DEBUG:index.test.ts:44 => counter', counter);
+            mapped.run();
             expect(counter).to.be.equal(1);
-            expect(r).to.be.equal(66);
         })
 
+    });
 
-        it("chain", () => {
+    describe("Apply", () => {
+
+        it("ap doesn't invoke functions", () => {
             let counter = 0;
-            const x = () => {
-                console.log('DEBUG:index.test.ts:55 =>');
+            const sum = () => {
                 counter++;
-                return 33
+                return (): void => undefined;
             };
+            const instanceSum = new Testee(sum);
+            const instance = new Testee(() => counter++);
+            expect(counter).to.be.equal(0);
 
-            const instance = new Testee(x);
-            console.log('DEBUG:index.test.ts:64 =>', instance.inspect());
-            const fc = (x: any) => {
-                console.log('DEBUG:index.test.ts:63 =>', x);
-                return Testee.of(x);
-            };
+            const apped = instanceSum.ap(instance);
+            expect(counter).to.be.equal(0);
 
-            // let q = instance.chain(fc);
-            // console.log('DEBUG:index.test.ts:68 =>', q.inspect());
-            // expect(counter).to.be.equal(0);
-            //
-            // console.log('DEBUG:index.test.ts:71 => counter ', counter);
-            //
-            // let r = q.run();
-            // console.log('DEBUG:index.test.ts:74 => r', r);
-            // console.log('DEBUG:index.test.ts:75 => counter', counter);
-            // expect(counter).to.be.equal(1);
-            // expect(r).to.be.equal(33);
+            apped.run();
+            expect(counter).to.be.equal(2);
         });
 
-    })
+        it("ap takes argument from function result", () => {
+            const sum = (a: any) => (b: any) => a + b;
+            const instanceSum = new Testee(sum);
+
+            const instance = new Testee(() => 2);
+
+            const apped = instanceSum.ap(instance);
+            expect(apped.run(3)).to.be.equal(5);
+        });
 
 
-    it("join", () => {
-        const instance = Testee.of(Testee.of(3));
+    });
+
+    describe("Chain", () => {
+
+        it("chain doesn't invoke original function", () => {
+            let counter = 0;
+            const inc = () => counter++;
+
+            const instance = new Testee(inc);
+
+            const fc = (x: any) => new Testee(x);
+
+            let chained = instance.chain(fc);
+            expect(counter).to.be.equal(0);
+
+            chained.run();
+            expect(counter).to.be.equal(1);
+        });
+
+    });
+
+    it("run takes arguments for IO action", () => {
+        const sum = (a: any, b: any, c: any) => {
+            return a + b + c;
+        };
+
+        const instance = new Testee(sum);
+        const result = instance.run(1, 2, 3);
+        expect(result).to.be.equal(6);
+    });
+
+    it("join invokes internal IO", () => {
+        const instance = Testee.of(new Testee(() => 3));
         expect(instance.join()).to.be.instanceof(Testee);
         expect(instance.join().get()()).to.be.equal(3);
     });

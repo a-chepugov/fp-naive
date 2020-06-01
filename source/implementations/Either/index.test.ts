@@ -80,10 +80,10 @@ describe("Either", () => {
         describe("Apply", () => {
 
             it("skips ap function", () => {
-                const instance = Testee.right(x);
+                const instance = Testee.right<Error, number>(x);
                 let counter = 0;
                 const add = (_: number) => counter++;
-                const instanceAdd = Testee.left(add);
+                const instanceAdd = Testee.left<Error, (_: number) => number>(new Error('No function'));
                 instanceAdd.ap(instance);
                 expect(counter).to.be.equal(0);
             });
@@ -93,7 +93,7 @@ describe("Either", () => {
         describe("Chain", () => {
 
             it("skips chain function", () => {
-                const either = Testee.left(x);
+                const either = Testee.left<Error, number>(new Error('NaN'));
                 let counter = 0;
                 const fn = (_: number): Testee<Error, number> => Testee.right(counter++);
                 either.chain(fn);

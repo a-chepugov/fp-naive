@@ -6,7 +6,6 @@ import * as MonadModule from "../../interfaces/Monad";
 
 type Applicative<A> = MonadModule.Applicative.Applicative<A>;
 type ApplicativeTypeRep<A> = MonadModule.Applicative.ApplicativeTypeRep<A>;
-type Apply<A> = MonadModule.Chain.Apply.Apply<A>;
 type ARG1<A> = MonadModule.Chain.Apply.ARG1<A>;
 type RETURNS<A> = MonadModule.Chain.Apply.RETURNS<A>;
 const isFN = MonadModule.Chain.Apply.isFN;
@@ -26,12 +25,12 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
         return new List(this.values.map(fn));
     }
 
-    ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> {
+    ap(other: List<ARG1<A>>): List<RETURNS<A>> {
         type INPUT = ARG1<A>;
         type OUTPUT = RETURNS<A>;
         const fn = this.values[0];
         if (isFN<INPUT, OUTPUT>(fn)) {
-            return other.map<OUTPUT>(fn) as Apply<OUTPUT>;
+            return other.map<OUTPUT>(fn);
         } else {
             throw new Error('this.value is not a function: ' + this.inspect())
         }

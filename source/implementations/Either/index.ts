@@ -7,8 +7,6 @@ import * as MonadModule from "../../interfaces/Monad";
 type Monad<A> = MonadModule.Monad<A>;
 type Applicative<A> = MonadModule.Applicative.Applicative<A>;
 type ApplicativeTypeRep<A> = MonadModule.Applicative.ApplicativeTypeRep<A>;
-type Chain<A> = MonadModule.Chain.Chain<A>;
-type Apply<A> = MonadModule.Chain.Apply.Apply<A>;
 type ARG1<A> = MonadModule.Chain.Apply.ARG1<A>;
 type RETURNS<A> = MonadModule.Chain.Apply.RETURNS<A>;
 const isFN = MonadModule.Chain.Apply.isFN;
@@ -24,9 +22,9 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R>,
 
     abstract map<R2>(fn: (right: R) => R2): Either<L, R2>;
 
-    abstract ap(other: Apply<ARG1<R>>): Apply<RETURNS<R>> | never
+    abstract ap(other: Either<L, ARG1<R>>): Either<L, RETURNS<R>> | never
 
-    abstract chain<R2>(fn: (right: R) => Chain<R2>): Chain<R2>
+    abstract chain<R2>(fn: (right: R) => Either<L, R2>): Either<L, R2>
 
     static of<L, R>(right?: R): Either<L, R> {
         return new Right<L, R>(undefined, right);
@@ -71,11 +69,11 @@ class Left<L, R> extends Either<L, R> {
         return new Left<L, R2>(this.left, undefined);
     }
 
-    ap(other: Apply<ARG1<R>>): Apply<RETURNS<R>> {
+    ap(other: Either<L, ARG1<R>>): Either<L, RETURNS<R>> {
         return new Left<L, RETURNS<R>>(undefined, undefined);
     }
 
-    chain<R2>(fn: (right: R) => Chain<R2>): Chain<R2> {
+    chain<R2>(fn: (right: R) => Either<L, R2>): Either<L, R2> {
         return new Left<L, R2>(this.left, undefined);
     }
 
@@ -124,7 +122,7 @@ class Right<L, R> extends Either<L, R> {
         return new Right(undefined, fn(this.right));
     }
 
-    ap(other: Apply<ARG1<R>>): Apply<RETURNS<R>> {
+    ap(other: Either<L, ARG1<R>>): Either<L, RETURNS<R>> {
         if (isFN<ARG1<R>, RETURNS<R>>(this.right)) {
             return other.map(this.right);
         } else {
@@ -132,7 +130,7 @@ class Right<L, R> extends Either<L, R> {
         }
     }
 
-    chain<R2>(fn: (right: R) => Chain<R2>): Chain<R2> {
+    chain<R2>(fn: (right: R) => Either<L, R2>): Either<L, R2> {
         return fn(this.right);
     }
 

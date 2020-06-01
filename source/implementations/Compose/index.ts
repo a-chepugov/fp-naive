@@ -20,7 +20,7 @@ export default (F: ApplicativeTypeRep<any>) => (G: ApplicativeTypeRep<any>) =>
             return new Compose(this.value.map((x) => x.map(fn)));
         }
 
-        ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> | never {
+        ap(other: Compose<ARG1<A>>): Compose<RETURNS<A>> | never {
             if (isFN<ARG1<A>, RETURNS<A>>(this.value)) {
                 return other.map(this.value);
             } else {

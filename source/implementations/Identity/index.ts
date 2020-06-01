@@ -5,8 +5,6 @@ import * as MonadModule from "../../interfaces/Monad";
 type Monad<A> = MonadModule.Monad<A>;
 type Applicative<A> = MonadModule.Applicative.Applicative<A>;
 type ApplicativeTypeRep<A> = MonadModule.Applicative.ApplicativeTypeRep<A>;
-type Chain<A> = MonadModule.Chain.Chain<A>;
-type Apply<A> = MonadModule.Chain.Apply.Apply<A>;
 type ARG1<A> = MonadModule.Chain.Apply.ARG1<A>;
 type RETURNS<A> = MonadModule.Chain.Apply.RETURNS<A>;
 const isFN = MonadModule.Chain.Apply.isFN;
@@ -22,7 +20,7 @@ export default class Identity<A> implements Monad<A>, Traversable<A> {
         return new Identity(fn(this.value));
     }
 
-    ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> | never {
+    ap(other: Identity<ARG1<A>>): Identity<RETURNS<A>> | never {
         if (isFN<ARG1<A>, RETURNS<A>>(this.value)) {
             return other.map(this.value);
         } else {
@@ -34,12 +32,8 @@ export default class Identity<A> implements Monad<A>, Traversable<A> {
         return new Identity<A>(value);
     }
 
-    chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
+    chain<B>(fn: (value: A) => Identity<B>): Identity<B> {
         return fn(this.value);
-    }
-
-    join(): A {
-        return this.value;
     }
 
     reduce<B>(reducer: (accumulator: B, value: A) => B, initial: B): B {

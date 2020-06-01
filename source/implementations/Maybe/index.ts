@@ -5,8 +5,6 @@ import * as MonadModule from "../../interfaces/Monad";
 type Monad<A> = MonadModule.Monad<A>;
 type Applicative<A> = MonadModule.Applicative.Applicative<A>;
 type ApplicativeTypeRep<A> = MonadModule.Applicative.ApplicativeTypeRep<A>;
-type Chain<A> = MonadModule.Chain.Chain<A>;
-type Apply<A> = MonadModule.Chain.Apply.Apply<A>;
 type ARG1<A> = MonadModule.Chain.Apply.ARG1<A>;
 type RETURNS<A> = MonadModule.Chain.Apply.RETURNS<A>;
 const isFN = MonadModule.Chain.Apply.isFN;
@@ -22,9 +20,9 @@ export default abstract class Maybe<A> implements Monad<A>, Filterable<A>, Trave
 
     abstract map<B>(fn: (value: A) => B): Maybe<B>;
 
-    abstract ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> | never
+    abstract ap(other: Maybe<ARG1<A>>): Maybe<RETURNS<A>> | never
 
-    abstract chain<B>(fn: (value: A) => Chain<B>): Chain<B>
+    abstract chain<B>(fn: (value: A) => Maybe<B>): Maybe<B>
 
     static of<A>(value: A): Maybe<A> {
         return new Just<A>(value);
@@ -74,11 +72,11 @@ class Nothing<A> extends Maybe<A> {
         return new Nothing<B>(undefined);
     }
 
-    ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> {
+    ap(other: Maybe<ARG1<A>>): Maybe<RETURNS<A>> {
         return new Nothing<RETURNS<A>>(undefined);
     }
 
-    chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
+    chain<B>(fn: (value: A) => Maybe<B>): Maybe<B> {
         return new Nothing<B>(undefined);
     }
 
@@ -127,7 +125,7 @@ class Just<A> extends Maybe<A> {
         return Maybe.fromNullable(fn(this.value));
     }
 
-    ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> | never {
+    ap(other: Maybe<ARG1<A>>): Maybe<RETURNS<A>> | never {
         if (isFN<ARG1<A>, RETURNS<A>>(this.value)) {
             return other.map(this.value);
         } else {
@@ -135,7 +133,7 @@ class Just<A> extends Maybe<A> {
         }
     }
 
-    chain<B>(fn: (value: A) => Chain<B>): Chain<B> {
+    chain<B>(fn: (value: A) => Maybe<B>): Maybe<B> {
         return fn(this.value);
     }
 

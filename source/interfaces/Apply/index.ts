@@ -2,9 +2,9 @@ import * as Functor from '../Functor';
 
 export * as Functor from '../Functor';
 
-export type ARGS<F> = F extends (arg: any) => any ? Parameters<F> : Parameters<any>;
+export type ARGS<F> = F extends (...args: any[]) => any ? Parameters<F> : Parameters<any>;
 export type ARG1<F> = ARGS<F>[0]
-export type RETURNS<F> = F extends (arg: any) => any ? ReturnType<F> : never
+export type RETURNS<F> = F extends (...args: any[]) => any ? ReturnType<F> : never
 export type FN<I, O> = (i: I) => O;
 
 export function isFN<A, B>(object: any): object is FN<A, B> {

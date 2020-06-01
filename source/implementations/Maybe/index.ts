@@ -151,7 +151,7 @@ class Just<A> extends Maybe<A> {
         return fn(this.value).map((x: B) => new Just(x));
     }
 
-    join<B>(): Maybe<A | any> {
+    join(): Maybe<A | any> {
         return this.value instanceof Maybe ?
             this.value :
             this;

@@ -48,6 +48,12 @@ export default class Identity<A> implements Monad<A>, Traversable<A> {
         return this.value;
     }
 
+    join(): Identity<A | any> {
+        return this.value instanceof Identity ?
+            this.value :
+            this;
+    };
+
     inspect() {
         return `Identity(${
             // @ts-ignore

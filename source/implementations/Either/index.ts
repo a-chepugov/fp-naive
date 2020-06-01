@@ -93,6 +93,10 @@ class Left<L, R> extends Either<L, R> {
         return new Left(fn(this.left), this.right);
     }
 
+    join(): Either<L, R> {
+        return this;
+    };
+
     get(): L {
         return this.left;
     }
@@ -149,6 +153,12 @@ class Right<L, R> extends Either<L, R> {
     traverse<R2>(TypeRep: ApplicativeTypeRep<Either<L, R2>>, fn: (a: R) => Applicative<R2>): Applicative<Either<L, R2>> {
         return fn(this.right).map((a: R2) => new Right<L, R2>(undefined, a));
     }
+
+    join(): Either<L, R | any> {
+        return this.right instanceof Either ?
+            this.right :
+            this;
+    };
 
     get(): R {
         return this.right;

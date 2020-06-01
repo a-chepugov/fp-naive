@@ -1,4 +1,5 @@
 import {expect} from "chai";
+import accomplish from "../../utilities/accomplish";
 
 export default (M: any, {x, i}: { x: any, i: any }) => {
 
@@ -14,7 +15,7 @@ export default (M: any, {x, i}: { x: any, i: any }) => {
                 .reduce((acc: Array<any>, x: any) => acc.concat([x]), [])
                 .reduce((_: any, x: any) => x, i);
 
-            expect(r1).to.be.deep.equal(r2);
+            expect(accomplish(r1)).to.be.deep.equal(accomplish(r2));
         });
 
     });

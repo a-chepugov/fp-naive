@@ -1,6 +1,7 @@
 import {expect} from "chai";
 
 import identity from "../../utilities/identity";
+import accomplish from "../../utilities/accomplish";
 
 export default (M: any, {x, f}: {x: any, f: any}) => {
 
@@ -12,14 +13,14 @@ export default (M: any, {x, f}: {x: any, f: any}) => {
             const r1 = v;
             const r2 = M.of(identity).ap(v);
 
-            expect(r1).to.be.deep.equal(r2);
+            expect(accomplish(r1.get())).to.be.deep.equal(accomplish(r2.get()));
         });
 
         it("homomorphism", () => {
             const r1 = M.of(f).ap(M.of(x));
             const r2 = M.of(f(x));
 
-            expect(r1).to.be.deep.equal(r2);
+            expect(accomplish(r1.get())).to.be.deep.equal(accomplish(r2.get()));
         });
 
         it("interchange", () => {
@@ -28,7 +29,7 @@ export default (M: any, {x, f}: {x: any, f: any}) => {
             const r1 = v.ap(M.of(x));
             const r2 = M.of((f: (a: any) => any) => f(x)).ap(v);
 
-            expect(r1).to.be.deep.equal(r2);
+            expect(accomplish(r1.get())).to.be.deep.equal(accomplish(r2.get()));
         });
 
     });

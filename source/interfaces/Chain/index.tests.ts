@@ -1,4 +1,5 @@
 import {expect} from "chai";
+import accomplish from "../../utilities/accomplish";
 
 export default (M: any, {x, f, g}: { x: any, f: any, g: any }) => {
 
@@ -13,7 +14,7 @@ export default (M: any, {x, f, g}: { x: any, f: any, g: any }) => {
             const r1 = m.chain(fc).chain(gc);
             const r2 = m.chain((x: any) => fc(x).chain(gc));
 
-            expect(r1).to.be.deep.equal(r2);
+            expect(accomplish(r1.get())).to.be.deep.equal(accomplish(r2.get()));
         });
 
     });

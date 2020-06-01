@@ -1,51 +1,73 @@
-import * as MonadModule from "../../interfaces/Monad";
+import Chain from "../../interfaces/Chain";
+import Foldable from "../../interfaces/Foldable";
 
-type Monad<A> = MonadModule.Monad<A>;
-type Apply<A> = MonadModule.Chain.Apply.Apply<A>;
+import * as ApplicativeModule from "../../interfaces/Applicative";
 
-export default class IO<A> implements Monad<A> {
-    private readonly fn: A & Function;
+type Applicative<A> = ApplicativeModule.Applicative<A>;
 
-    constructor(fn: A) {
-        if (typeof fn === 'function') {
-            this.fn = fn;
+export type FN = (...args: any[]) => any;
+export type FN1<I, O> = (i: I) => O;
+export type ARGS<F> = F extends (...args: any[]) => any ? Parameters<F> : Parameters<any>;
+export type ARG1<F> = ARGS<F>[0]
+export type RETURNS<F> = F extends (...args: any[]) => any ? ReturnType<F> : never
+
+export default class IO<F extends FN> implements Applicative<F>, Chain<F>, Foldable<F> {
+    private readonly action: F;
+
+    constructor(action: F) {
+        if (typeof action === 'function') {
+            this.action = action;
         } else {
-            throw new Error(`First argument must be a function. Got: ${fn}.`)
+            throw new Error(`IO requires a function. Got: ${action}.`)
         }
     }
 
-    static of<A>(value: A): IO<() => A> {
+    map<F2 extends FN1<RETURNS<F>, RETURNS<F2>>>(fn: F2): IO<(...args: ARGS<F>) => RETURNS<F2>> {
+        return new IO((...args: ARGS<F>) => fn(this.run(...args)));
+    }
+
+    static of<O>(value: O): IO<() => O> {
         return new IO(() => value);
     }
 
-    map<B>(fn: (value: A) => B & Function): IO<B & Function> {
-        return new IO(fn(this.fn));
+    ap(other: IO<FN1<ARG1<ARG1<F>>, RETURNS<String & ARG1<F>>>>)
+        : IO<(...args: ARGS<F>) => RETURNS<RETURNS<F>>> {
+
+        return new IO((...args: ARGS<F>) => {
+            return (other.map(this.action(...args))
+                // @ts-ignore
+            ).run();
+        });
     }
 
-    ap<B>(applyFn: Apply<(value: A) => B & Function>): IO<B & Function> {
-        return applyFn.map((fn: (value: A) => B) => fn.call(this, this.fn)) as IO<B & Function>;
+    // @ts-ignore
+    chain<F2 extends (...args: ARGS<F>) => RETURNS<F2>>(fn: (action: F) => IO<F2>): IO<F2> {
+
+        return new IO((...args: ARGS<F>) => {
+                // @ts-ignore
+                return fn(this.action).run(...args);
+            }
+        ) as IO<F2>;
     }
 
-    chain<B>(fn: (value: A) => IO<B & Function>): IO<B & Function> {
-        return fn(this.fn);
+    reduce<B>(reducer: (accumulator: B, value: F) => B, initial: B): B {
+        return reducer(initial, this.action);
     }
 
     join() {
-        return new IO(() => this.run().run());
+        // @ts-ignore
+        return new IO((...args: ARGS<F>) => this.run(...args).run());
     }
 
-    run(...args: any[]) {
-        return this.fn.apply(this, args);
+    run(...args: ARGS<F>): RETURNS<F> {
+        return this.action(...args);
     }
 
-    get(): A {
-        return this.fn;
+    get(): F {
+        return this.action;
     }
 
     inspect() {
-        return `IO(${
-            // @ts-ignore
-            this.fn && typeof this.fn.inspect === 'function' ? this.fn.inspect() : this.fn
-        })`
+        return `IO(${this.action.toString()})`
     }
 }

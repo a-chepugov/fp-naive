@@ -13,11 +13,6 @@ const isFNA1 = FunctionModule.isFNA1;
 import Filterable from "../../interfaces/Filterable";
 
 export default abstract class Maybe<A> implements Monad<A>, Filterable<A>, Traversable<A> {
-    protected readonly value: A;
-
-    protected constructor(value: A) {
-        this.value = value;
-    }
 
     abstract map<B>(fn: (value: A) => B): Maybe<B>;
 
@@ -69,6 +64,10 @@ export default abstract class Maybe<A> implements Monad<A>, Filterable<A>, Trave
 }
 
 class Nothing<A> extends Maybe<A> {
+    constructor(_value: A) {
+        super();
+    }
+
     map<B>(fn: (value: A) => B): Maybe<B> {
         return new Nothing<B>(undefined);
     }
@@ -114,14 +113,18 @@ class Nothing<A> extends Maybe<A> {
     }
 
     inspect() {
-        return `Maybe.Nothing(${
-            // @ts-ignore
-            this.value && typeof this.value.inspect === 'function' ? this.value.inspect() : this.value
-        })`
+        return `Maybe.Nothing()`;
     }
 }
 
 class Just<A> extends Maybe<A> {
+    protected readonly value: A;
+
+    constructor(value: A) {
+        super();
+        this.value = value;
+    }
+
     map<B>(fn: (value: A) => B): Maybe<B> {
         return Maybe.fromNullable(fn(this.value));
     }
@@ -178,6 +181,6 @@ class Just<A> extends Maybe<A> {
         return `Maybe.Just(${
             // @ts-ignore
             this.value && typeof this.value.inspect === 'function' ? this.value.inspect() : this.value
-        })`
+        })`;
     }
 }

@@ -3,8 +3,7 @@ interface AnyFn {
 }
 
 /**
- * Curries function
- * @name curry
+ * Creates curried functions
  * @param {function} fn
  * @param {number} length - curry level
  * @return {function}

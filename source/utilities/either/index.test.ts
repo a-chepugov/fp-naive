@@ -11,7 +11,7 @@ describe('either', () => {
         const incLeft = (a: number) => left += a;
         const incRight = (a: number) => right += a;
 
-        const result = Testee(incLeft, incRight, Either.left(2));
+        const result = Testee(incLeft, incRight)(Either.left(2));
         expect(result).to.be.equal(2);
         expect(left).to.be.equal(2);
         expect(right).to.be.equal(0);
@@ -23,7 +23,7 @@ describe('either', () => {
         const incLeft = (a: number) => left += a;
         const incRight = (a: number) => right += a;
 
-        const result = Testee(incLeft, incRight, Either.right(2));
+        const result = Testee(incLeft, incRight)(Either.right(2));
         expect(result).to.be.equal(2);
         expect(left).to.be.equal(0);
         expect(right).to.be.equal(2);
@@ -36,7 +36,7 @@ describe('either', () => {
         const incRight = (a: number) => right += a;
 
         // @ts-ignore
-        const action = () => Testee(incLeft, incRight, {});
+        const action = () => Testee(incLeft, incRight)({});
         expect(action).to.throw();
 
     });

@@ -33,23 +33,23 @@ describe("Either", () => {
     describe("Either prototype", () => {
 
         it("Either.left gives Either.Left", () => {
-            const either = Testee.left(x);
+            const either = Testee.left(1);
             expect(either.isLeft).to.be.true;
         });
 
         it("Either.right gives Either.Right", () => {
-            const either = Testee.right(y);
+            const either = Testee.right(1);
             expect(either.isRight).to.be.true;
         });
 
         it("swap on Either.Left gives Either.Right", () => {
-            const either = Testee.left(x);
+            const either = Testee.left(1);
             expect(either.isLeft).to.be.true;
             expect(either.swap().isRight).to.be.true;
         });
 
         it("swap on Either.Right gives Either.Left", () => {
-            const either = Testee.right(y);
+            const either = Testee.right(1);
             expect(either.isRight).to.be.true;
             expect(either.swap().isLeft).to.be.true;
         });
@@ -80,7 +80,6 @@ describe("Either", () => {
             it("skips ap function", () => {
                 const instance = Testee.right<Error, number>(x);
                 let counter = 0;
-                const add = (_: number) => counter++;
                 const instanceAdd = Testee.left<Error, (_: number) => number>(new Error('No function'));
                 instanceAdd.ap(instance);
                 expect(counter).to.be.equal(0);

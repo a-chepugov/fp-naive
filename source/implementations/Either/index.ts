@@ -26,7 +26,7 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R>,
 
     abstract chain<R2>(fn: (right: R) => Either<L, R2>): Either<L, R2>
 
-    static of<L, R>(right?: R): Either<L, R> {
+    static of<L, R>(right: R): Either<L, R> {
         return new Right<L, R>(undefined, right);
     }
 

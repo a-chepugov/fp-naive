@@ -1,7 +1,5 @@
 import Either from '../../implementations/Either';
 
-type SafeResult<F extends (...args: any[]) => any> = Either<Error, ReturnType<F>>;
-
 /**
  * safely calls a function
  * @param {function} fn
@@ -14,8 +12,8 @@ type SafeResult<F extends (...args: any[]) => any> = Either<Error, ReturnType<F>
  * expect(result.isLeft).to.be.true;
  */
 export default function safely(fn: (...args: any[]) => any)
-    : (...args: any[]) => SafeResult<typeof fn> {
-    return function (...args: any[]): SafeResult<typeof fn> {
+    : (...args: Parameters<typeof fn>) => Either<Error, ReturnType<typeof fn>> {
+    return function (...args: Parameters<typeof fn>): Either<Error, ReturnType<typeof fn>> {
         try {
             return Either.right(fn.apply(this, args));
         } catch (error) {

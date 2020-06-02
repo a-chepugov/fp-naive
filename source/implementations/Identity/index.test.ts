@@ -17,13 +17,13 @@ describe("Identity", () => {
     const G = Either;
 
     describe("laws", () => {
-        require('../../interfaces/Functor/index.tests').default(Testee, {x, f, g});
-        require('../../interfaces/Apply/index.tests').default(Testee, {x, f, g});
-        require('../../interfaces/Applicative/index.tests').default(Testee, {x, f});
-        require('../../interfaces/Chain/index.tests').default(Testee, {x, f, g});
-        require('../../interfaces/Monad/index.tests').default(Testee, {x, f});
-        require('../../interfaces/Foldable/index.tests').default(Testee, {x, i: 1});
-        require('../../interfaces/Traversable/index.tests').default(Testee, {x, F, G});
+        require('../../interfaces/Functor/index.test').default(Testee, {x, f, g});
+        require('../../interfaces/Apply/index.test').default(Testee, {x, f, g});
+        require('../../interfaces/Applicative/index.test').default(Testee, {x, f});
+        require('../../interfaces/Chain/index.test').default(Testee, {x, f, g});
+        require('../../interfaces/Monad/index.test').default(Testee, {x, f});
+        require('../../interfaces/Foldable/index.test').default(Testee, {x, i: 1});
+        require('../../interfaces/Traversable/index.test').default(Testee, {x, F, G});
     });
 
     it("get", () => {

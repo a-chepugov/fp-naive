@@ -28,6 +28,7 @@ describe("List", () => {
         require('../../interfaces/Traversable/index.test').default(Testee, {x, F, G});
         require('../../interfaces/Filterable/index.test').default(Testee, {x, y, p, q});
         require('../../interfaces/Semigroup/index.test').default(Testee, {x, y, z});
+        require('../../interfaces/Monoid/index.test').default(Testee, {x});
     });
 
     describe("Filterable", () => {

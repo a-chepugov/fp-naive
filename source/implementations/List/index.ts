@@ -1,6 +1,6 @@
 import Filterable from "../../interfaces/Filterable";
 import Traversable from "../../interfaces/Traversable";
-import Semigroup from "../../interfaces/Semigroup";
+import Monoid from "../../interfaces/Monoid";
 
 import * as MonadModule from "../../interfaces/Monad";
 type Applicative<A> = MonadModule.Applicative.Applicative<A>;
@@ -11,7 +11,7 @@ type ARG1<F> = FunctionModule.ARG1<F>;
 type RETURNS<F> = FunctionModule.RETURNS<F>;
 const isFNA1 = FunctionModule.isFNA1;
 
-export default class List<A> implements Applicative<A>, Filterable<A>, Traversable<A>, Semigroup<A> {
+export default class List<A> implements Applicative<A>, Filterable<A>, Traversable<A>, Monoid<A> {
     protected readonly values: Array<A>;
 
     constructor(values: Array<A>) {
@@ -63,6 +63,10 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
 
     concat(other: List<A>): List<A> {
         return new List(this.values.concat(other.get()));
+    }
+
+    static empty<A>() {
+        return new List<A>([]);
     }
 
     get(): Array<A> {

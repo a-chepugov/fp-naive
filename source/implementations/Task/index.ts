@@ -2,15 +2,15 @@ import * as MonadModule from "../../interfaces/Monad";
 
 type Monad<A> = MonadModule.Monad<A>;
 type Apply<A> = MonadModule.Chain.Apply.Apply<A>;
-type ARG1<A> = MonadModule.Chain.Apply.ARG1<A>;
-type RETURNS<A> = MonadModule.Chain.Apply.RETURNS<A>;
-const isFN = MonadModule.Chain.Apply.isFN;
 
+import * as FunctionModule from "../../interfaces/Function";
+type FN = FunctionModule.FN;
+type ARG1<F> = FunctionModule.ARG1<F>;
+type RETURNS<F> = FunctionModule.RETURNS<F>;
+const isFNA1 = FunctionModule.isFNA1;
 
 import compose from "../../utilities/compose";
 import identity from "../../utilities/identity";
-
-type FN = (...args: any[]) => any
 
 export default class Task<A> implements Monad<A> {
     private readonly fork: A & Function;
@@ -41,7 +41,7 @@ export default class Task<A> implements Monad<A> {
     }
 
     ap(other: Apply<ARG1<A>>): Apply<RETURNS<A>> {
-        if (isFN<ARG1<A>, RETURNS<A>>(this.fork)) {
+        if (isFNA1<ARG1<A>, RETURNS<A>>(this.fork)) {
             return other.map(this.fork);
         } else {
             throw new Error('this.value is not a function: ' + this.inspect())

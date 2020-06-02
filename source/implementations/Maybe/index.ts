@@ -1,13 +1,14 @@
 import Traversable from "../../interfaces/Traversable";
 
 import * as MonadModule from "../../interfaces/Monad";
-
 type Monad<A> = MonadModule.Monad<A>;
 type Applicative<A> = MonadModule.Applicative.Applicative<A>;
 type ApplicativeTypeRep<A> = MonadModule.Applicative.ApplicativeTypeRep<A>;
-type ARG1<A> = MonadModule.Chain.Apply.ARG1<A>;
-type RETURNS<A> = MonadModule.Chain.Apply.RETURNS<A>;
-const isFN = MonadModule.Chain.Apply.isFN;
+
+import * as FunctionModule from "../../interfaces/Function";
+type ARG1<F> = FunctionModule.ARG1<F>;
+type RETURNS<F> = FunctionModule.RETURNS<F>;
+const isFNA1 = FunctionModule.isFNA1;
 
 import Filterable from "../../interfaces/Filterable";
 
@@ -126,7 +127,7 @@ class Just<A> extends Maybe<A> {
     }
 
     ap(other: Maybe<ARG1<A>>): Maybe<RETURNS<A>> | never {
-        if (isFN<ARG1<A>, RETURNS<A>>(this.value)) {
+        if (isFNA1<ARG1<A>, RETURNS<A>>(this.value)) {
             return other.map(this.value);
         } else {
             throw new Error('This is not a apply function: ' + this.inspect())

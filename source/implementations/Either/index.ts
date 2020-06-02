@@ -3,13 +3,14 @@ import Traversable from "../../interfaces/Traversable";
 import Bifunctor from "../../interfaces/Bifunctor";
 
 import * as MonadModule from "../../interfaces/Monad";
-
 type Monad<A> = MonadModule.Monad<A>;
 type Applicative<A> = MonadModule.Applicative.Applicative<A>;
 type ApplicativeTypeRep<A> = MonadModule.Applicative.ApplicativeTypeRep<A>;
-type ARG1<A> = MonadModule.Chain.Apply.ARG1<A>;
-type RETURNS<A> = MonadModule.Chain.Apply.RETURNS<A>;
-const isFN = MonadModule.Chain.Apply.isFN;
+
+import * as FunctionModule from "../../interfaces/Function";
+type ARG1<F> = FunctionModule.ARG1<F>;
+type RETURNS<F> = FunctionModule.RETURNS<F>;
+const isFNA1 = FunctionModule.isFNA1;
 
 export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R>, Traversable<R> {
     protected readonly left: L;
@@ -127,7 +128,7 @@ class Right<L, R> extends Either<L, R> {
     }
 
     ap(other: Either<L, ARG1<R>>): Either<L, RETURNS<R>> {
-        if (isFN<ARG1<R>, RETURNS<R>>(this.right)) {
+        if (isFNA1<ARG1<R>, RETURNS<R>>(this.right)) {
             return other.map(this.right);
         } else {
             throw new Error('This is not a apply function: ' + this.inspect())

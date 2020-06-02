@@ -1,11 +1,9 @@
-import * as ApplicativeModule from "../../interfaces/Applicative";
+import {Applicative, ApplicativeTypeRep} from "../../interfaces/Applicative";
 
-type Applicative<A> = ApplicativeModule.Applicative<A>;
-type ApplicativeTypeRep<A> = ApplicativeModule.ApplicativeTypeRep<A>;
-type Apply<A> = ApplicativeModule.Apply.Apply<A>;
-type ARG1<A> = ApplicativeModule.Apply.ARG1<A>;
-type RETURNS<A> = ApplicativeModule.Apply.RETURNS<A>;
-const isFN = ApplicativeModule.Apply.isFN;
+import * as FunctionModule from "../../interfaces/Function";
+type ARG1<F> = FunctionModule.ARG1<F>;
+type RETURNS<F> = FunctionModule.RETURNS<F>;
+const isFNA1 = FunctionModule.isFNA1;
 
 export default (F: ApplicativeTypeRep<any>) => (G: ApplicativeTypeRep<any>) =>
 
@@ -21,7 +19,7 @@ export default (F: ApplicativeTypeRep<any>) => (G: ApplicativeTypeRep<any>) =>
         }
 
         ap(other: Compose<ARG1<A>>): Compose<RETURNS<A>> | never {
-            if (isFN<ARG1<A>, RETURNS<A>>(this.value)) {
+            if (isFNA1<ARG1<A>, RETURNS<A>>(this.value)) {
                 return other.map(this.value);
             } else {
                 throw new Error('This is not a apply function: ' + this.inspect())

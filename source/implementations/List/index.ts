@@ -3,12 +3,13 @@ import Traversable from "../../interfaces/Traversable";
 import Semigroup from "../../interfaces/Semigroup";
 
 import * as MonadModule from "../../interfaces/Monad";
-
 type Applicative<A> = MonadModule.Applicative.Applicative<A>;
 type ApplicativeTypeRep<A> = MonadModule.Applicative.ApplicativeTypeRep<A>;
-type ARG1<A> = MonadModule.Chain.Apply.ARG1<A>;
-type RETURNS<A> = MonadModule.Chain.Apply.RETURNS<A>;
-const isFN = MonadModule.Chain.Apply.isFN;
+
+import * as FunctionModule from "../../interfaces/Function";
+type ARG1<F> = FunctionModule.ARG1<F>;
+type RETURNS<F> = FunctionModule.RETURNS<F>;
+const isFNA1 = FunctionModule.isFNA1;
 
 export default class List<A> implements Applicative<A>, Filterable<A>, Traversable<A>, Semigroup<A> {
     protected readonly values: Array<A>;
@@ -29,7 +30,7 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
         type INPUT = ARG1<A>;
         type OUTPUT = RETURNS<A>;
         const fn = this.values[0];
-        if (isFN<INPUT, OUTPUT>(fn)) {
+        if (isFNA1<INPUT, OUTPUT>(fn)) {
             return other.map<OUTPUT>(fn);
         } else {
             throw new Error('this.value is not a function: ' + this.inspect())

@@ -1,15 +1,15 @@
 import Chain from "../../interfaces/Chain";
+import Applicative from "../../interfaces/Applicative";
+
 import Foldable from "../../interfaces/Foldable";
 
-import * as ApplicativeModule from "../../interfaces/Applicative";
+import * as FunctionModule from "../../interfaces/Function";
 
-type Applicative<A> = ApplicativeModule.Applicative<A>;
-
-export type FN = (...args: any[]) => any;
-export type FN1<I, O> = (i: I) => O;
-export type ARGS<F> = F extends (...args: any[]) => any ? Parameters<F> : Parameters<any>;
-export type ARG1<F> = ARGS<F>[0]
-export type RETURNS<F> = F extends (...args: any[]) => any ? ReturnType<F> : never
+type FN = FunctionModule.FN;
+type FNA1<I, O> = FunctionModule.FNA1<I, O>
+type ARGS<F> = FunctionModule.ARGS<F>;
+type ARG1<F> = FunctionModule.ARG1<F>;
+type RETURNS<F> = FunctionModule.RETURNS<F>;
 
 export default class IO<F extends FN> implements Applicative<F>, Chain<F>, Foldable<F> {
     private readonly action: F;
@@ -22,7 +22,7 @@ export default class IO<F extends FN> implements Applicative<F>, Chain<F>, Folda
         }
     }
 
-    map<F2 extends FN1<RETURNS<F>, RETURNS<F2>>>(fn: F2): IO<(...args: ARGS<F>) => RETURNS<F2>> {
+    map<F2 extends FNA1<RETURNS<F>, RETURNS<F2>>>(fn: F2): IO<(...args: ARGS<F>) => RETURNS<F2>> {
         return new IO((...args: ARGS<F>) => fn(this.run(...args)));
     }
 
@@ -30,7 +30,7 @@ export default class IO<F extends FN> implements Applicative<F>, Chain<F>, Folda
         return new IO(() => value);
     }
 
-    ap(other: IO<FN1<ARG1<ARG1<F>>, RETURNS<String & ARG1<F>>>>)
+    ap(other: IO<FNA1<ARG1<ARG1<F>>, RETURNS<String & ARG1<F>>>>)
         : IO<(...args: ARGS<F>) => RETURNS<RETURNS<F>>> {
 
         return new IO((...args: ARGS<F>) => {

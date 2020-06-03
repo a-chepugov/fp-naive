@@ -1,9 +1,6 @@
-import {expect} from "chai";
-
 import identity from "../../utilities/identity";
-import accomplish from "../../utilities/accomplish";
 
-export default (M: any, {x, f, g}: {x: any, f: any, g: any}) => {
+export default (M: any, {x, f, g}: { x: any, f: any, g: any }, assert: { equal: any }) => {
 
     describe("Functor", () => {
 
@@ -13,7 +10,7 @@ export default (M: any, {x, f, g}: {x: any, f: any, g: any}) => {
             const r1 = u.map(identity);
             const r2 = u;
 
-            expect(accomplish(r1.get())).to.be.deep.equal(accomplish(r2.get()));
+            return assert.equal(r1, r2);
         });
 
         it("composition", () => {
@@ -23,7 +20,7 @@ export default (M: any, {x, f, g}: {x: any, f: any, g: any}) => {
             const r1 = u.map((a: any) => f(g(a)));
             const r2 = u.map(g).map(f);
 
-            expect(accomplish(r1.get())).to.be.deep.equal(accomplish(r2.get()));
+            return assert.equal(r1, r2);
         });
 
     });

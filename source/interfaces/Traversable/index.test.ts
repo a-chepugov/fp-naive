@@ -1,10 +1,8 @@
-import {expect} from "chai";
-
 import identity from "../../utilities/identity";
 
 import {ApplicativeTypeRep} from "../Applicative";
 
-export default (M: any, {x, F, G}: { x: any, F: ApplicativeTypeRep<any>, G: ApplicativeTypeRep<any>}) => {
+export default (M: any, {x, F, G}: { x: any, F: ApplicativeTypeRep<any>, G: ApplicativeTypeRep<any>}, assert: { equal: any }) => {
 
     describe("Traversable", () => {
 
@@ -15,7 +13,7 @@ export default (M: any, {x, F, G}: { x: any, F: ApplicativeTypeRep<any>, G: Appl
             const r1 = t(u.traverse(F, identity));
             const r2 = u.traverse(G, t);
 
-            expect(r1).to.be.deep.equal(r2);
+            return assert.equal(r1, r2);
         });
 
         it("identity", () => {
@@ -24,7 +22,7 @@ export default (M: any, {x, F, G}: { x: any, F: ApplicativeTypeRep<any>, G: Appl
             const r1 = u.traverse(F, F.of);
             const r2 = F.of(u);
 
-            expect(r1).to.be.deep.equal(r2);
+            return assert.equal(r1, r2);
         });
 
         it("composition", () => {
@@ -40,7 +38,7 @@ export default (M: any, {x, F, G}: { x: any, F: ApplicativeTypeRep<any>, G: Appl
                 .traverse(F, identity)
                 .map((x: any) => x.traverse(G, identity));
 
-            expect(r1).to.be.deep.equal(r2);
+            return assert.equal(r1, r2);
         });
 
     });

@@ -1,7 +1,4 @@
-import {expect} from "chai";
-import accomplish from "../../utilities/accomplish";
-
-export default (M: any, {x, i}: { x: any, i: any }) => {
+export default (M: any, {x, i}: { x: any, i: any }, assert: { equal: any }) => {
 
     describe("Foldable", () => {
 
@@ -15,7 +12,7 @@ export default (M: any, {x, i}: { x: any, i: any }) => {
                 .reduce((acc: Array<any>, x: any) => acc.concat([x]), [])
                 .reduce((_: any, x: any) => x, i);
 
-            expect(accomplish(r1)).to.be.deep.equal(accomplish(r2));
+            return assert.equal(r1, r2);
         });
 
     });

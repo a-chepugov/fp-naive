@@ -1,6 +1,4 @@
-import {expect} from "chai";
-
-export default (M: any, {x}: { x: any }) => {
+export default (M: any, {x}: { x: any }, assert: { equal: any }) => {
 
     describe("Monoid", () => {
 
@@ -10,7 +8,7 @@ export default (M: any, {x}: { x: any }) => {
             const r1 = m.concat(M.empty());
             const r2 = m;
 
-            expect(r1).to.be.deep.equal(r2);
+            return assert.equal(r1, r2);
         });
 
         it("left identity", () => {
@@ -19,7 +17,7 @@ export default (M: any, {x}: { x: any }) => {
             const r1 = M.empty().concat(m);
             const r2 = m;
 
-            expect(r1).to.be.deep.equal(r2);
+            return assert.equal(r1, r2);
         });
 
     });

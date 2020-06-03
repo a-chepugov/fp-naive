@@ -1,11 +1,8 @@
-import {expect} from "chai";
-
 import identity from "../../utilities/identity";
-import accomplish from "../../utilities/accomplish";
 
 const compose = (f: any) => (g: any) => (x: any) => f(g(x));
 
-export default (M: any, {x, f, g}: {x: any, f: any, g: any}) => {
+export default (M: any, {x, f, g}: {x: any, f: any, g: any}, assert: { equal: any }) => {
 
     describe("Apply", () => {
 
@@ -15,14 +12,14 @@ export default (M: any, {x, f, g}: {x: any, f: any, g: any}) => {
             const r1 = v;
             const r2 = M.of(identity).ap(v);
 
-            expect(accomplish(r1.get())).to.be.deep.equal(accomplish(r2.get()));
+            return assert.equal(r1, r2);
         });
 
         it("homomorphism", () => {
             const r1 = M.of(f).ap(M.of(x));
             const r2 = M.of(f(x));
 
-            expect(accomplish(r1.get())).to.be.deep.equal(accomplish(r2.get()));
+            return assert.equal(r1, r2);
         });
 
         it("interchange", () => {
@@ -31,7 +28,7 @@ export default (M: any, {x, f, g}: {x: any, f: any, g: any}) => {
             const r1 = v.ap(M.of(x));
             const r2 = M.of((f: (a: any) => any) => f(x)).ap(v);
 
-            expect(accomplish(r1.get())).to.be.deep.equal(accomplish(r2.get()));
+            return assert.equal(r1, r2);
         });
 
         it("composition", () => {
@@ -42,7 +39,7 @@ export default (M: any, {x, f, g}: {x: any, f: any, g: any}) => {
             const r2 = M.of(compose).ap(u).ap(v).ap(w);
             const r1 = u.ap(v.ap(w));
 
-            expect(accomplish(r1.get())).to.be.deep.equal(accomplish(r2.get()));
+            return assert.equal(r1, r2);
         });
 
     });

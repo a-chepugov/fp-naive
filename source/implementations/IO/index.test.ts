@@ -4,6 +4,10 @@ import Testee from "./index";
 
 import random from "../../utilities/random";
 
+const equal = (r1: any, r2: any) => {
+    expect(r1.get()()).to.be.deep.equal(r2.get()());
+};
+
 describe("IO", () => {
 
     const x = random(1, 100);
@@ -11,11 +15,11 @@ describe("IO", () => {
     const g = (a: any) => a * 3;
 
     describe("laws", () => {
-        require('../../interfaces/Functor/index.test').default(Testee, {x, f, g});
-        require('../../interfaces/Apply/index.test').default(Testee, {x, f, g});
-        require('../../interfaces/Applicative/index.test').default(Testee, {x, f});
-        require('../../interfaces/Chain/index.test').default(Testee, {x, f, g});
-        require('../../interfaces/Monad/index.test').default(Testee, {x, f});
+        require('../../interfaces/Functor/index.test').default(Testee, {x, f, g}, {equal});
+        require('../../interfaces/Apply/index.test').default(Testee, {x, f, g}, {equal});
+        require('../../interfaces/Applicative/index.test').default(Testee, {x, f}, {equal});
+        require('../../interfaces/Chain/index.test').default(Testee, {x, f, g}, {equal});
+        require('../../interfaces/Monad/index.test').default(Testee, {x, f}, {equal});
     });
 
     describe("Functor", () => {

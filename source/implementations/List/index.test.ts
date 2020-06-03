@@ -4,6 +4,10 @@ import Testee from "./index";
 
 import random from "../../utilities/random";
 
+const equal = (r1: any, r2: any) => {
+    expect(r1).to.be.deep.equal(r2);
+};
+
 describe("List", () => {
 
     const x = random(0, 100);
@@ -21,14 +25,14 @@ describe("List", () => {
     const G = Maybe;
 
     describe("laws", () => {
-        require('../../interfaces/Functor/index.test').default(Testee, {x, f, g});
-        require('../../interfaces/Apply/index.test').default(Testee, {x, f, g});
-        require('../../interfaces/Applicative/index.test').default(Testee, {x, f});
-        require('../../interfaces/Foldable/index.test').default(Testee, {x, i: 1});
-        require('../../interfaces/Traversable/index.test').default(Testee, {x, F, G});
-        require('../../interfaces/Filterable/index.test').default(Testee, {x, y, p, q});
-        require('../../interfaces/Semigroup/index.test').default(Testee, {x, y, z});
-        require('../../interfaces/Monoid/index.test').default(Testee, {x});
+        require('../../interfaces/Functor/index.test').default(Testee, {x, f, g}, {equal});
+        require('../../interfaces/Apply/index.test').default(Testee, {x, f, g}, {equal});
+        require('../../interfaces/Applicative/index.test').default(Testee, {x, f}, {equal});
+        require('../../interfaces/Foldable/index.test').default(Testee, {x, i: 1}, {equal});
+        require('../../interfaces/Traversable/index.test').default(Testee, {x, F, G}, {equal});
+        require('../../interfaces/Filterable/index.test').default(Testee, {x, y, p, q}, {equal});
+        require('../../interfaces/Semigroup/index.test').default(Testee, {x, y, z}, {equal});
+        require('../../interfaces/Monoid/index.test').default(Testee, {x}, {equal});
     });
 
     describe("Filterable", () => {

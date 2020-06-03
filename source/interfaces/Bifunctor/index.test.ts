@@ -1,8 +1,6 @@
-import {expect} from "chai";
-
 import identity from "../../utilities/identity";
 
-export default (M: any, {x, f, g, h, i}: { x: any, f: any, g: any, h: any, i: any  }) => {
+export default (M: any, {x, f, g, h, i}: { x: any, f: any, g: any, h: any, i: any }, assert: { equal: any }) => {
 
     describe("Bifunctor", () => {
 
@@ -12,7 +10,7 @@ export default (M: any, {x, f, g, h, i}: { x: any, f: any, g: any, h: any, i: an
             const r1 = p;
             const r2 = p.bimap(identity, identity);
 
-            expect(r1).to.be.deep.equal(r2);
+            return assert.equal(r1, r2);
         });
 
         it("composition", () => {
@@ -24,7 +22,7 @@ export default (M: any, {x, f, g, h, i}: { x: any, f: any, g: any, h: any, i: an
             const r1 = p.bimap(composedLeft, composedRight);
             const r2 = p.bimap(g, i).bimap(f, h);
 
-            expect(r1).to.be.deep.equal(r2);
+            return assert.equal(r1, r2);
         });
 
     });

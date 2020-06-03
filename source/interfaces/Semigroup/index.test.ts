@@ -1,6 +1,4 @@
-import {expect} from "chai";
-
-export default (M: any, {x, y, z}: {x: any, y: any, z: any}) => {
+export default (M: any, {x, y, z}: {x: any, y: any, z: any}, assert: { equal: any }) => {
 
     describe("Semigroup", () => {
 
@@ -12,7 +10,7 @@ export default (M: any, {x, y, z}: {x: any, y: any, z: any}) => {
             const r1 = a.concat(b).concat(c);
             const r2 = a.concat(b.concat(c));
 
-            expect(r1).to.be.deep.equal(r2);
+            return assert.equal(r1, r2);
         });
 
     });

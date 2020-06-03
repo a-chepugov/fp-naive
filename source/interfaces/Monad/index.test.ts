@@ -1,7 +1,4 @@
-import {expect} from "chai";
-import accomplish from "../../utilities/accomplish";
-
-export default (M: any, {x, f}: { x: any, f: any }) => {
+export default (M: any, {x, f}: { x: any, f: any }, assert: { equal: any }) => {
 
     describe("Monad", () => {
 
@@ -11,7 +8,7 @@ export default (M: any, {x, f}: { x: any, f: any }) => {
             const r1 = M.of(x).chain(fc);
             const r2 = fc(x);
 
-            expect(accomplish(r1.get())).to.be.deep.equal(accomplish(r2.get()));
+            return assert.equal(r1, r2);
         });
 
         it("right identity", () => {
@@ -20,7 +17,7 @@ export default (M: any, {x, f}: { x: any, f: any }) => {
             const r1 = m.chain(M.of);
             const r2 = m;
 
-            expect(accomplish(r1.get())).to.be.deep.equal(accomplish(r2.get()));
+            return assert.equal(r1, r2);
         });
 
     });

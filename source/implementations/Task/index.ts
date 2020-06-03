@@ -1,4 +1,5 @@
 import Monad from "../../interfaces/Monad";
+import Bifunctor from "../../interfaces/Bifunctor";
 
 import {isFNA1, FNA1} from "../../interfaces/Function";
 
@@ -7,7 +8,7 @@ export type Action<L, R> = (l: CB<L>, r: CB<R>) => ReturnType<typeof l> | Return
 
 export enum STATE { PENDING = -1, REJECTED, RESOLVED }
 
-export default class Task<L, R> implements Monad<R> {
+export default class Task<L, R> implements Monad<R>, Bifunctor<L, R> {
     protected readonly action: Action<L, R>;
     protected state: STATE;
 
@@ -58,7 +59,11 @@ export default class Task<L, R> implements Monad<R> {
         return Task.resolved(a);
     }
 
-    // bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Either<L2, R2>;
+    bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Task<L2, R2> {
+        return new Task<L2, R2>((reject: CB<L2>, resolve: CB<R2>) =>
+            this.fork((l: L) => reject(fnLeft(l)), (r: R) => resolve(fnRight(r)))
+        )
+    }
 
     fork(reject: CB<L>, resolve: CB<R>) {
         return this.action(

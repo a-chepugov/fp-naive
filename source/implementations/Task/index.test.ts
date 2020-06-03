@@ -19,8 +19,11 @@ const equal = (result1: any, result2: any) => {
 describe("Task", () => {
 
     const x = random(1, 100);
-    const f = (a: any) => a ** 2;
-    const g = (a: any) => a * 3;
+    const y = random(1, 100);
+    const f = (a: number) => a ** 2;
+    const g = (a: number) => a * 3;
+    const h = (a: number) => a + 4;
+    const i = (a: number) => a - 5;
 
     describe("laws", () => {
         require('../../interfaces/Functor/index.test').default(Testee, {x, f, g}, {equal});
@@ -28,6 +31,7 @@ describe("Task", () => {
         require('../../interfaces/Applicative/index.test').default(Testee, {x, f}, {equal});
         require('../../interfaces/Chain/index.test').default(Testee, {x, f, g}, {equal});
         require('../../interfaces/Monad/index.test').default(Testee, {x, f}, {equal});
+        require('../../interfaces/Bifunctor/index.test').default(Testee, {x, y, f, g, h, i}, {equal});
     });
 
     describe("Functor", () => {

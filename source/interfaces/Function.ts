@@ -4,6 +4,12 @@ export function isFN(object: any): object is FN {
     return typeof (object as FN) === 'function';
 }
 
+export type FNA0<O> = () => O;
+
+export function isFNA0<O>(object: any): object is FNA0<O> {
+    return typeof (object as FNA0<O>) === 'function';
+}
+
 export type FNA1<I, O> = (i: I) => O;
 
 export function isFNA1<I, O>(object: any): object is FNA1<I, O> {
@@ -32,4 +38,10 @@ export type ARGS<F extends FN> = Parameters<F>;
 export type ARG1<F extends FN> = ARGS<F>[0];
 export type ARG2<F extends FN> = ARGS<F>[1];
 export type ARG3<F extends FN> = ARGS<F>[2];
-export type RETURNS<F extends FN> = ReturnType<F>;
+export type RETURN<F extends FN> = ReturnType<F>;
+
+export type OR_ARGS<F> = F extends (...args: infer Args) => any? Args : unknown;
+export type OR_ARG1<F> = F extends (...args: infer Args) => any? Args[0] : unknown;
+export type OR_ARG2<F> = F extends (...args: infer Args) => any? Args[1] : unknown;
+export type OR_ARG3<F> = F extends (...args: infer Args) => any? Args[2] : unknown;
+export type OR_RETURN<F> = F extends (...args: any[]) => infer Result? Result : unknown;

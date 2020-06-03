@@ -19,7 +19,7 @@ export default (F: ApplicativeTypeRep<any>) => (G: ApplicativeTypeRep<any>) =>
             if (isFNA1<B, A extends FNA1<B, infer C> ? Compose<C> : any>(this.value)) {
                 return other.map(this.value) as (A extends FNA1<B, infer C> ? Compose<C> : Compose<any>);
             } else {
-                throw new Error('This is not a apply function: ' + this.inspect());
+                throw new Error('This is not a container of a function: ' + this.inspect());
             }
         }
 

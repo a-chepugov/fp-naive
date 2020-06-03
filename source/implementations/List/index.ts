@@ -22,7 +22,7 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
         if (isFNA1<B, A extends FNA1<B, infer C> ? List<C> : any>(fn)) {
             return other.map(fn) as (A extends FNA1<B, infer C> ? List<C> : any);
         } else {
-            throw new Error('this.value is not a function: ' + this.inspect());
+            throw new Error('This is not a container of a function: ' + this.inspect());
         }
     }
 

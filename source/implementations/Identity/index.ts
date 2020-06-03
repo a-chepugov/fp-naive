@@ -20,7 +20,7 @@ export default class Identity<A> implements Monad<A>, Traversable<A> {
         if (isFNA1<B, A extends FNA1<B, infer C> ? Identity<C> : any>(this.value)) {
             return other.map(this.value) as (A extends FNA1<B, infer C> ? Identity<C> : Identity<any>);
         } else {
-            throw new Error('This is not a apply function: ' + this.inspect());
+            throw new Error('This is not a container of a function: ' + this.inspect());
         }
     }
 

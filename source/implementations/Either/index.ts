@@ -133,7 +133,7 @@ class Right<L, R> extends Either<L, R> {
         if (isFNA1<R2, R extends FNA1<R2, infer R3> ? Either<L, R3> : Either<any, any>>(this.value)) {
             return other.map(this.value) as (R extends FNA1<R2, infer R3> ? Either<L, R3> : Either<any, any>);
         } else {
-            throw new Error('This is not a apply function: ' + this.inspect())
+            throw new Error('This is not a container of a function: ' + this.inspect());
         }
     }
 

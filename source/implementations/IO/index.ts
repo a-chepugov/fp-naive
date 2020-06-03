@@ -25,7 +25,7 @@ export default class IO<A> implements Monad<A> {
                 return other.map(fn).run();
             }) as (A extends FNA1<B, infer C> ? IO<C> : never);
         } else {
-            throw new Error('This is not a apply function: ' + this.inspect());
+            throw new Error('This is not a container of a function: ' + this.inspect());
         }
     }
 

@@ -1,14 +1,9 @@
 import Traversable from "../../interfaces/Traversable";
 
-import * as MonadModule from "../../interfaces/Monad";
-type Monad<A> = MonadModule.Monad<A>;
-type Applicative<A> = MonadModule.Applicative.Applicative<A>;
-type ApplicativeTypeRep<A> = MonadModule.Applicative.ApplicativeTypeRep<A>;
+import Monad from "../../interfaces/Monad";
+import {Applicative, ApplicativeTypeRep} from "../../interfaces/Applicative";
 
-import * as FunctionModule from "../../interfaces/Function";
-type ARG1<F> = FunctionModule.ARG1<F>;
-type RETURNS<F> = FunctionModule.RETURNS<F>;
-const isFNA1 = FunctionModule.isFNA1;
+import {isFNA1, FNA1} from "../../interfaces/Function";
 
 export default class Identity<A> implements Monad<A>, Traversable<A> {
     private readonly value: A;
@@ -17,15 +12,15 @@ export default class Identity<A> implements Monad<A>, Traversable<A> {
         this.value = value;
     }
 
-    map<B>(fn: (value: A) => B): Identity<B> {
+    map<B>(fn: (a: A) => B): Identity<B> {
         return new Identity(fn(this.value));
     }
 
-    ap(other: Identity<ARG1<A>>): Identity<RETURNS<A>> | never {
-        if (isFNA1<ARG1<A>, RETURNS<A>>(this.value)) {
-            return other.map(this.value);
+    ap<B>(other: Identity<B>): A extends FNA1<B, infer C> ? Identity<C> : Identity<any> {
+        if (isFNA1<B, A extends FNA1<B, infer C> ? Identity<C> : any>(this.value)) {
+            return other.map(this.value) as (A extends FNA1<B, infer C> ? Identity<C> : Identity<any>);
         } else {
-            throw new Error('This is not a apply function: ' + this.inspect())
+            throw new Error('This is not a apply function: ' + this.inspect());
         }
     }
 
@@ -59,6 +54,6 @@ export default class Identity<A> implements Monad<A>, Traversable<A> {
         return `Identity(${
             // @ts-ignore
             this.value && typeof this.value.inspect === 'function' ? this.value.inspect() : this.value
-        })`
+        })`;
     }
 }

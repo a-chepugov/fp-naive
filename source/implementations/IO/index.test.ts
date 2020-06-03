@@ -15,7 +15,7 @@ describe("IO", () => {
         require('../../interfaces/Apply/index.test').default(Testee, {x, f, g});
         require('../../interfaces/Applicative/index.test').default(Testee, {x, f});
         require('../../interfaces/Chain/index.test').default(Testee, {x, f, g});
-        require('../../interfaces/Foldable/index.test').default(Testee, {x, i: (a: any) => a()});
+        require('../../interfaces/Monad/index.test').default(Testee, {x, f});
     });
 
     describe("Functor", () => {
@@ -56,13 +56,13 @@ describe("IO", () => {
         });
 
         it("ap takes argument from function result", () => {
-            const sum = (a: any) => (b: any) => a + b;
+            const sum = () => (a: any) => a ** 2;
             const instanceSum = new Testee(sum);
 
             const instance = new Testee(() => 2);
 
             const apped = instanceSum.ap(instance);
-            expect(apped.run(3)).to.be.equal(5);
+            expect(apped.run()).to.be.equal(4);
         });
 
 
@@ -76,7 +76,7 @@ describe("IO", () => {
 
             const instance = new Testee(inc);
 
-            const fc = (x: any) => new Testee(x);
+            const fc = (x: any) => Testee.of(x);
 
             let chained = instance.chain(fc);
             expect(counter).to.be.equal(0);
@@ -85,16 +85,6 @@ describe("IO", () => {
             expect(counter).to.be.equal(1);
         });
 
-    });
-
-    it("run takes arguments for IO action", () => {
-        const sum = (a: any, b: any, c: any) => {
-            return a + b + c;
-        };
-
-        const instance = new Testee(sum);
-        const result = instance.run(1, 2, 3);
-        expect(result).to.be.equal(6);
     });
 
     it("join invokes internal IO", () => {

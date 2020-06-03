@@ -2,14 +2,9 @@ import Filterable from "../../interfaces/Filterable";
 import Traversable from "../../interfaces/Traversable";
 import Monoid from "../../interfaces/Monoid";
 
-import * as MonadModule from "../../interfaces/Monad";
-type Applicative<A> = MonadModule.Applicative.Applicative<A>;
-type ApplicativeTypeRep<A> = MonadModule.Applicative.ApplicativeTypeRep<A>;
+import {Applicative, ApplicativeTypeRep} from "../../interfaces/Applicative";
 
-import * as FunctionModule from "../../interfaces/Function";
-type ARG1<F> = FunctionModule.ARG1<F>;
-type RETURNS<F> = FunctionModule.RETURNS<F>;
-const isFNA1 = FunctionModule.isFNA1;
+import {isFNA1, FNA1} from "../../interfaces/Function";
 
 export default class List<A> implements Applicative<A>, Filterable<A>, Traversable<A>, Monoid<A> {
     protected readonly values: Array<A>;
@@ -18,23 +13,21 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
         this.values = values;
     }
 
-    static of<A>(value: A): List<A> {
-        return new List<A>([value]);
-    }
-
-    map<B>(fn: (value: A) => B): List<B> {
+    map<B>(fn: (a: A) => B): List<B> {
         return new List(this.values.map(fn));
     }
 
-    ap(other: List<ARG1<A>>): List<RETURNS<A>> {
-        type INPUT = ARG1<A>;
-        type OUTPUT = RETURNS<A>;
+    ap<B>(other: List<B>): A extends FNA1<B, infer C> ? List<C> : any {
         const fn = this.values[0];
-        if (isFNA1<INPUT, OUTPUT>(fn)) {
-            return other.map<OUTPUT>(fn);
+        if (isFNA1<B, A extends FNA1<B, infer C> ? List<C> : any>(fn)) {
+            return other.map(fn) as (A extends FNA1<B, infer C> ? List<C> : any);
         } else {
-            throw new Error('this.value is not a function: ' + this.inspect())
+            throw new Error('this.value is not a function: ' + this.inspect());
         }
+    }
+
+    static of<A>(value: A): List<A> {
+        return new List<A>([value]);
     }
 
     filter(fn: (value: A) => Boolean): List<A> {
@@ -75,6 +68,6 @@ export default class List<A> implements Applicative<A>, Filterable<A>, Traversab
 
     inspect() {
         // @ts-ignore
-        return `List(${this.values.map((item) => item && typeof item.inspect === 'function' ? item.inspect() : `${item}`)})`
+        return `List(${this.values.map((item) => item && typeof item.inspect === 'function' ? item.inspect() : `${item}`)})`;
     }
 }

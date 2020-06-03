@@ -1,34 +1,28 @@
 import Traversable from "../../interfaces/Traversable";
-
-import * as MonadModule from "../../interfaces/Monad";
-type Monad<A> = MonadModule.Monad<A>;
-type Applicative<A> = MonadModule.Applicative.Applicative<A>;
-type ApplicativeTypeRep<A> = MonadModule.Applicative.ApplicativeTypeRep<A>;
-
-import * as FunctionModule from "../../interfaces/Function";
-type ARG1<F> = FunctionModule.ARG1<F>;
-type RETURNS<F> = FunctionModule.RETURNS<F>;
-const isFNA1 = FunctionModule.isFNA1;
-
 import Filterable from "../../interfaces/Filterable";
+
+import Monad from "../../interfaces/Monad";
+import {Applicative, ApplicativeTypeRep} from "../../interfaces/Applicative";
+
+import {isFNA1, FNA1} from "../../interfaces/Function";
 
 export default abstract class Maybe<A> implements Monad<A>, Filterable<A>, Traversable<A> {
 
-    abstract map<B>(fn: (value: A) => B): Maybe<B>;
+    abstract map<B>(fn: (a: A) => B): Maybe<B>;
 
-    abstract ap(other: Maybe<ARG1<A>>): Maybe<RETURNS<A>> | never
+    abstract ap<B>(other: Maybe<B>): A extends FNA1<B, infer C> ? Maybe<C> : Maybe<any>;
 
-    abstract chain<B>(fn: (value: A) => Maybe<B>): Maybe<B>
+    abstract chain<B>(fn: (value: A) => Maybe<B>): Maybe<B>;
 
     static of<A>(value: A): Maybe<A> {
         return new Just<A>(value);
     }
 
-    abstract filter(fn: (value: A) => Boolean): Maybe<A>
+    abstract filter(fn: (value: A) => Boolean): Maybe<A>;
 
     abstract reduce<B>(reducer: (accumulator: B, value: A) => B, initial: B): B;
 
-    abstract traverse<B>(TypeRep: ApplicativeTypeRep<Maybe<B>>, fn: (a: A) => Applicative<B>): Applicative<Maybe<B>>
+    abstract traverse<B>(TypeRep: ApplicativeTypeRep<Maybe<B>>, fn: (a: A) => Applicative<B>): Applicative<Maybe<B>>;
 
     abstract join(): Maybe<A | any>;
 
@@ -68,12 +62,12 @@ class Nothing<A> extends Maybe<A> {
         super();
     }
 
-    map<B>(fn: (value: A) => B): Maybe<B> {
+    map<B>(fn: (a: A) => B): Maybe<B> {
         return new Nothing<B>(undefined);
     }
 
-    ap(other: Maybe<ARG1<A>>): Maybe<RETURNS<A>> {
-        return new Nothing<RETURNS<A>>(undefined);
+    ap<B>(other: Maybe<B>): A extends FNA1<B, infer C> ? Maybe<C> : Maybe<any> {
+        return new Nothing(undefined) as unknown as (A extends FNA1<B, infer C> ? Maybe<C> : Maybe<any>);
     }
 
     chain<B>(fn: (value: A) => Maybe<B>): Maybe<B> {
@@ -125,15 +119,15 @@ class Just<A> extends Maybe<A> {
         this.value = value;
     }
 
-    map<B>(fn: (value: A) => B): Maybe<B> {
+    map<B>(fn: (a: A) => B): Maybe<B> {
         return Maybe.fromNullable(fn(this.value));
     }
 
-    ap(other: Maybe<ARG1<A>>): Maybe<RETURNS<A>> | never {
-        if (isFNA1<ARG1<A>, RETURNS<A>>(this.value)) {
-            return other.map(this.value);
+    ap<B>(other: Maybe<B>): A extends FNA1<B, infer C> ? Maybe<C> : Maybe<any> {
+        if (isFNA1<B, A extends FNA1<B, infer C> ? Maybe<C> : any>(this.value)) {
+            return other.map(this.value) as (A extends FNA1<B, infer C> ? Maybe<C> : any);
         } else {
-            throw new Error('This is not a apply function: ' + this.inspect())
+            throw new Error('This is not a apply function: ' + this.inspect());
         }
     }
 

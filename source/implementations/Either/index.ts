@@ -2,15 +2,10 @@ import Traversable from "../../interfaces/Traversable";
 
 import Bifunctor from "../../interfaces/Bifunctor";
 
-import * as MonadModule from "../../interfaces/Monad";
-type Monad<A> = MonadModule.Monad<A>;
-type Applicative<A> = MonadModule.Applicative.Applicative<A>;
-type ApplicativeTypeRep<A> = MonadModule.Applicative.ApplicativeTypeRep<A>;
+import Monad from "../../interfaces/Monad";
+import {Applicative, ApplicativeTypeRep} from "../../interfaces/Applicative";
 
-import * as FunctionModule from "../../interfaces/Function";
-type ARG1<F> = FunctionModule.ARG1<F>;
-type RETURNS<F> = FunctionModule.RETURNS<F>;
-const isFNA1 = FunctionModule.isFNA1;
+import {isFNA1, FNA1} from "../../interfaces/Function";
 
 export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R>, Traversable<R> {
     protected readonly left: L;
@@ -21,23 +16,23 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R>,
         this.right = right;
     }
 
-    abstract map<R2>(fn: (right: R) => R2): Either<L, R2>;
+    abstract map<R2>(fn: (a: R) => R2): Either<L, R2>;
 
-    abstract ap(other: Either<L, ARG1<R>>): Either<L, RETURNS<R>> | never
+    abstract ap<R2>(other: Either<any, R2>): R extends FNA1<R2, infer R3> ? Either<L, R3> : Either<any, any>;
 
-    abstract chain<R2>(fn: (right: R) => Either<L, R2>): Either<L, R2>
+    abstract chain<R2>(fn: (right: R) => Either<L, R2>): Either<L, R2>;
 
     static of<L, R>(right: R): Either<L, R> {
         return new Right<L, R>(undefined, right);
     }
 
-    abstract bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Either<L2, R2>
+    abstract bimap<L2, R2>(fnLeft: (left: L) => L2, fnRight: (right: R) => R2): Either<L2, R2>;
 
     abstract mapLeft<L2>(fn: (left: L) => L2): Either<L2, R>;
 
     abstract reduce<R2>(reducer: (accumulator: R2, value: R) => R2, initial: R2): R2;
 
-    abstract traverse<R2>(TypeRep: ApplicativeTypeRep<Either<L, R2>>, fn: (a: R) => Applicative<R2>): Applicative<Either<L, R2>>
+    abstract traverse<R2>(TypeRep: ApplicativeTypeRep<Either<L, R2>>, fn: (a: R) => Applicative<R2>): Applicative<Either<L, R2>>;
 
     abstract get(): L | R ;
 
@@ -66,12 +61,12 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R>,
 }
 
 class Left<L, R> extends Either<L, R> {
-    map<R2>(fn: (right: R) => R2): Either<L, R2> {
+    map<R2>(fn: (a: R) => R2): Either<L, R2> {
         return new Left<L, R2>(this.left, undefined);
     }
 
-    ap(other: Either<L, ARG1<R>>): Either<L, RETURNS<R>> {
-        return new Left<L, RETURNS<R>>(undefined, undefined);
+    ap<R2>(other: Either<any, R2>): R extends FNA1<R2, infer R3> ? Either<L, R3> : Either<any, any> {
+        return new Left(this.left, undefined) as unknown as (R extends FNA1<R2, infer R3> ? Either<L, R3> : Either<any, any>);
     }
 
     chain<R2>(fn: (right: R) => Either<L, R2>): Either<L, R2> {
@@ -118,18 +113,18 @@ class Left<L, R> extends Either<L, R> {
         return `Either.Left(${
             // @ts-ignore
             this.left && typeof this.left.inspect === 'function' ? this.left.inspect() : this.left
-        })`
+        })`;
     }
 }
 
 class Right<L, R> extends Either<L, R> {
-    map<R2>(fn: (right: R) => R2): Either<L, R2> {
-        return new Right(undefined, fn(this.right));
+    map<R2>(fn: (a: R) => R2): Either<L, R2> {
+        return new Right<L, R2>(undefined, fn(this.right));
     }
 
-    ap(other: Either<L, ARG1<R>>): Either<L, RETURNS<R>> {
-        if (isFNA1<ARG1<R>, RETURNS<R>>(this.right)) {
-            return other.map(this.right);
+    ap<R2>(other: Either<any, R2>): R extends FNA1<R2, infer R3> ? Either<L, R3> : Either<any, any> {
+        if (isFNA1<R2, R extends FNA1<R2, infer R3> ? Either<L, R3> : Either<any, any>>(this.right)) {
+            return other.map(this.right) as (R extends FNA1<R2, infer R3> ? Either<L, R3> : Either<any, any>);
         } else {
             throw new Error('This is not a apply function: ' + this.inspect())
         }
@@ -181,6 +176,6 @@ class Right<L, R> extends Either<L, R> {
         return `Either.Right(${
             // @ts-ignore
             this.right && typeof this.right.inspect === 'function' ? this.right.inspect() : this.right
-        })`
+        })`;
     }
 }

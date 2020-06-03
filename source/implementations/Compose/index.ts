@@ -1,9 +1,6 @@
 import {Applicative, ApplicativeTypeRep} from "../../interfaces/Applicative";
 
-import * as FunctionModule from "../../interfaces/Function";
-type ARG1<F> = FunctionModule.ARG1<F>;
-type RETURNS<F> = FunctionModule.RETURNS<F>;
-const isFNA1 = FunctionModule.isFNA1;
+import {FNA1, isFNA1} from "../../interfaces/Function";
 
 export default (F: ApplicativeTypeRep<any>) => (G: ApplicativeTypeRep<any>) =>
 
@@ -14,15 +11,15 @@ export default (F: ApplicativeTypeRep<any>) => (G: ApplicativeTypeRep<any>) =>
             this.value = value;
         }
 
-        map<B>(fn: (value: A) => B): Compose<B> {
+        map<B>(fn: (a: A) => B): Compose<B> {
             return new Compose(this.value.map((x) => x.map(fn)));
         }
 
-        ap(other: Compose<ARG1<A>>): Compose<RETURNS<A>> | never {
-            if (isFNA1<ARG1<A>, RETURNS<A>>(this.value)) {
-                return other.map(this.value);
+        ap<B>(other: Compose<B>): A extends FNA1<B, infer C> ? Compose<C> : Compose<any> {
+            if (isFNA1<B, A extends FNA1<B, infer C> ? Compose<C> : any>(this.value)) {
+                return other.map(this.value) as (A extends FNA1<B, infer C> ? Compose<C> : Compose<any>);
             } else {
-                throw new Error('This is not a apply function: ' + this.inspect())
+                throw new Error('This is not a apply function: ' + this.inspect());
             }
         }
 
@@ -38,6 +35,6 @@ export default (F: ApplicativeTypeRep<any>) => (G: ApplicativeTypeRep<any>) =>
             return `Compose(${
                 // @ts-ignore
                 this.value && typeof this.value.inspect === 'function' ? this.value.inspect() : this.value
-            })`
+            })`;
         }
     }

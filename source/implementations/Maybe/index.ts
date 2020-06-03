@@ -62,19 +62,19 @@ class Nothing<A> extends Maybe<A> {
         super();
     }
 
-    map<B>(fn: (a: A) => B): Maybe<B> {
+    map<B>(fn: (a: A) => B): Nothing<B> {
         return new Nothing<B>(undefined);
     }
 
-    ap<B>(other: Maybe<B>): A extends FNA1<B, infer C> ? Maybe<C> : Maybe<any> {
-        return new Nothing(undefined) as unknown as (A extends FNA1<B, infer C> ? Maybe<C> : Maybe<any>);
+    ap<B>(other: Maybe<B>): A extends FNA1<B, infer C> ? Nothing<C> : Nothing<any> {
+        return new Nothing(undefined) as (A extends FNA1<B, infer C> ? Nothing<C> : Nothing<any>);
     }
 
-    chain<B>(fn: (value: A) => Maybe<B>): Maybe<B> {
+    chain<B>(fn: (value: A) => Maybe<B>): Nothing<B> {
         return new Nothing<B>(undefined);
     }
 
-    filter(fn: (value: A) => Boolean): Maybe<A> {
+    filter(fn: (value: A) => Boolean): Nothing<A> {
         return this;
     }
 
@@ -86,7 +86,7 @@ class Nothing<A> extends Maybe<A> {
         return TypeRep.of(new Nothing<B>(undefined));
     }
 
-    join(): Maybe<A> {
+    join(): Nothing<A> {
         return this;
     };
 
@@ -124,7 +124,7 @@ class Just<A> extends Maybe<A> {
     }
 
     ap<B>(other: Maybe<B>): A extends FNA1<B, infer C> ? Maybe<C> : Maybe<any> {
-        if (isFNA1<B, A extends FNA1<B, infer C> ? Maybe<C> : any>(this.value)) {
+        if (isFNA1<B, A extends FNA1<B, infer C> ? Just<C> : any>(this.value)) {
             return other.map(this.value) as (A extends FNA1<B, infer C> ? Maybe<C> : any);
         } else {
             throw new Error('This is not a container of a function: ' + this.inspect());

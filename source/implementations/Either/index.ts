@@ -54,19 +54,19 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R>,
 }
 
 class Left<L, R> extends Either<L, R> {
-    private value: L;
+    private readonly value: L;
 
     constructor(left: L, _right: R) {
         super();
         this.value = left;
     }
 
-    map<R2>(fn: (a: R) => R2): Either<L, R2> {
+    map<R2>(fn: (a: R) => R2): Left<L, R2> {
         return new Left<L, R2>(this.value, undefined);
     }
 
     ap<R2>(other: Either<any, R2>): R extends FNA1<R2, infer R3> ? Either<L, R3> : Either<any, any> {
-        return new Left(this.value, undefined) as unknown as (R extends FNA1<R2, infer R3> ? Either<L, R3> : Either<any, any>);
+        return new Left(this.value, undefined) as (R extends FNA1<R2, infer R3> ? Left<L, R3> : Left<any, any>);
     }
 
     chain<R2>(fn: (right: R) => Either<L, R2>): Either<L, R2> {
@@ -85,7 +85,7 @@ class Left<L, R> extends Either<L, R> {
         return TypeRep.of(new Left<L, R2>(undefined, undefined));
     }
 
-    mapLeft<L2>(fn: (left: L) => L2): Either<L2, R> {
+    mapLeft<L2>(fn: (left: L) => L2): Left<L2, R> {
         return new Left<L2, R>(fn(this.value), undefined);
     }
 
@@ -118,7 +118,7 @@ class Left<L, R> extends Either<L, R> {
 }
 
 class Right<L, R> extends Either<L, R> {
-    private value: R;
+    private readonly value: R;
 
     constructor(_left: L, right: R) {
         super();

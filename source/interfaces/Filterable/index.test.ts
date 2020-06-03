@@ -19,7 +19,7 @@ export default (M: any, {x, y}: { x: any, y: any}, assert: { equal: any }) => {
             const v = M.of(x);
 
             const r1 = v.filter((_: any) => true);
-            const r2 = v;
+            const r2: typeof M = v;
 
             return assert.equal(r1, r2);
         });

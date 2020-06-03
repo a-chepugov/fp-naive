@@ -8,7 +8,7 @@ export default (M: any, {x, f, g}: { x: any, f: any, g: any }, assert: { equal: 
             const u = M.of(x);
 
             const r1 = u.map(identity);
-            const r2 = u;
+            const r2: typeof M = u;
 
             return assert.equal(r1, r2);
         });

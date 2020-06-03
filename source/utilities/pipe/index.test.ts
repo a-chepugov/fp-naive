@@ -6,8 +6,8 @@ describe('pipe', () => {
     it('delays run until returned function invoke', () => {
         let counter = 0;
 
-        const fn1 = (a: any): any => ++counter;
-        const fn2 = (a: any): any => ++counter;
+        const fn1 = (_a: any): any => ++counter;
+        const fn2 = (_a: any): any => ++counter;
 
         const piped = pipe(fn1, fn2);
         expect(counter).to.equal(0);

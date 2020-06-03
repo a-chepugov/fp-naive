@@ -6,8 +6,8 @@ describe('compose', () => {
     it('delayed run', () => {
         let counter = 0;
 
-        const fn1 = (a: any): any => counter++;
-        const fn2 = (a: any): any => counter++;
+        const fn1 = (_a: any): any => counter++;
+        const fn2 = (_a: any): any => counter++;
 
         const composed = Testee(fn1, fn2);
         expect(counter).to.equal(0);

@@ -3,6 +3,7 @@
  * it is executed passing other argument to it and result of its execution is returned,
  * otherwise first argument returns it as is
  * @param {any} a
+ * @param {...any} args
  * @return {any}
  * @example
  * const result = accomplish((a: number, b: number) => a + b, 2, 3);

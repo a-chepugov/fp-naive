@@ -7,4 +7,7 @@ export interface Monoid<A> extends Semigroup<A> {
     // empty(): Monoid<A>;
 }
 
+/** @ignore */
+export type MonoidTypeRep<A> = { empty: () => Monoid<A> }
+
 export default Monoid;

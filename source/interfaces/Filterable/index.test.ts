@@ -1,4 +1,4 @@
-import identity from "../../utilities/identity";
+import identity from "../../helpers/identity";
 
 export default (M: any, {x, y}: { x: any, y: any}, assert: { equal: any }) => {
 

@@ -2,8 +2,8 @@ import {expect} from "chai";
 
 import Testee from "./index";
 
-import random from "../../utilities/random";
-import taskToPromise from "../../utilities/taskToPromise";
+import random from "../../helpers/random";
+import taskToPromise from "../../helpers/taskToPromise";
 
 const equal = (result1: any, result2: any) => {
     const promise1 = taskToPromise(result1);

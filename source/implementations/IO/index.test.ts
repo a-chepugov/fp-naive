@@ -2,7 +2,7 @@ import {expect} from "chai";
 
 import Testee from "./index";
 
-import random from "../../utilities/random";
+import random from "../../helpers/random";
 
 const equal = (r1: any, r2: any) => {
     expect(r1.get()()).to.be.deep.equal(r2.get()());

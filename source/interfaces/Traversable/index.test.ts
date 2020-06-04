@@ -1,4 +1,4 @@
-import identity from "../../utilities/identity";
+import identity from "../../helpers/identity";
 
 import {ApplicativeTypeRep} from "../Applicative";
 

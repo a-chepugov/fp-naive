@@ -2,12 +2,24 @@ import {Applicative, ApplicativeTypeRep} from "../../interfaces/Applicative";
 
 import {FNA1, isFNA1} from "../../interfaces/Function";
 
-export default (F: ApplicativeTypeRep<any>) => (G: ApplicativeTypeRep<any>) =>
+/**
+ * @category Implementations
+ * @description Creates Compose class constructor with two applicative signatures saved in closure
+ * @param {object} F
+ * @param {object} G
+ * @returns {function}
+ * @example
+ * ComposeFactory(Identity, Maybe)
+ */
 
-    class Compose<A> implements Applicative<A> {
+export default function ComposeFactory<A>(F: ApplicativeTypeRep<any>, G: ApplicativeTypeRep<any>) {
+    /**
+     * @description Represents a composition of applicative types
+     */
+    return class Compose<A> implements Applicative<A> {
         private readonly value: Applicative<Applicative<A>>;
 
-        constructor(value: Applicative<Applicative<A>>) {
+        private constructor(value: Applicative<Applicative<A>>) {
             this.value = value;
         }
 
@@ -38,3 +50,4 @@ export default (F: ApplicativeTypeRep<any>) => (G: ApplicativeTypeRep<any>) =>
             })`;
         }
     }
+}

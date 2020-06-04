@@ -5,6 +5,10 @@ import {Applicative, ApplicativeTypeRep} from "../../interfaces/Applicative";
 
 import {isFNA1, FNA1} from "../../interfaces/Function";
 
+/**
+ * @category Implementations
+ * @description The simplest container
+ */
 export default class Identity<A> implements Monad<A>, Traversable<A> {
     private readonly value: A;
 

@@ -3,11 +3,17 @@ import Bifunctor from "../../interfaces/Bifunctor";
 
 import {isFNA1, FNA1} from "../../interfaces/Function";
 
+/** @ignore */
 export type CB<H> = FNA1<H, Task<any, any> | any>;
+/** @ignore */
 export type Action<L, R> = (l: CB<L>, r: CB<R>) => ReturnType<typeof l> | ReturnType<typeof r> ;
+/** @ignore */
+enum STATE { PENDING = -1, REJECTED, RESOLVED }
 
-export enum STATE { PENDING = -1, REJECTED, RESOLVED }
-
+/**
+ * @category Implementations
+ * @description Represents an asynchronous computation model with possibility of fail and success
+ */
 export default class Task<L, R> implements Monad<R>, Bifunctor<L, R> {
     protected readonly action: Action<L, R>;
     protected state: STATE;
@@ -100,6 +106,9 @@ export default class Task<L, R> implements Monad<R>, Bifunctor<L, R> {
     }
 }
 
+/**
+ * @category Inner classes
+ */
 class Rejected<L, R> extends Task<L, R> {
     readonly state: STATE;
 
@@ -123,6 +132,9 @@ class Rejected<L, R> extends Task<L, R> {
     }
 }
 
+/**
+ * @category Inner classes
+ */
 class Resolved<L, R> extends Task<L, R> {
     readonly state: STATE;
 

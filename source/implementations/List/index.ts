@@ -6,6 +6,10 @@ import {Applicative, ApplicativeTypeRep} from "../../interfaces/Applicative";
 
 import {isFNA1, FNA1} from "../../interfaces/Function";
 
+/**
+ * @category Implementations
+ * @description Represents a structure of ordered values
+ */
 export default class List<A> implements Applicative<A>, Filterable<A>, Traversable<A>, Monoid<A> {
     protected readonly values: Array<A>;
 

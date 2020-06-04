@@ -2,6 +2,10 @@ import Monad from "../../interfaces/Monad";
 
 import {isFNA1, FNA1} from "../../interfaces/Function";
 
+/**
+ * @category Implementations
+ * @description Represents a deferred computation model
+ */
 export default class IO<A> implements Monad<A> {
     private readonly action: () => A;
 

@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "doc": "typedoc --readme README.md --mode file --name fp --out ./doc/ --theme minimal --includeDeclarations --excludePrivate --excludeNotExported --excludeExternals --listInvalidSymbolLinks --hideGenerator",
+    "docs": "typedoc",
     "test": "mocha -r ts-node/register source/**/*test.ts"
   },
   "keywords": [],

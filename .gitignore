@@ -136,5 +136,5 @@ typings/
 .serverless
 
 build
-doc
+docs
 README.md

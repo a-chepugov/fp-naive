@@ -13,6 +13,8 @@ enum STATE { PENDING = -1, REJECTED, RESOLVED }
 /**
  * @category Implementations
  * @description Represents an asynchronous computation model with possibility of fail and success
+ * @typeParam L type of value than will be passed to left callback of action that contained in Task in case of failure
+ * @typeParam R type of value than will be passed to right callback of action that contained in Task in case of success
  */
 export default class Task<L, R> implements Monad<R>, Bifunctor<L, R> {
     protected readonly action: Action<L, R>;

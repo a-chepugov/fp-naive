@@ -5,6 +5,7 @@ import {isFNA1, FNA1} from "../../interfaces/Function";
 /**
  * @category Implementations
  * @description Represents a deferred computation model
+ * @typeParam A type of value than will be returned by action that contained in IO
  */
 export default class IO<A> implements Monad<A> {
     private readonly action: () => A;

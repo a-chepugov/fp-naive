@@ -8,7 +8,8 @@ import {isFNA1, FNA1} from "../../interfaces/Function";
 
 /**
  * @category Implementations
- * @description Polymorphic type that encapsulates an optional value
+ * @description Polymorphic container that encapsulates an optional value
+ * @typeParam A type of values than could be contained in Maybe
  */
 export default abstract class Maybe<A> implements Monad<A>, Filterable<A>, Traversable<A> {
     protected constructor() {
@@ -123,7 +124,7 @@ class Nothing<A> extends Maybe<A> {
 
 /**
  * @category Inner classes
- * @description Represents presents of a value
+ * @description Represents presence of a value
  */
 class Just<A> extends Maybe<A> {
     protected readonly value: A;

@@ -9,6 +9,7 @@ import {isFNA1, FNA1} from "../../interfaces/Function";
 /**
  * @category Implementations
  * @description Represents a structure of ordered values
+ * @typeParam A type of values contained in List
  */
 export default class List<A> implements Applicative<A>, Filterable<A>, Traversable<A>, Monoid<A> {
     protected readonly values: Array<A>;

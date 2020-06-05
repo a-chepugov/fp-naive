@@ -8,7 +8,7 @@ import {Applicative, ApplicativeTypeRep} from "../../interfaces/Applicative";
 import {isFNA1, FNA1} from "../../interfaces/Function";
 
 /**
- * @description Provided model of returning and propagating errors for computation that could fail.
+ * @description Provided model of returning and propagating errors for computation that could fail
  * @typeParam L an error value
  * @typeParam R a success value
  * @category Implementations

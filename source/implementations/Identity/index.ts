@@ -8,6 +8,7 @@ import {isFNA1, FNA1} from "../../interfaces/Function";
 /**
  * @category Implementations
  * @description The simplest container
+ * @typeParam A type of value contained in Identity
  */
 export default class Identity<A> implements Monad<A>, Traversable<A> {
     private readonly value: A;

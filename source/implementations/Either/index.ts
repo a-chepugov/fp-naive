@@ -14,6 +14,8 @@ import {isFNA1, FNA1} from "../../interfaces/Function";
  * @category Implementations
  */
 export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R>, Traversable<R> {
+    protected constructor() {
+    }
 
     abstract map<R2>(fn: (a: R) => R2): Either<L, R2>;
 

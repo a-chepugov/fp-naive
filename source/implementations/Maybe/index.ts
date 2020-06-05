@@ -11,6 +11,8 @@ import {isFNA1, FNA1} from "../../interfaces/Function";
  * @description Polymorphic type that encapsulates an optional value
  */
 export default abstract class Maybe<A> implements Monad<A>, Filterable<A>, Traversable<A> {
+    protected constructor() {
+    }
 
     abstract map<B>(fn: (a: A) => B): Maybe<B>;
 

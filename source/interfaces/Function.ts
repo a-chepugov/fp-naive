@@ -1,5 +1,6 @@
 /** @ignore */
 export type FN = (...args: any[]) => any;
+export default FN;
 /** @ignore */
 export function isFN(object: any): object is FN {
     return typeof (object as FN) === 'function';

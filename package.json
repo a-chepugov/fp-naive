@@ -3,9 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
-    "build:watch": "tsc --watch",
-    "docs": "typedoc",
+    "js:build": "tsc",
+    "js:delete": "rm -rf ./build",
+    "js:build:watch": "tsc --watch",
+    "declaration:build": "tsc --declaration",
+    "declaration:delete": "find ./build -type f -name \"*.d.ts\" -delete",
+    "declaration:build:savely": "npm run declaration:delete; npm run declaration:build;",
+    "docs:build": "typedoc source/index.ts",
+    "docs:delete": "rm -rf ./docs",
+    "all:build": "npm run js:delete; npm run docs:delete; npm run js:build; npm run declaration:build; npm run docs:build",
     "test": "mocha -r ts-node/register source/**/*test.ts"
   },
   "keywords": [],

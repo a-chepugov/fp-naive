@@ -134,7 +134,7 @@ typings/
 
 # Serverless directories
 .serverless
-
+.idea
 build
 docs
 README.md

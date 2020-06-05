@@ -19,7 +19,7 @@ export default function ComposeFactory<A0>(F: ApplicativeTypeRep<any>, G: Applic
      * @description Represents a composition of applicative types
      */
     return class Compose<A> implements AP3<A> {
-        private readonly value: any;
+        readonly value: AP2<A>;
 
         private constructor(value: AP2<A>) {
             this.value = value;

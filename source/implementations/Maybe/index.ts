@@ -46,12 +46,12 @@ export default abstract class Maybe<A> implements Monad<A>, Filterable<A>, Trave
     }
 
     static nothing<A>(_?: A): Nothing<A> {
-        return new Nothing<A>(undefined);
+        return new Nothing<A>();
     }
 
     static fromNullable<A>(value: A): Maybe<A> {
         return value === null || value === undefined ?
-            new Nothing<A>(undefined) :
+            new Nothing<A>() :
             new Just<A>(value);
     }
 
@@ -69,20 +69,20 @@ export default abstract class Maybe<A> implements Monad<A>, Filterable<A>, Trave
  * @description Represents absence of a value
  */
 class Nothing<A> extends Maybe<A> {
-    constructor(_value: A) {
+    constructor() {
         super();
     }
 
     map<B>(fn: (a: A) => B): Nothing<B> {
-        return new Nothing<B>(undefined);
+        return new Nothing<B>();
     }
 
     ap<B>(other: Maybe<B>): A extends FNA1<B, infer C> ? Nothing<C> : Nothing<any> {
-        return new Nothing(undefined) as (A extends FNA1<B, infer C> ? Nothing<C> : Nothing<any>);
+        return new Nothing() as (A extends FNA1<B, infer C> ? Nothing<C> : Nothing<any>);
     }
 
     chain<B>(fn: (value: A) => Maybe<B>): Nothing<B> {
-        return new Nothing<B>(undefined);
+        return new Nothing<B>();
     }
 
     filter(fn: (value: A) => Boolean): Nothing<A> {
@@ -94,7 +94,7 @@ class Nothing<A> extends Maybe<A> {
     }
 
     traverse<B>(TypeRep: ApplicativeTypeRep<Maybe<B>>, fn: (a: A) => Applicative<B>): Applicative<Maybe<B>> {
-        return TypeRep.of(new Nothing<B>(undefined));
+        return TypeRep.of(new Nothing<B>());
     }
 
     join(): Nothing<A> {
@@ -153,7 +153,7 @@ class Just<A> extends Maybe<A> {
     filter(fn: (value: A) => Boolean): Maybe<A> {
         return fn(this.value) ?
             this :
-            new Nothing<A>(undefined);
+            new Nothing<A>();
     }
 
     reduce<B>(reducer: (accumulator: B, value: A) => B, initial: B): B {

@@ -10,7 +10,7 @@ describe("filter", () => {
         const maybe = Maybe.just(1);
         const filtrator = (value: number): Boolean => Boolean(value);
 
-        const result = Testee(filtrator, maybe) as Maybe<number>;
+        const result = Testee(filtrator)(maybe) as Maybe<number>;
         expect(result.isJust).to.be.true;
     });
 
@@ -18,7 +18,7 @@ describe("filter", () => {
         const maybe = Maybe.just(0);
         const filtrator = (value: number): Boolean => Boolean(value);
 
-        const result = Testee(filtrator, maybe) as Maybe<number>;
+        const result = Testee(filtrator)(maybe) as Maybe<number>;
         expect(result.isNothing).to.be.true;
     });
 
@@ -26,7 +26,7 @@ describe("filter", () => {
         const maybe = Maybe.nothing(1);
         const filtrator = (value: number): Boolean => Boolean(value);
 
-        const result = Testee(filtrator, maybe) as Maybe<number>;
+        const result = Testee(filtrator)(maybe) as Maybe<number>;
         expect(result.isNothing).to.be.true;
     });
 

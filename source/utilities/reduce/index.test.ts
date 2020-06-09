@@ -10,7 +10,7 @@ describe("reduce", () => {
         const instance = new List([1, 2, 3]);
         const reducer = (accumulator: number, value: number) => accumulator + value;
 
-        const result = Testee(reducer, instance, 0);
+        const result = Testee(reducer, 0)(instance);
         expect(result).to.be.equal(6);
     });
 

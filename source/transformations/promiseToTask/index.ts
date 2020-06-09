@@ -1,8 +1,8 @@
 import Task from "../../implementations/Task";
 
 /**
- * @category Helpers
- * @description Converts Promise into Task
+ * @category Transformations
+ * @description Transforms Promise into Task
  * @summary promiseToTask :: Promise a b -> Task b a
  * @param {Promise} promise
  * @typeParam L type of task left callback first argument

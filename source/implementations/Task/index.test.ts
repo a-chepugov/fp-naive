@@ -3,7 +3,7 @@ import {expect} from "chai";
 import Testee from "./index";
 
 import random from "../../helpers/random";
-import taskToPromise from "../../helpers/taskToPromise";
+import taskToPromise from "../../transformations/taskToPromise";
 
 const equal = (result1: any, result2: any) => {
     const promise1 = taskToPromise(result1);

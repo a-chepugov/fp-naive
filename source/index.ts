@@ -44,10 +44,12 @@ export {default as identity} from './helpers/identity';
 export {default as liftA2} from './helpers/liftA2';
 export {default as maybe} from './helpers/maybe';
 export {default as pipe} from './helpers/pipe';
-export {default as promiseToTask} from './helpers/promiseToTask';
 export {default as prop} from './helpers/prop';
 export {default as random} from './helpers/random';
 export {default as safely} from './helpers/safely';
 export {default as seq} from './helpers/seq';
 export {default as tap} from './helpers/tap';
-export {default as taskToPromise} from './helpers/taskToPromise';
+
+/** transformations */
+export {default as promiseToTask} from './transformations/promiseToTask';
+export {default as taskToPromise} from './transformations/taskToPromise';

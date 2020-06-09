@@ -1,6 +1,6 @@
-import Monad from "../../interfaces/Monad";
+import Monad from "../../specifications/Monad";
 
-import {isFNA1, FNA1} from "../../interfaces/Function";
+import {isFNA1, FNA1} from "../../specifications/Function";
 
 /**
  * @category Implementations

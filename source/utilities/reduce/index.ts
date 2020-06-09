@@ -1,4 +1,4 @@
-import Foldable from "../../interfaces/Foldable";
+import Foldable from "../../specifications/Foldable";
 
 /**
  * @category Point-free Utilities

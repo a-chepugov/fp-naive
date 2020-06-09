@@ -1,11 +1,11 @@
-import Traversable from "../../interfaces/Traversable";
+import Traversable from "../../specifications/Traversable";
 
-import Bifunctor from "../../interfaces/Bifunctor";
+import Bifunctor from "../../specifications/Bifunctor";
 
-import Monad from "../../interfaces/Monad";
-import {Applicative, ApplicativeTypeRep} from "../../interfaces/Applicative";
+import Monad from "../../specifications/Monad";
+import {Applicative, ApplicativeTypeRep} from "../../specifications/Applicative";
 
-import {isFNA1, FNA1} from "../../interfaces/Function";
+import {isFNA1, FNA1} from "../../specifications/Function";
 
 /**
  * @description Provided model of returning and propagating errors for computation that could fail

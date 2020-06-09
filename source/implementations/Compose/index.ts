@@ -1,5 +1,5 @@
-import {Applicative, ApplicativeTypeRep} from "../../interfaces/Applicative";
-import {FNA1, isFNA1} from "../../interfaces/Function";
+import {Applicative, ApplicativeTypeRep} from "../../specifications/Applicative";
+import {FNA1, isFNA1} from "../../specifications/Function";
 
 /**
  * @category Implementations

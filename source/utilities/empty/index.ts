@@ -1,4 +1,4 @@
-import {Monoid, MonoidTypeRep} from "../../interfaces/Monoid";
+import {Monoid, MonoidTypeRep} from "../../specifications/Monoid";
 
 /**
  * @category Point-free Utilities

@@ -1,16 +1,16 @@
-/** interfaces */
-export {default as Applicative} from './interfaces/Applicative';
-export {default as Apply} from './interfaces/Apply';
-export {default as Bifunctor} from './interfaces/Bifunctor';
-export {default as Chain} from './interfaces/Chain';
-export {default as Filterable} from './interfaces/Filterable';
-export {default as Foldable} from './interfaces/Foldable';
-export {default as Functor} from './interfaces/Functor';
-export {default as Monad} from './interfaces/Monad';
-export {default as Monoid} from './interfaces/Monoid';
-export {default as Semigroup} from './interfaces/Semigroup';
-export {default as Traversable} from './interfaces/Traversable';
-export {default as Function} from './interfaces/Function';
+/** specifications */
+export {default as Applicative} from './specifications/Applicative';
+export {default as Apply} from './specifications/Apply';
+export {default as Bifunctor} from './specifications/Bifunctor';
+export {default as Chain} from './specifications/Chain';
+export {default as Filterable} from './specifications/Filterable';
+export {default as Foldable} from './specifications/Foldable';
+export {default as Functor} from './specifications/Functor';
+export {default as Monad} from './specifications/Monad';
+export {default as Monoid} from './specifications/Monoid';
+export {default as Semigroup} from './specifications/Semigroup';
+export {default as Traversable} from './specifications/Traversable';
+export {default as Function} from './specifications/Function';
 
 /** point-free utilities */
 export {default as ap} from './utilities/ap';

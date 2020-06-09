@@ -1,4 +1,4 @@
-import Semigroup from "../../interfaces/Semigroup";
+import Semigroup from "../../specifications/Semigroup";
 
 /**
  * @category Point-free Utilities

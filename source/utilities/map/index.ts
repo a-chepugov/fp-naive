@@ -1,4 +1,4 @@
-import Functor from "../../interfaces/Functor";
+import Functor from "../../specifications/Functor";
 
 /**
  * @category Point-free Utilities

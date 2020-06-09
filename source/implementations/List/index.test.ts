@@ -25,14 +25,14 @@ describe("List", () => {
     const G = Maybe;
 
     describe("laws", () => {
-        require('../../interfaces/Functor/index.test').default(Testee, {x, f, g}, {equal});
-        require('../../interfaces/Apply/index.test').default(Testee, {x, f, g}, {equal});
-        require('../../interfaces/Applicative/index.test').default(Testee, {x, f}, {equal});
-        require('../../interfaces/Foldable/index.test').default(Testee, {x, i: 1}, {equal});
-        require('../../interfaces/Traversable/index.test').default(Testee, {x, F, G}, {equal});
-        require('../../interfaces/Filterable/index.test').default(Testee, {x, y, p, q}, {equal});
-        require('../../interfaces/Semigroup/index.test').default(Testee, {x, y, z}, {equal});
-        require('../../interfaces/Monoid/index.test').default(Testee, {x}, {equal});
+        require('../../specifications/Functor/index.test').default(Testee, {x, f, g}, {equal});
+        require('../../specifications/Apply/index.test').default(Testee, {x, f, g}, {equal});
+        require('../../specifications/Applicative/index.test').default(Testee, {x, f}, {equal});
+        require('../../specifications/Foldable/index.test').default(Testee, {x, i: 1}, {equal});
+        require('../../specifications/Traversable/index.test').default(Testee, {x, F, G}, {equal});
+        require('../../specifications/Filterable/index.test').default(Testee, {x, y, p, q}, {equal});
+        require('../../specifications/Semigroup/index.test').default(Testee, {x, y, z}, {equal});
+        require('../../specifications/Monoid/index.test').default(Testee, {x}, {equal});
     });
 
     describe("Filterable", () => {

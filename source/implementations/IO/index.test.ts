@@ -15,11 +15,11 @@ describe("IO", () => {
     const g = (a: any) => a * 3;
 
     describe("laws", () => {
-        require('../../interfaces/Functor/index.test').default(Testee, {x, f, g}, {equal});
-        require('../../interfaces/Apply/index.test').default(Testee, {x, f, g}, {equal});
-        require('../../interfaces/Applicative/index.test').default(Testee, {x, f}, {equal});
-        require('../../interfaces/Chain/index.test').default(Testee, {x, f, g}, {equal});
-        require('../../interfaces/Monad/index.test').default(Testee, {x, f}, {equal});
+        require('../../specifications/Functor/index.test').default(Testee, {x, f, g}, {equal});
+        require('../../specifications/Apply/index.test').default(Testee, {x, f, g}, {equal});
+        require('../../specifications/Applicative/index.test').default(Testee, {x, f}, {equal});
+        require('../../specifications/Chain/index.test').default(Testee, {x, f, g}, {equal});
+        require('../../specifications/Monad/index.test').default(Testee, {x, f}, {equal});
     });
 
     describe("Functor", () => {

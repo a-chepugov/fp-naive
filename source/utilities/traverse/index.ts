@@ -1,5 +1,5 @@
-import Applicative, {ApplicativeTypeRep} from "../../interfaces/Applicative";
-import Traversable from "../../interfaces/Traversable";
+import Applicative, {ApplicativeTypeRep} from "../../specifications/Applicative";
+import Traversable from "../../specifications/Traversable";
 
 /**
  * @category Point-free Utilities

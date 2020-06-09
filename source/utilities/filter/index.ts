@@ -1,4 +1,4 @@
-import Filterable from "../../interfaces/Filterable";
+import Filterable from "../../specifications/Filterable";
 
 /**
  * @category Point-free Utilities

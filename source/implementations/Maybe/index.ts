@@ -1,10 +1,10 @@
-import Traversable from "../../interfaces/Traversable";
-import Filterable from "../../interfaces/Filterable";
+import Traversable from "../../specifications/Traversable";
+import Filterable from "../../specifications/Filterable";
 
-import Monad from "../../interfaces/Monad";
-import {Applicative, ApplicativeTypeRep} from "../../interfaces/Applicative";
+import Monad from "../../specifications/Monad";
+import {Applicative, ApplicativeTypeRep} from "../../specifications/Applicative";
 
-import {isFNA1, FNA1} from "../../interfaces/Function";
+import {isFNA1, FNA1} from "../../specifications/Function";
 
 /**
  * @category Implementations

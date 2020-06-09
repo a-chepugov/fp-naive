@@ -1,4 +1,4 @@
-import Chain from "../../interfaces/Chain";
+import Chain from "../../specifications/Chain";
 
 /**
  * @category Point-free Utilities

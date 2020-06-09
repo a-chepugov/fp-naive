@@ -1,4 +1,4 @@
-import {Applicative, ApplicativeTypeRep} from "../../interfaces/Applicative";
+import {Applicative, ApplicativeTypeRep} from "../../specifications/Applicative";
 
 /**
  * @category Point-free Utilities

@@ -1,4 +1,4 @@
-import Bifunctor from "../../interfaces/Bifunctor";
+import Bifunctor from "../../specifications/Bifunctor";
 
 /**
  * @category Point-free Utilities

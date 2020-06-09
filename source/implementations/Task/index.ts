@@ -1,7 +1,7 @@
-import Monad from "../../interfaces/Monad";
-import Bifunctor from "../../interfaces/Bifunctor";
+import Monad from "../../specifications/Monad";
+import Bifunctor from "../../specifications/Bifunctor";
 
-import {isFNA1, FNA1} from "../../interfaces/Function";
+import {isFNA1, FNA1} from "../../specifications/Function";
 
 /** @ignore */
 export type CB<H> = FNA1<H, Task<any, any> | any>;

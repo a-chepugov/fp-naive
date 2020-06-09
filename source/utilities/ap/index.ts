@@ -1,4 +1,4 @@
-import Apply from "../../interfaces/Apply";
+import Apply from "../../specifications/Apply";
 
 /**
  * @category Point-free Utilities

@@ -4,27 +4,27 @@ import Testee from "./index";
 
 import random from "../../helpers/random";
 
-const equal = (r1: any, r2: any) => {
-    expect(r1).to.be.deep.equal(r2);
-};
-
 describe("List", () => {
 
-    const x = random(0, 100);
-    const y = random(0, 100);
-    const z = random(0, 100);
-    const f = (a: number) => a + 2;
-    const g = (a: number) => a * 3;
-    const p = (x: any) => Boolean(x);
-    const q = (x: any) => x > 3;
-
-    const Identity = require("../../implementations/Identity").default;
-    const Maybe = require("../../implementations/Maybe").default;
-
-    const F = Identity;
-    const G = Maybe;
-
     describe("laws", () => {
+        const equal = (r1: any, r2: any) => {
+            expect(r1).to.be.deep.equal(r2);
+        };
+
+        const x = random(1, 99);
+        const y = random(1, 99);
+        const z = random(1, 99);
+        const f = (a: number) => a + 2;
+        const g = (a: number) => a * 3;
+        const p = (x: any) => Boolean(x);
+        const q = (x: any) => x > 3;
+
+        const Identity = require("../../implementations/Identity").default;
+        const Maybe = require("../../implementations/Maybe").default;
+
+        const F = Identity;
+        const G = Maybe;
+
         require('../../specifications/Functor/index.test').default(Testee, {x, f, g}, {equal});
         require('../../specifications/Apply/index.test').default(Testee, {x, f, g}, {equal});
         require('../../specifications/Applicative/index.test').default(Testee, {x, f}, {equal});

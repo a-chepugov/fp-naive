@@ -4,17 +4,17 @@ import Testee from "./index";
 
 import random from "../../helpers/random";
 
-const equal = (r1: any, r2: any) => {
-    expect(r1.get()()).to.be.deep.equal(r2.get()());
-};
-
 describe("IO", () => {
 
-    const x = random(1, 100);
-    const f = (a: any) => a ** 2;
-    const g = (a: any) => a * 3;
-
     describe("laws", () => {
+        const equal = (r1: any, r2: any) => {
+            expect(r1.get()()).to.be.deep.equal(r2.get()());
+        };
+
+        const x = random(1, 99);
+        const f = (a: number) => a ** 2;
+        const g = (a: number) => a * 3;
+
         require('../../specifications/Functor/index.test').default(Testee, {x, f, g}, {equal});
         require('../../specifications/Apply/index.test').default(Testee, {x, f, g}, {equal});
         require('../../specifications/Applicative/index.test').default(Testee, {x, f}, {equal});
@@ -31,7 +31,7 @@ describe("IO", () => {
             const instance = new Testee(inc);
             expect(counter).to.be.equal(0);
 
-            const mapped = instance.map(f);
+            const mapped = instance.map((a: number) => a ** 2);
             expect(counter).to.be.equal(0);
 
             mapped.run();

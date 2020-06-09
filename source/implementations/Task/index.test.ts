@@ -5,27 +5,27 @@ import Testee from "./index";
 import random from "../../helpers/random";
 import taskToPromise from "../../transformations/taskToPromise";
 
-const equal = (result1: any, result2: any) => {
-    const promise1 = taskToPromise(result1);
-    const promise2 = taskToPromise(result2);
-
-    return Promise.all([promise1, promise2])
-        .catch((error) => [error])
-        .then(([response1, response2]) => {
-            expect(response1).to.be.deep.equal(response2)
-        })
-};
-
 describe("Task", () => {
 
-    const x = random(1, 100);
-    const y = random(1, 100);
-    const f = (a: number) => a ** 2;
-    const g = (a: number) => a * 3;
-    const h = (a: number) => a + 4;
-    const i = (a: number) => a - 5;
-
     describe("laws", () => {
+        const equal = (result1: any, result2: any) => {
+            const promise1 = taskToPromise(result1);
+            const promise2 = taskToPromise(result2);
+
+            return Promise.all([promise1, promise2])
+                .catch((error) => [error])
+                .then(([response1, response2]) => {
+                    expect(response1).to.be.deep.equal(response2)
+                })
+        };
+
+        const x = random(1, 99);
+        const y = random(1, 99);
+        const f = (a: number) => a ** 2;
+        const g = (a: number) => a * 3;
+        const h = (a: number) => a + 4;
+        const i = (a: number) => a - 5;
+
         require('../../specifications/Functor/index.test').default(Testee, {x, f, g}, {equal});
         require('../../specifications/Apply/index.test').default(Testee, {x, f, g}, {equal});
         require('../../specifications/Applicative/index.test').default(Testee, {x, f}, {equal});
@@ -34,6 +34,8 @@ describe("Task", () => {
         require('../../specifications/Bifunctor/index.test').default(Testee, {x, y, f, g, h, i}, {equal});
     });
 
+    const x = random(1, 99);
+
     describe("Functor", () => {
 
         it("map doesn't invoke original function", () => {
@@ -41,7 +43,7 @@ describe("Task", () => {
             const inc = () => counter++;
             const instance = new Testee((_reject: any, _resolve: any) => _resolve(inc()));
             expect(counter).to.be.equal(0);
-            const mapped = instance.map(f);
+            const mapped = instance.map((a: number) => a ** 2);
             expect(counter).to.be.equal(0);
 
             return taskToPromise(mapped)

@@ -51,5 +51,6 @@ export {default as seq} from './helpers/seq';
 export {default as tap} from './helpers/tap';
 
 /** transformations */
+export {default as eitherToTask} from './transformations/eitherToTask';
 export {default as promiseToTask} from './transformations/promiseToTask';
 export {default as taskToPromise} from './transformations/taskToPromise';

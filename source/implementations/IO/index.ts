@@ -55,6 +55,6 @@ export default class IO<A> implements Monad<A> {
     }
 
     inspect() {
-        return `IO(${this.action.toString()})`;
+        return `IO{ ${this.action.toString()} }`;
     }
 }

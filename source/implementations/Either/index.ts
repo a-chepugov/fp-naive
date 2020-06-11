@@ -122,10 +122,10 @@ class Left<L, R> extends Either<L, R> {
     }
 
     inspect() {
-        return `Either.Left(${
+        return `Either.Left{ ${
             // @ts-ignore
             this.value && typeof this.value.inspect === 'function' ? this.value.inspect() : this.value
-        })`;
+        } }`;
     }
 }
 
@@ -196,9 +196,9 @@ class Right<L, R> extends Either<L, R> {
     }
 
     inspect() {
-        return `Either.Right(${
+        return `Either.Right{ ${
             // @ts-ignore
             this.value && typeof this.value.inspect === 'function' ? this.value.inspect() : this.value
-        })`;
+        } }`;
     }
 }

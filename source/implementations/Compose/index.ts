@@ -47,10 +47,10 @@ export default function ComposeFactory<A0>(F: ApplicativeTypeRep<any>, G: Applic
         }
 
         inspect() {
-            return `Compose(${
+            return `Compose{ ${
                 // @ts-ignore
                 this.value && typeof this.value.inspect === 'function' ? this.value.inspect() : this.value
-            })`;
+            } }`;
         }
     }
 }

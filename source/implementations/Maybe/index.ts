@@ -65,7 +65,7 @@ export default abstract class Maybe<A> implements Monad<A>, Filterable<A>, Trave
 }
 
 /**
- * @category Inner classes
+ * @ignore
  * @description Represents absence of a value
  */
 class Nothing<A> extends Maybe<A> {
@@ -123,7 +123,7 @@ class Nothing<A> extends Maybe<A> {
 }
 
 /**
- * @category Inner classes
+ * @ignore
  * @description Represents presence of a value
  */
 class Just<A> extends Maybe<A> {

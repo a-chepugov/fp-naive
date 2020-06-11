@@ -62,7 +62,7 @@ export default abstract class Either<L, R> implements Monad<R>, Bifunctor<L, R>,
 }
 
 /**
- * @category Inner classes
+ * @ignore
  * @description Represents failure and contains an error value
  */
 class Left<L, R> extends Either<L, R> {
@@ -130,7 +130,7 @@ class Left<L, R> extends Either<L, R> {
 }
 
 /**
- * @category Inner classes
+ * @ignore
  * @description Represents success and contains a proper result value
  */
 class Right<L, R> extends Either<L, R> {

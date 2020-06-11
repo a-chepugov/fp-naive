@@ -1,14 +1,10 @@
 import Monad from "../../specifications/Monad";
 import Bifunctor from "../../specifications/Bifunctor";
 
-import {isFNA1, FNA1} from "../../specifications/Function";
-
 /** @ignore */
-export type CB<H> = FNA1<H, Task<any, any> | any>;
+type CB<I> = (i?: I) => any;
 /** @ignore */
-export type Action<L, R> = (l: CB<L>, r: CB<R>) => ReturnType<typeof l> | ReturnType<typeof r> ;
-/** @ignore */
-enum STATE { PENDING = -1, REJECTED, RESOLVED }
+type Action<L, R> = (l: CB<L>, r: CB<R>) => any;
 
 /**
  * @category Implementations
@@ -18,14 +14,12 @@ enum STATE { PENDING = -1, REJECTED, RESOLVED }
  */
 export default class Task<L, R> implements Monad<R>, Bifunctor<L, R> {
     protected readonly action: Action<L, R>;
-    protected state: STATE;
 
     constructor(action: Action<L, R>) {
         if (typeof action === 'function') {
             this.action = action;
-            this.state = STATE.PENDING;
         } else {
-            throw new Error(`First argument must be a function. Got: ${action}.`)
+            throw new Error(`First argument must be a function. Got: ${typeof action}.`)
         }
     }
 
@@ -43,18 +37,14 @@ export default class Task<L, R> implements Monad<R>, Bifunctor<L, R> {
         )
     }
 
-    ap<R2>(other: Task<L, R2>): R extends FNA1<R2, infer R3> ? Task<L, R3> : any {
-        type R3 = R extends FNA1<R2, infer R3> ? Task<L, R3> : any;
-        if (isFNA1<R2, R extends FNA1<R2, infer R3> ? Task<L, R3> : never>(this.action)) {
-            return new Task((reject, resolve) => {
-                return this.fork(reject, (r: R) => {
-                    const fn = r as unknown as (a: R2) => R3;
-                    return other.map<R3>(fn).fork(reject, resolve)
-                });
-            }) as (R extends FNA1<R2, infer R3> ? Task<L, R3> : any);
-        } else {
-            throw new Error('This is not a container of a function: ' + this.inspect());
-        }
+    ap<R2>(other: Task<L, R2>): R extends (r: R2) => infer R3 ? Task<L, R3> : any {
+        type R3 = R extends (r: R2) => infer R3 ? Task<L, R3> : any;
+        return new Task((reject, resolve) => {
+            return this.fork(reject, (r: R) => {
+                const fn = r as unknown as (r: R2) => R3;
+                return other.map<R3>(fn).fork(reject, resolve)
+            });
+        }) as (R extends (r: R2) => infer R3 ? Task<L, R3> : any);
     }
 
     chain<R2>(fn: (right: R) => Task<L, R2>): Task<L, R2> {
@@ -73,18 +63,8 @@ export default class Task<L, R> implements Monad<R>, Bifunctor<L, R> {
         )
     }
 
-    fork(reject: CB<L>, resolve: CB<R>) {
-        return this.action(
-            (result: L) => {
-                reject(result);
-                this.state = STATE.REJECTED;
-                return Task.rejected<L, R>(result)
-            },
-            (result: R) => {
-                resolve(result);
-                this.state = STATE.RESOLVED;
-                return Task.resolved<L, R>(result)
-            });
+    fork(reject: CB<L>, resolve: CB<R>): ReturnType<Action<L, R>> {
+        return this.action(reject, resolve);
     }
 
     get(): Action<L, R> {
@@ -96,6 +76,6 @@ export default class Task<L, R> implements Monad<R>, Bifunctor<L, R> {
     }
 
     inspect() {
-        return `Task.${STATE[this.state]} (${this.action.toString()})`;
+        return `Task( ${this.action.toString()} )`;
     }
 }

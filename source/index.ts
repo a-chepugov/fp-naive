@@ -28,6 +28,7 @@ export {default as traverse} from './utilities/traverse';
 export {default as Compose} from './implementations/Compose';
 export {default as Either} from './implementations/Either';
 export {default as Identity} from './implementations/Identity';
+export {default as Intersection} from './implementations/Intersection';
 export {default as IO} from './implementations/IO';
 export {default as List} from './implementations/List';
 export {default as Maybe} from './implementations/Maybe';

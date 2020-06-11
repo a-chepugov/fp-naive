@@ -5,14 +5,12 @@ import Task from '../../implementations/Task';
 describe('promiseToTask', () => {
 
     it('Promise.resolve to Task', (done) => {
-        const promise = Promise.resolve(42);
+        const promise = new Promise((resolve, reject) => setTimeout(() => resolve(42), 9));
         const task = Testee(promise);
         expect(task).to.be.instanceof(Task);
 
         promise
             .then((response) => {
-                expect(task.isResolved).to.be.true;
-
                 task.fork(() => {
                 }, (value) => {
                     expect(value).to.be.equal(response);
@@ -22,7 +20,7 @@ describe('promiseToTask', () => {
     });
 
     it('Promise.reject to Task', (done) => {
-        const promise = Promise.reject(42);
+        const promise = new Promise((resolve, reject) => setTimeout(() => reject(42), 9));
         const task = Testee(promise);
         expect(task).to.be.instanceof(Task);
 
@@ -31,8 +29,6 @@ describe('promiseToTask', () => {
                 throw new Error();
             })
             .catch((response) => {
-                expect(task.isRejected).to.be.true;
-
                 task.fork((value) => {
                     expect(value).to.be.equal(response);
                     done();

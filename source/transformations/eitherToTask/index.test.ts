@@ -39,8 +39,6 @@ describe('eitherToTask', () => {
         const task = Testee(either);
         expect(task).to.be.instanceof(Task);
 
-        expect(task.isRejected).to.be.true;
-
         task.fork((value) => {
             expect(value).to.be.equal(x);
             done();
@@ -53,8 +51,6 @@ describe('eitherToTask', () => {
         const either = Either.right(x);
         const task = Testee(either);
         expect(task).to.be.instanceof(Task);
-
-        expect(task.isResolved).to.be.true;
 
         task.fork(() => {
         }, (value) => {

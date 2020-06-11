@@ -38,7 +38,7 @@ describe("Task", () => {
 
     describe("Functor", () => {
 
-        it("map doesn't invoke original function", () => {
+        it("map doesn't invoke original function", (done) => {
             let counter = 0;
             const inc = () => counter++;
             const instance = new Testee((_reject: any, _resolve: any) => _resolve(inc()));
@@ -46,47 +46,45 @@ describe("Task", () => {
             const mapped = instance.map((a: number) => a ** 2);
             expect(counter).to.be.equal(0);
 
-            return taskToPromise(mapped)
-                .then(() => {
-                    expect(counter).to.be.equal(1);
-                })
+            mapped.fork(console.error, () => {
+                expect(counter).to.be.equal(1);
+                done();
+            })
         })
 
     });
 
     describe("Apply", () => {
 
-        it("ap doesn't invoke functions", () => {
+        it("ap doesn't invoke handlers until fork method", (done) => {
             let counter = 0;
-            const sum = () => {
+            const sum = (_reject: any, _resolve: any) => {
                 counter++;
-                return (): void => undefined;
+                _resolve(() => counter++);
             };
-            const instanceSum = Testee.of(sum);
+            const instanceSum = new Testee(sum);
             const instance = new Testee((_reject: any, _resolve: any) => _resolve(counter++));
             expect(counter).to.be.equal(0);
 
-            const apped = instanceSum.ap(instance);
+            const aped = instanceSum.ap(instance);
             expect(counter).to.be.equal(0);
 
-            return taskToPromise(apped)
-                .then(() => {
-                    expect(counter).to.be.equal(2);
-                })
-
+            aped.fork(console.error, () => {
+                expect(counter).to.be.equal(3);
+                done();
+            });
         });
 
-        it("ap takes argument from function result", () => {
-            const mul2 = (a: any) => a * 2;
-            const instanceSum = Testee.of(mul2);
+        it("ap takes argument from function result", (done) => {
+            const pow2 = (_reject: any, _resolve: any) => _resolve((a: number) => a ** 2);
+            const instanceSum = new Testee(pow2);
             const instance = Testee.of(2);
-            const apped = instanceSum.ap(instance);
+            const aped = instanceSum.ap(instance);
 
-            return taskToPromise(apped)
-                .then((response) => {
-                    expect(response).to.be.equal(4);
-                })
-
+            aped.fork(console.error, (response: number) => {
+                expect(response).to.be.equal(4);
+                done();
+            });
         });
 
     });
@@ -112,15 +110,15 @@ describe("Task", () => {
     });
 
 
-    it("join invokes internal Task", () => {
+    it("join invokes internal Task", (done) => {
         const instance = Testee.of(new Testee((_reject, resolve) => resolve(3)));
         const internal = instance.join();
         expect(internal).to.be.instanceof(Testee);
 
-        return taskToPromise(internal)
-            .then((response) => {
-                expect(response).to.be.equal(3);
-            })
+        internal.fork(console.error, (response) => {
+            expect(response).to.be.equal(3);
+            done();
+        });
     });
 
     it("reject callback returns Task.Rejected", () => {
@@ -146,41 +144,22 @@ describe("Task", () => {
         expect(result).to.be.deep.equal(x);
     });
 
-    it("fork return Task instance if internal Task function returns results of reject or resolve function", () => {
-        let counterLeft = 0;
-        let counterRight = 0;
-
-        const incLeft = () => counterLeft++;
-        const incRight = () => counterRight++;
-
-        const instance = new Testee((_reject: any, _resolve: any) => _resolve());
-
-        instance
-            .fork(incLeft, incRight)
-            .fork(incLeft, incRight);
-
-        expect(counterLeft).to.be.deep.equal(0);
-        expect(counterRight).to.be.deep.equal(2);
+    it("Task action receives reject handler result", (done) => {
+        const instance = new Testee((_reject: any, _resolve: any) => {
+            const result = _reject();
+            expect(result).to.be.equal('reject');
+            done();
+        });
+        instance.fork(() => 'reject', () => 'resolve');
     });
 
-    it("isResolved, isRejected", () => {
-        const instance0 = Testee.rejected(x);
-        expect(instance0.isRejected).to.be.true;
-        expect(instance0.isResolved).to.be.false;
-
-        const instance1 = Testee.resolved(x);
-        expect(instance1.isResolved).to.be.true;
-        expect(instance1.isRejected).to.be.false;
-
-        const instance = new Testee((_, resolved) => resolved(x));
-        expect(instance.isRejected).to.be.false;
-        expect(instance.isRejected).to.be.false;
-
-        return taskToPromise(instance)
-            .then(() => {
-                expect(instance.isResolved).to.be.true;
-                expect(instance.isRejected).to.be.false;
-            })
+    it("Task action receives resolve handler result", (done) => {
+        const instance = new Testee((_reject: any, _resolve: any) => {
+            const result = _resolve();
+            expect(result).to.be.equal('resolve');
+            done();
+        });
+        instance.fork(() => 'reject', () => 'resolve');
     });
 
 });

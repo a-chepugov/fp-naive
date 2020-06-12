@@ -10,7 +10,7 @@ import {FNA1, isFNA1} from "../../specifications/Function";
  * @example
  * ComposeFactory(Identity, Maybe).of(5); // Compose(Identity(Maybe(5)))
  */
-export default function ComposeFactory<A0>(F: ApplicativeTypeRep<any>, G: ApplicativeTypeRep<A0>) {
+export default function factory<A0>(F: ApplicativeTypeRep<ReturnType<typeof G.of>>, G: ApplicativeTypeRep<A0>) {
     type AP1<T> = Applicative<T>;
     type AP2<T> = Applicative<AP1<T>>;
     type AP3<T> = Applicative<AP2<T>>;

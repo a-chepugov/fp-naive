@@ -85,7 +85,7 @@ const incOrFail = (a) => {
 	} else {
 		throw new Error('Not a number: ' + a);
 	}
-}
+};
 
 Maybe
 	.fromNullable()
@@ -115,4 +115,4 @@ Maybe
 	.getOrElseRun(() => 8); // 8
 ```
 
-[See full documentation here](https://htmlpreview.github.io/?https://github.com/a-chepugov/fp/docs/docs/index.html)
+[See full documentation here](https://htmlpreview.github.io/?https://github.com/a-chepugov/fp-naive/docs/docs/index.html)

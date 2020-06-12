@@ -1,36 +1,48 @@
 {
-  "name": "fp",
-  "version": "0.0.0",
-  "main": "index.js",
-  "keywords": ["typescript", "functional-programming", "library"],
-  "author": "Alexey",
-  "license": "ISC",
-  "description": "Library for functional programming in JavaScript",
-  "homepage": "https://github.com/a-chepugov/fp",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/a-chepugov/fp.git"
-  },
-  "scripts": {
-    "js:build": "tsc",
-    "js:delete": "rm -rf ./build",
-    "js:build:watch": "tsc --watch",
-    "declaration:build": "tsc --declaration",
-    "declaration:delete": "find ./build -type f -name \"*.d.ts\" -delete",
-    "declaration:build:savely": "npm run declaration:delete; npm run declaration:build;",
-    "docs:build": "typedoc source/index.ts",
-    "docs:delete": "rm -rf ./docs",
-    "all:build": "npm run js:delete; npm run docs:delete; npm run js:build; npm run declaration:build; npm run docs:build",
-    "test": "mocha -r ts-node/register source/**/*test.ts"
-  },
-  "devDependencies": {
-    "@types/chai": "^4.1.7",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^12.12.6",
-    "chai": "^4.2.0",
-    "mocha": "^6.2.0",
-    "ts-node": "^8.3.0",
-    "typedoc": "^0.17.7",
-    "typescript": "^3.5.3"
-  }
+	"name": "fp-naive",
+	"version": "1.0.0",
+	"main": "index.js",
+	"keywords": [
+		"typescript",
+		"ts",
+		"functional",
+		"fp",
+		"fantasy-land",
+		"library",
+		"toolkit",
+		"utils",
+		"server",
+		"browser"
+	],
+	"author": "Alexey",
+	"license": "ISC",
+	"description": "Library for functional programming in JavaScript",
+	"homepage": "https://github.com/a-chepugov/fp-naive",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/a-chepugov/fp-naive.git"
+	},
+	"scripts": {
+		"prepublish": "npm run test && npm run all:build",
+		"js:build": "tsc",
+		"js:delete": "rm -rf ./build",
+		"js:build:watch": "tsc --watch",
+		"declaration:build": "tsc --declaration",
+		"declaration:delete": "find ./build -type f -name \"*.d.ts\" -delete",
+		"declaration:build:savely": "npm run declaration:delete; npm run declaration:build;",
+		"docs:build": "typedoc source/index.ts",
+		"docs:delete": "rm -rf ./docs",
+		"all:build": "npm run js:delete; npm run docs:delete; npm run js:build; npm run declaration:build; npm run docs:build",
+		"test": "mocha -r ts-node/register source/**/*test.ts"
+	},
+	"devDependencies": {
+		"@types/chai": "^4.1.7",
+		"@types/mocha": "^5.2.7",
+		"@types/node": "^12.12.6",
+		"chai": "^4.2.0",
+		"mocha": "^6.2.0",
+		"ts-node": "^8.3.0",
+		"typedoc": "^0.17.7",
+		"typescript": "^3.5.3"
+	}
 }

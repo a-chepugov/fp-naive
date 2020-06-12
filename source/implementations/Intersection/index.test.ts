@@ -75,7 +75,7 @@ describe("Intersection", () => {
 
     it("inspect", () => {
         const instance = new Testee((new Set([1, 2, 3])));
-        expect(instance.inspect()).to.be.deep.equal('Intersection{ 1, 2, 3 }');
+        expect(instance.inspect()).to.be.deep.equal('Intersection { 1, 2, 3 }');
     });
 
 });

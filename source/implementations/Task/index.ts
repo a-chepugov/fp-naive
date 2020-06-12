@@ -76,6 +76,6 @@ export default class Task<L, R> implements Monad<R>, Bifunctor<L, R> {
     }
 
     inspect() {
-        return `Task{ ${this.action.toString()} }`;
+        return `Task { ${this.action.toString()} }`;
     }
 }

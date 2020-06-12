@@ -118,7 +118,7 @@ class Nothing<A> extends Maybe<A> {
     }
 
     inspect() {
-        return `Maybe.Nothing{ }`;
+        return `Maybe.Nothing { }`;
     }
 }
 
@@ -187,7 +187,7 @@ class Just<A> extends Maybe<A> {
     }
 
     inspect() {
-        return `Maybe.Just{ ${
+        return `Maybe.Just { ${
             // @ts-ignore
             this.value && typeof this.value.inspect === 'function' ? this.value.inspect() : this.value
         } }`;

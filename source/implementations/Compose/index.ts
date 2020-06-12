@@ -47,7 +47,7 @@ export default function factory<A0>(F: ApplicativeTypeRep<ReturnType<typeof G.of
         }
 
         inspect() {
-            return `Compose{ ${
+            return `Compose { ${
                 // @ts-ignore
                 this.value && typeof this.value.inspect === 'function' ? this.value.inspect() : this.value
             } }`;

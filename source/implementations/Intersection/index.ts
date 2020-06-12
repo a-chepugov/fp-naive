@@ -79,6 +79,6 @@ export default class Intersection<A> implements Applicative<A>, Filterable<A>, T
 
     inspect() {
         // @ts-ignore
-        return `Intersection{ ${Array.from(this.values.values()).map((item) => item && typeof item.inspect === 'function' ? item.inspect() : `${item}`). join(', ')} }`;
+        return `Intersection { ${Array.from(this.values.values()).map((item) => item && typeof item.inspect === 'function' ? item.inspect() : `${item}`). join(', ')} }`;
     }
 }

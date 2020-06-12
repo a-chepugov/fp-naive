@@ -2,7 +2,7 @@
  * @category Helpers
  * @description If the first passed argument is a function,
  * it is executed passing other argument to it and result of its execution is returned,
- * otherwise first argument returns it as is
+ * otherwise first argument will be returned as is
  * @summary accomplish :: a | (b -> a) -> a
  * @param {any} a
  * @param {...any} args

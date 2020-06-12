@@ -55,3 +55,5 @@ export {default as tap} from './helpers/tap';
 export {default as eitherToTask} from './transformations/eitherToTask';
 export {default as promiseToTask} from './transformations/promiseToTask';
 export {default as taskToPromise} from './transformations/taskToPromise';
+export {default as maybeToEither} from './transformations/maybeToEither';
+export {default as eitherToMaybe} from './transformations/eitherToMaybe';

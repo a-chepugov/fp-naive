@@ -8,8 +8,8 @@
  * propA({a: 3}); // 3
  */
 export default function prop<K extends NonNullable<string | number | symbol>, T>(key: K): (target: T) => any {
-    return function (target: T) {
-        const {[key]: value} = target !== undefined && target !== null ? target : {};
-        return value;
-    }
+	return function (target: T) {
+		const {[key]: value} = target !== undefined && target !== null ? target : {};
+		return value;
+	}
 }

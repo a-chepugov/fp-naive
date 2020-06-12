@@ -5,7 +5,7 @@ import Filterable from "../../specifications/Filterable";
  * @summary filter :: (a -> Boolean) -> Filterable a -> Filterable a
  */
 export default function filter<A>(filtrator: (a: A) => Boolean): (filterable: Filterable<A>) => Filterable<A> {
-    return function (filterable: Filterable<A>): Filterable<A> {
-        return filterable.filter(filtrator);
-    };
+	return function (filterable: Filterable<A>): Filterable<A> {
+		return filterable.filter(filtrator);
+	};
 }

@@ -12,7 +12,7 @@
  * run(4)); // [5, 6]
  */
 export default function seq<Args extends any[], F extends (...args: Args) => any>(...fns: F[]): (...args: Args) => any[] {
-    return function run(...args: Args): any[] {
-        return fns.map((fn) => fn.apply(this, args));
-    }
+	return function run(...args: Args): any[] {
+		return fns.map((fn) => fn.apply(this, args));
+	}
 };

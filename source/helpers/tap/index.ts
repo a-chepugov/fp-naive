@@ -8,8 +8,8 @@
  * Maybe.of(5).map(tapFn).map((a) => a + 1); // Maybe(6)
  */
 export default function tap<A>(interceptor: (a: A) => any): (a: A) => A {
-    return function identity(a: A): A {
-        interceptor.call(this, a);
-        return a;
-    }
+	return function identity(a: A): A {
+		interceptor.call(this, a);
+		return a;
+	}
 }

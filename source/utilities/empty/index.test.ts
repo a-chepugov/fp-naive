@@ -6,9 +6,9 @@ import List from "../../implementations/List";
 
 describe("empty", () => {
 
-    it("run", () => {
-        const result = Testee(List);
-        expect(result).to.be.instanceof(List);
-    });
+	it("run", () => {
+		const result = Testee(List);
+		expect(result).to.be.instanceof(List);
+	});
 
 });

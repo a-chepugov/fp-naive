@@ -8,7 +8,7 @@
  * saved(33); // 42
  */
 export default function always<A>(a: A): (...args: any[]) => A {
-    return function (..._args: Array<any>): A {
-        return a;
-    }
+	return function (..._args: Array<any>): A {
+		return a;
+	}
 };

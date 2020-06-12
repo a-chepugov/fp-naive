@@ -12,8 +12,8 @@ import Task from "../../implementations/Task";
  * promiseToTask(Promise.resolve(42)); // Task.Resolved{ 42 }
  */
 export default function promiseToTask<L, R>(promise: Promise<R>): Task<L, R> {
-    return new Task<L, R>(function (reject, resolve) {
-        promise.then(resolve, reject);
-        return this;
-    }).fork((l: L) => l, (r: R) => r);
+	return new Task<L, R>(function (reject, resolve) {
+		promise.then(resolve, reject);
+		return this;
+	}).fork((l: L) => l, (r: R) => r);
 };

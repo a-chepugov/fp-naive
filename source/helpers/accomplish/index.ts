@@ -11,9 +11,9 @@
  * accomplish((a: number, b: number) => a + b, 2, 3); // 5
  */
 export default function accomplish(a: any, ...args: any[]): any {
-    if (typeof a === 'function') {
-        return a.apply(this, args);
-    } else {
-        return a;
-    }
+	if (typeof a === 'function') {
+		return a.apply(this, args);
+	} else {
+		return a;
+	}
 };

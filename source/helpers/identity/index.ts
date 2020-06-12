@@ -8,5 +8,5 @@
  * identity(42); // 42
  */
 export default function identity<A>(a: A): A {
-    return a;
+	return a;
 }

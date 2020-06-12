@@ -11,9 +11,9 @@
  * compose(fn1, fn2, fn3)(2); // 10;
  */
 export default function compose(...fns: Array<(a?: any) => any>): (a?: any) => any {
-    return fns
-        .reduce(<A, B, C>(composition: (b?: B) => C, fn: (a?: A) => B): (a?: A) => C =>
-            function (a?: A): C {
-                return composition.call(this, fn.call(this, a));
-            });
+	return fns
+		.reduce(<A, B, C>(composition: (b?: B) => C, fn: (a?: A) => B): (a?: A) => C =>
+			function (a?: A): C {
+				return composition.call(this, fn.call(this, a));
+			});
 };

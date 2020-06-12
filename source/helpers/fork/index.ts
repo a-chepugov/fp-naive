@@ -11,11 +11,11 @@
  * run(2); // 10;
  */
 export default function fork(
-    join: (...values: Array<any>) => any,
-    ...fns: Array<(...args: Array<any>) => any>
+	join: (...values: Array<any>) => any,
+	...fns: Array<(...args: Array<any>) => any>
 ):
-    (...args: Array<any>) => any {
-    return function run(...args: Array<any>) {
-        return join.apply(this, fns.map((fn) => fn.apply(this, args)));
-    }
+	(...args: Array<any>) => any {
+	return function run(...args: Array<any>) {
+		return join.apply(this, fns.map((fn) => fn.apply(this, args)));
+	}
 };

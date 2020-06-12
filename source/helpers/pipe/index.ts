@@ -11,9 +11,9 @@
  * pipe(fn1, fn2, fn3)(2); // 25
  */
 export default function pipe(...fns: Array<(a?: any) => any>): (a?: any) => any {
-    return fns
-        .reduce(<A, B, C>(pipe: (a?: A) => B, fn: (b?: B) => C): (a?: A) => C =>
-            function (a?: A): C {
-                return fn.call(this, pipe.call(this, a))
-            });
+	return fns
+		.reduce(<A, B, C>(pipe: (a?: A) => B, fn: (b?: B) => C): (a?: A) => C =>
+			function (a?: A): C {
+				return fn.call(this, pipe.call(this, a))
+			});
 };

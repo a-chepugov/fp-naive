@@ -7,5 +7,5 @@
  * @returns {Number}
  */
 export default function random(a: number = 0, b: number = 1): number {
-    return Math.floor((Math.random() * (b - a)) + a);
+	return Math.floor((Math.random() * (b - a)) + a);
 }

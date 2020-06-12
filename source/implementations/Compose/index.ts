@@ -11,46 +11,46 @@ import {FNA1, isFNA1} from "../../specifications/Function";
  * ComposeFactory(Identity, Maybe).of(5); // Compose(Identity(Maybe(5)))
  */
 export default function factory<A0>(F: ApplicativeTypeRep<ReturnType<typeof G.of>>, G: ApplicativeTypeRep<A0>) {
-    type AP1<T> = Applicative<T>;
-    type AP2<T> = Applicative<AP1<T>>;
-    type AP3<T> = Applicative<AP2<T>>;
+	type AP1<T> = Applicative<T>;
+	type AP2<T> = Applicative<AP1<T>>;
+	type AP3<T> = Applicative<AP2<T>>;
 
-    /**
-     * @description Represents a composition of applicative types
-     */
-    return class Compose<A> implements AP3<A> {
-        readonly value: AP2<A>;
+	/**
+	 * @description Represents a composition of applicative types
+	 */
+	return class Compose<A> implements AP3<A> {
+		readonly value: AP2<A>;
 
-        private constructor(value: AP2<A>) {
-            this.value = value;
-        }
+		private constructor(value: AP2<A>) {
+			this.value = value;
+		}
 
-        // @ts-ignore
-        map<B>(fn: (a: A) => B): Compose<B> {
-            return new Compose<B>(this.value.map((x: AP1<A>) => x.map((a: A) => fn(a) as B) as AP1<B>) as AP2<B>);
-        }
+		// @ts-ignore
+		map<B>(fn: (a: A) => B): Compose<B> {
+			return new Compose<B>(this.value.map((x: AP1<A>) => x.map((a: A) => fn(a) as B) as AP1<B>) as AP2<B>);
+		}
 
-        ap<B>(other: Compose<B>): A extends FNA1<B, infer C> ? Compose<C> : Compose<any> {
-            if (isFNA1<B, A extends FNA1<B, infer C> ? Compose<C> : any>(this.value)) {
-                return other.map(this.value) as (A extends FNA1<B, infer C> ? Compose<C> : Compose<any>);
-            } else {
-                throw new Error('This is not a container of a function: ' + this.inspect());
-            }
-        }
+		ap<B>(other: Compose<B>): A extends FNA1<B, infer C> ? Compose<C> : Compose<any> {
+			if (isFNA1<B, A extends FNA1<B, infer C> ? Compose<C> : any>(this.value)) {
+				return other.map(this.value) as (A extends FNA1<B, infer C> ? Compose<C> : Compose<any>);
+			} else {
+				throw new Error('This is not a container of a function: ' + this.inspect());
+			}
+		}
 
-        static of(x: A0): Compose<A0> {
-            return new Compose(F.of(G.of(x)));
-        }
+		static of(x: A0): Compose<A0> {
+			return new Compose(F.of(G.of(x)));
+		}
 
-        get(): AP2<A> {
-            return this.value;
-        }
+		get(): AP2<A> {
+			return this.value;
+		}
 
-        inspect() {
-            return `Compose { ${
-                // @ts-ignore
-                this.value && typeof this.value.inspect === 'function' ? this.value.inspect() : this.value
-            } }`;
-        }
-    }
+		inspect() {
+			return `Compose { ${
+				// @ts-ignore
+				this.value && typeof this.value.inspect === 'function' ? this.value.inspect() : this.value
+			} }`;
+		}
+	}
 }

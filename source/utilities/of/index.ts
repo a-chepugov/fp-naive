@@ -5,7 +5,7 @@ import {Applicative, ApplicativeTypeRep} from "../../specifications/Applicative"
  * @summary of :: TypeRep Applicative -> a -> Applicative a
  */
 export default function of<A>(anApplicativeTypeRep: ApplicativeTypeRep<A>) {
-    return function (value: A): Applicative<A> {
-        return anApplicativeTypeRep.of(value);
-    };
+	return function (value: A): Applicative<A> {
+		return anApplicativeTypeRep.of(value);
+	};
 }

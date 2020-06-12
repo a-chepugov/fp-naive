@@ -13,5 +13,5 @@ import Task from "../../implementations/Task";
  * eitherToTask(Either.right(42)); // Task.Resolved{ 42 }
  */
 export default function eitherToTask<L, R>(either: Either<L, R>): Task<L, R> {
-    return either.bimap((l: L) => Task.rejected<L, R>(l), (r: R) => Task.resolved<L, R>(r)).get();
+	return either.bimap((l: L) => Task.rejected<L, R>(l), (r: R) => Task.resolved<L, R>(r)).get();
 };

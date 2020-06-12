@@ -8,8 +8,8 @@ import Either from '../../implementations/Either';
  * either((a: number) => a + 1, (a: number) => a + 2)(Either.right(2)); // 4
  */
 export default function either<A, B, C>(cbLeft: (a: A) => C, cbRight: (b: B) => C)
-    : (e: Either<A, B>) => C {
-    return (e: Either<A, B>): C => {
-        return e.bimap(cbLeft, cbRight).get();
-    }
+	: (e: Either<A, B>) => C {
+	return (e: Either<A, B>): C => {
+		return e.bimap(cbLeft, cbRight).get();
+	}
 };

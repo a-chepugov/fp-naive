@@ -12,7 +12,7 @@ import Task from "../../implementations/Task";
  * TaskToPromise(Task.resolved(42)); // Promise { 42 }
  */
 export default function taskToPromise<L, R>(task: Task<L, R>) {
-    return new Promise<R>((resolve, reject) => {
-        task.fork(reject, resolve)
-    });
+	return new Promise<R>((resolve, reject) => {
+		task.fork(reject, resolve)
+	});
 };

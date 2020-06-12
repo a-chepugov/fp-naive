@@ -57,3 +57,5 @@ export {default as promiseToTask} from './transformations/promiseToTask';
 export {default as taskToPromise} from './transformations/taskToPromise';
 export {default as maybeToEither} from './transformations/maybeToEither';
 export {default as eitherToMaybe} from './transformations/eitherToMaybe';
+export {default as identityToMaybe} from './transformations/identityToMaybe';
+export {default as maybeToIdentity} from './transformations/maybeToIdentity';

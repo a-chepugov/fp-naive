@@ -32,31 +32,35 @@ describe('eitherToTask', () => {
 		});
 	});
 
-	const x = random(1, 99);
+	describe("own properties", () => {
 
-	it('Either.left to Task', (done) => {
-		const either = Either.left(x);
-		const task = Testee(either);
-		expect(task).to.be.instanceof(Task);
+		const x = random(1, 99);
 
-		task.fork((value) => {
-			expect(value).to.be.equal(x);
-			done();
-		}, () => {
-		},)
+		it('Either.left to Task', (done) => {
+			const either = Either.left(x);
+			const task = Testee(either);
+			expect(task).to.be.instanceof(Task);
 
-	});
+			task.fork((value) => {
+				expect(value).to.be.equal(x);
+				done();
+			}, () => {
+			},)
 
-	it('Either.right to Task', (done) => {
-		const either = Either.right(x);
-		const task = Testee(either);
-		expect(task).to.be.instanceof(Task);
-
-		task.fork(() => {
-		}, (value) => {
-			expect(value).to.be.equal(x);
-			done();
 		});
+
+		it('Either.right to Task', (done) => {
+			const either = Either.right(x);
+			const task = Testee(either);
+			expect(task).to.be.instanceof(Task);
+
+			task.fork(() => {
+			}, (value) => {
+				expect(value).to.be.equal(x);
+				done();
+			});
+		});
+
 	});
 
 });

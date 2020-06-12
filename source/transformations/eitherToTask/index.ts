@@ -3,7 +3,7 @@ import Task from "../../implementations/Task";
 
 /**
  * @category Transformations
- * @description Natural transforms Either into Task
+ * @description Natural transformation from Either into Task
  * @summary promiseToTask :: Either a b -> Task a b
  * @param {Either} either
  * @typeParam L type of task left callback first argument

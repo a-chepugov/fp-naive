@@ -1,7 +1,8 @@
 {
 	"name": "fp-naive",
 	"version": "1.2.0",
-	"main": "index.js",
+	"main": "build/index.js",
+	"types": "build/index.d.ts",
 	"keywords": [
 		"typescript",
 		"ts",
@@ -23,17 +24,19 @@
 		"url": "https://github.com/a-chepugov/fp-naive.git"
 	},
 	"scripts": {
-		"prepublish": "npm run test && npm run all:build",
-		"js:build": "tsc",
-		"js:delete": "rm -rf ./build",
-		"js:build:watch": "tsc --watch",
-		"declaration:build": "tsc --declaration",
-		"declaration:delete": "find ./build -type f -name \"*.d.ts\" -delete",
-		"declaration:build:savely": "npm run declaration:delete; npm run declaration:build;",
-		"executable:build": "npm run js:delete; npm run js:build; npm run declaration:build",
+		"ts:build": "tsc",
+		"ts:delete": "rm -rf ./build",
+		"ts:build:clear": "npm run ts:delete && npm run ts:build;",
+		"ts:build:watch": "tsc --watch",
 		"docs:build": "typedoc source/index.ts",
 		"docs:delete": "rm -rf ./docs",
-		"all:build": "npm run js:delete; npm run docs:delete; npm run js:build; npm run declaration:build; npm run docs:build",
+		"docs:build:clear": "npm run docs:delete && npm run docs:build;",
+		"all:build": "npm run ts:build:clear && npm run docs:build:clear;",
+		"version:major": "npm version major",
+		"version:minor": "npm version minor",
+		"version:patch": "npm version patch",
+		"preversion": "npm run test && npm run all:build",
+		"prepublishOnly": "npm run test && npm run all:build",
 		"test": "mocha -r ts-node/register source/**/*test.ts"
 	},
 	"devDependencies": {

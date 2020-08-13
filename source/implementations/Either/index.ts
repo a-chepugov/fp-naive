@@ -94,7 +94,7 @@ class Left<L, R> extends Either<L, R> {
 	}
 
 	traverse<R2>(TypeRep: ApplicativeTypeRep<Either<L, R2>>, fn: (a: R) => Applicative<R2>): Applicative<Either<L, R2>> {
-		return TypeRep.of(new Left<L, R2>(undefined));
+		return TypeRep.of(new Left<L, R2>(this.value));
 	}
 
 	mapLeft<L2>(fn: (left: L) => L2): Left<L2, R> {

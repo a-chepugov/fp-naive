@@ -63,6 +63,12 @@ export default class Task<L, R> implements Monad<R>, Bifunctor<L, R> {
 		)
 	}
 
+	bichain<L2, R2>(fnL: (left: L) => Task<L2, R2>, fnR: (right: R) => Task<L2, R2>): Task<L2, R2> {
+		return new Task((reject, resolve) => {
+			return this.fork((l: L) => fnL(l).fork(reject, resolve), (r: R) => fnR(r).fork(reject, resolve));
+		});
+	}
+
 	fork(reject: CB<L>, resolve: CB<R>): ReturnType<Action<L, R>> {
 		return this.action(reject, resolve);
 	}

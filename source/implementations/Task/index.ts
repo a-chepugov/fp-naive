@@ -78,7 +78,7 @@ export default class Task<L, R> implements Monad<R>, Bifunctor<L, R> {
 	}
 
 	join() {
-		return this.chain((a: any) => a);
+		return this.bichain((a: any) => a, (a: any) => a);
 	}
 
 	inspect() {

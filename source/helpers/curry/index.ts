@@ -13,7 +13,7 @@
 export default (fn: (this: any, ...args: any[]) => any, length = fn.length): (this: any, ...args: any[]) => any =>
 	function bind(...args: any[]): (this: any, ...args: any[]) => any {
 		return length > args.length ?
-			bind.bind(undefined, ...args) :
-			fn(...args);
+			bind.bind(null, ...args) :
+			fn.apply(this, args);
 	};
 

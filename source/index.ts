@@ -52,11 +52,11 @@ export {default as seq} from './helpers/seq';
 export {default as tap} from './helpers/tap';
 
 /** transformations */
-export {default as eitherToTask} from './transformations/eitherToTask';
-export {default as promiseToTask} from './transformations/promiseToTask';
-export {default as taskToPromise} from './transformations/taskToPromise';
-export {default as maybeToEither} from './transformations/maybeToEither';
 export {default as eitherToMaybe} from './transformations/eitherToMaybe';
 export {default as eitherToPromise} from './transformations/eitherToPromise';
+export {default as eitherToTask} from './transformations/eitherToTask';
 export {default as identityToMaybe} from './transformations/identityToMaybe';
+export {default as maybeToEither} from './transformations/maybeToEither';
 export {default as maybeToIdentity} from './transformations/maybeToIdentity';
+export {default as promiseToTask} from './transformations/promiseToTask';
+export {default as taskToPromise} from './transformations/taskToPromise';

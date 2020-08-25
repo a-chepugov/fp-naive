@@ -1,6 +1,6 @@
 {
 	"name": "fp-naive",
-	"version": "1.5.0",
+	"version": "1.5.1",
 	"main": "build/index.js",
 	"types": "build/index.d.ts",
 	"keywords": [
@@ -35,6 +35,7 @@
 		"version:major": "npm version major",
 		"version:minor": "npm version minor",
 		"version:patch": "npm version patch",
+		"prepack": "npm install --only=production && npm run ts:build",
 		"preversion": "npm run test && npm run all:build",
 		"prepublishOnly": "npm run test && npm run all:build",
 		"test": "mocha -r ts-node/register source/**/*test.ts"

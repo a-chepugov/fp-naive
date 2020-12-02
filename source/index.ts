@@ -60,3 +60,4 @@ export {default as maybeToEither} from './transformations/maybeToEither';
 export {default as maybeToIdentity} from './transformations/maybeToIdentity';
 export {default as promiseToTask} from './transformations/promiseToTask';
 export {default as taskToPromise} from './transformations/taskToPromise';
+export {default as taskify} from './transformations/taskify';

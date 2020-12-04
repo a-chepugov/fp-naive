@@ -9,7 +9,11 @@
  */
 export default function tap<A>(interceptor: (a: A) => any): (a: A) => A {
 	return function identity(a: A): A {
-		interceptor.call(this, a);
+		try {
+			interceptor.call(this, a);
+		} catch (error) {
+			console.error(error);
+		}
 		return a;
 	}
 }
